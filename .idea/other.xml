@@ -237,6 +237,6 @@
         </PersistentDeviceSelectionData>
       </list>
     </option>
-    <option name="selectedCloudProject" />
+    <option name="selectedCloudProject" value="easidial" />
   </component>
 </project>
