@@ -17,13 +17,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.GoogleSignInButton
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 
+
+val NavHostController.canUserNavigateUp: Boolean
+    get() = this.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
+
 @Composable
 fun NavGraph(
+    currentUser: FirebaseUser?,
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     onSignInWithGoogle: () -> Unit,
@@ -33,7 +41,9 @@ fun NavGraph(
 
     Scaffold {innerPadding ->
         Column(
-            Modifier.fillMaxSize().padding(innerPadding),
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

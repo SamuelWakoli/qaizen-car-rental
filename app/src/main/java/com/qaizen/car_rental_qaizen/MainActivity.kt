@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                 NavGraph(
+                    currentUser = currentUser,
                     authViewModel = authViewModel,
                     onSignInWithGoogle = {
                         // now Sign in with Google
