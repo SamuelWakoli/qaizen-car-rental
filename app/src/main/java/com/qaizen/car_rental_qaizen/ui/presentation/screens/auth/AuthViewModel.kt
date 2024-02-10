@@ -2,6 +2,8 @@ package com.qaizen.car_rental_qaizen.ui.presentation.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.sign_in_with_google.GoogleSignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +19,19 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     private var _uiState: MutableStateFlow<AuthUiState> = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    fun onSignInResult(result: GoogleSignInResult) {
-        // TODO: Create user in firestore
-        _uiState.update {
-            it.copy(
-                isSignInSuccess = result.data != null,
-                errorMessage = result.errorMessage,
+    fun onSignInResult(result: GoogleSignInResult) = viewModelScope.launch {
+            authRepository.updateUserFirestoreData(
+                currentUser = Firebase.auth.currentUser,
+                data = result.data!!,
+                onSuccess = {
+                    _uiState.update { state ->
+                        state.copy(isSignInSuccess = true)
+                    }
+                },
+                onFailure = {
+                    _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
+                }
             )
-        }
     }
 
     fun resetUiState() {
