@@ -1,5 +1,7 @@
 package com.qaizen.car_rental_qaizen.data.repositories
 
+import android.util.Log
+import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -14,6 +16,7 @@ import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class QaizenAuthRepository : AuthRepository {
     override val auth: FirebaseAuth
@@ -38,58 +41,65 @@ class QaizenAuthRepository : AuthRepository {
     }
 
     override suspend fun registerWithEmailPwd(
-        name: String,
-        email: String,
-        password: String,
+        name: String, email: String, password: String,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener { authResult ->
-            val currentUser: FirebaseUser? = authResult.user
-            val tokenList: MutableList<String> = mutableListOf()
-            Firebase.messaging.token.addOnSuccessListener {
-                tokenList.add(it)
-            }
-            val userData = currentUser?.let {
-                UserData(
-                    userID = it.uid,
-                    displayName = name,
-                    photoURL = currentUser.photoUrl,
-                    userEmail = email,
-                    fcmTokens = tokenList
-                )
-            }
+        try {
+            // Create the user with email and password.
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            // Get the current user.
+            val currentUser = authResult.user!!
 
-            coroutineScope.launch {
-                updateUserFirestoreData(
-                    currentUser,
-                    userData!!,
-                    onSuccess,
-                    onFailure
-                )
-            }
+            // Get the FCM token.
+            val tokenList = mutableListOf<String>()
+            Firebase.messaging.token.addOnSuccessListener { tokenList.add(it) }
 
-        }.addOnFailureListener(onFailure)
+            // Create the user data object.
+            val userData = UserData(
+                currentUser.uid, name, currentUser.photoUrl, email, tokenList
+            )
+
+            // Update the user data in Firestore.
+            updateUserFirestoreData(currentUser, userData, onSuccess, onFailure)
+        } catch (e: Exception) {
+            // Handle any exceptions.
+            onFailure(e)
+        }
     }
 
+    /**
+     * Updates the user's data in Firestore.
+     *
+     * @param currentUser The current Firebase user.
+     * @param data The user data to update.
+     * @param onSuccess The callback to be executed if the update is successful.
+     * @param onFailure The callback to be executed if the update fails.
+     */
     override suspend fun updateUserFirestoreData(
         currentUser: FirebaseUser?,
         data: UserData,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        currentUser?.updateProfile(
-            userProfileChangeRequest {
-                displayName = data.displayName
-                photoUri = data.photoURL
-            }
-        )?.addOnSuccessListener {
+        try {
+            // Update the user profile.
+            currentUser?.updateProfile(
+                userProfileChangeRequest {
+                    displayName = data.displayName
+                    photoUri = data.photoURL
+                }
+            )?.await()
+
+            // Update the user data in Firestore.
             firestore.collection(FirebaseDirectories.UsersCollection.name)
-                .document(data.userEmail!!).set(
-                data
-            ).addOnSuccessListener {
-                onSuccess()
-            }
+                .document(data.userEmail!!).set(data).await()
+
+            // Notify success.
+            onSuccess()
+        } catch (e: Exception) {
+            // Handle any exceptions.
+            onFailure(e)
         }
     }
 
