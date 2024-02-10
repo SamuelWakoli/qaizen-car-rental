@@ -39,10 +39,10 @@ fun GoogleSignInButton(
                 painter = painterResource(id = R.drawable.google_g_logo),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(36.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Sign in with Google", fontSize = 18.sp)
+            Text(text = "Sign in with Google", style = MaterialTheme.typography.titleMedium)
             if (isLoading) Spacer(modifier = Modifier.width(16.dp))
             if (isLoading) CircularProgressIndicator(
                 strokeWidth = 2.dp,
