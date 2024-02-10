@@ -1,7 +1,9 @@
 package com.qaizen.car_rental_qaizen.domain.repositories
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.qaizen.car_rental_qaizen.domain.model.UserData
 
 interface AuthRepository {
     val auth: FirebaseAuth
@@ -18,6 +20,18 @@ interface AuthRepository {
         name: String,
         email: String,
         password: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit,
+    )
+
+    suspend fun updateUserFirestoreData(
+        currentUser: FirebaseUser?,
+        data: UserData,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit,
+    )
+
+    suspend fun sendVerificationEmail(
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     )
