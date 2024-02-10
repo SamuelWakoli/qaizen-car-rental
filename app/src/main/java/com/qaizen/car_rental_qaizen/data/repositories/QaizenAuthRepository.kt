@@ -93,7 +93,7 @@ class QaizenAuthRepository : AuthRepository {
 
             // Update the user data in Firestore.
             firestore.collection(FirebaseDirectories.UsersCollection.name)
-                .document(data.userEmail!!).set(data).await()
+                .document(currentUser?.uid!!).set(data).await() //always use uid for the purpose of security best practice
 
             // Notify success.
             onSuccess()
