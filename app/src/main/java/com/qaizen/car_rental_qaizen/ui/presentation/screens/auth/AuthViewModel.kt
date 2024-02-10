@@ -20,18 +20,18 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     fun onSignInResult(result: GoogleSignInResult) = viewModelScope.launch {
-            authRepository.updateUserFirestoreData(
-                currentUser = Firebase.auth.currentUser,
-                data = result.data!!,
-                onSuccess = {
-                    _uiState.update { state ->
-                        state.copy(isSignInSuccess = true)
-                    }
-                },
-                onFailure = {
-                    _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
+        authRepository.updateUserFirestoreData(
+            currentUser = Firebase.auth.currentUser,
+            data = result.data!!,
+            onSuccess = {
+                _uiState.update { state ->
+                    state.copy(isSignInSuccess = true)
                 }
-            )
+            },
+            onFailure = {
+                _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
+            }
+        )
     }
 
     fun resetUiState() {
@@ -75,24 +75,9 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
         _uiState.update { it.copy(showPassword = !(it.showPassword)) }
     }
 
-    fun hideOrShowEmailSentDialog() {
-        _uiState.update { it.copy(showDialogPwdResetEmailSent = !(it.showDialogPwdResetEmailSent)) }
-    }
-
-    fun updateErrorMessage(message: String?) {
-        _uiState.update { it.copy(errorMessage = message) }
-    }
-
-    fun updateIsSignInButtonLoading(isLoading: Boolean) {
-        _uiState.update { it.copy(isSignInButtonLoading = isLoading) }
-    }
-
-    fun updateAuthStatus(isSignedIn: Boolean) {
-        _uiState.update { it.copy(isSignInSuccess = isSignedIn) }
-    }
 
     fun signInWithEmailPwd(
-        onSuccess: () -> Unit, onFailure: (Exception) -> Unit,
+        onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {},
     ) {
         val email = uiState.value.email
         val password = uiState.value.password
@@ -108,13 +93,34 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
             }
 
             viewModelScope.launch {
-                authRepository.signInWithEmailPwd(email, password, onSuccess, onFailure)
+                authRepository.signInWithEmailPwd(email, password,
+                    onSuccess = {
+                        _uiState.update {
+                            it.copy(
+                                isSignInButtonLoading = false,
+                                isSignInSuccess = true,
+                                errorMessage = null
+                            )
+                        }
+                        onSuccess()
+                    }, onFailure = { exception ->
+                        _uiState.update {
+                            it.copy(
+                                isSignInButtonLoading = false,
+                                isSignInSuccess = false,
+                                errorMessage = exception.message
+                            )
+                        }
+                        onFailure(exception)
+                    })
             }
         }
+
+
     }
 
     fun registerWithEmailPwd(
-        onSuccess: () -> Unit, onFailure: (Exception) -> Unit,
+        onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {},
     ) {
         val name = uiState.value.name
         val email = uiState.value.email
@@ -135,19 +141,55 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
 
             viewModelScope.launch {
-                authRepository.registerWithEmailPwd(name, email, password, onSuccess, onFailure)
+                authRepository.registerWithEmailPwd(name, email, password,
+                    onSuccess = {
+                        _uiState.update {
+                            it.copy(
+                                isSignInButtonLoading = false,
+                                isSignInSuccess = true,
+                                errorMessage = null
+                            )
+                        }
+                        onSuccess()
+                    }, onFailure = { exception ->
+                        _uiState.update {
+                            it.copy(
+                                isSignInButtonLoading = false,
+                                isSignInSuccess = false,
+                                errorMessage = exception.message
+                            )
+                        }
+                        onFailure(exception)
+                    })
             }
         }
     }
 
-    fun sendPwdResetLink(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) =
+
+    fun sendPwdResetLink(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) =
         viewModelScope.launch {
             val email = uiState.value.email
             if (email.isEmpty()) {
                 _uiState.update { it.copy(showEmailError = true) }
             } else {
                 _uiState.update { it.copy(isSignInButtonLoading = true) }
-                authRepository.sendPwdResetLink(email, onSuccess, onFailure)
+                authRepository.sendPwdResetLink(email, onSuccess = {
+                    _uiState.update {
+                        it.copy(
+                            isSignInButtonLoading = false,
+                            showDialogPwdResetEmailSent = true
+                        )
+                    }
+                    onSuccess()
+                }, onFailure = { exception ->
+                    _uiState.update {
+                        it.copy(
+                            isSignInButtonLoading = false,
+                            errorMessage = it.errorMessage
+                        )
+                    }
+                    onFailure(exception)
+                })
             }
         }.invokeOnCompletion {
             _uiState.update { it.copy(isSignInButtonLoading = false) }
