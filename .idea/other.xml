@@ -90,6 +90,7 @@
           <option name="screenDensity" value="420" />
           <option name="screenX" value="2208" />
           <option name="screenY" value="1840" />
+          <option name="selected" value="true" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
           <option name="api" value="33" />
@@ -212,6 +213,7 @@
           <option name="screenDensity" value="420" />
           <option name="screenX" value="1080" />
           <option name="screenY" value="2400" />
+          <option name="selected" value="true" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
           <option name="api" value="33" />
@@ -223,6 +225,7 @@
           <option name="screenDensity" value="320" />
           <option name="screenX" value="1600" />
           <option name="screenY" value="2560" />
+          <option name="selected" value="true" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
           <option name="api" value="29" />
@@ -237,6 +240,6 @@
         </PersistentDeviceSelectionData>
       </list>
     </option>
-    <option name="selectedCloudProject" value="easidial" />
+    <option name="selectedCloudProject" value="qaizen-49e94" />
   </component>
 </project>
