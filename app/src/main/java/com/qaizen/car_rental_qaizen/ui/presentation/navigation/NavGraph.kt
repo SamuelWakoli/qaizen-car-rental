@@ -55,7 +55,9 @@ fun NavGraph(
             HomeScreen()
         }
         composable(Screens.ContactUsScreen.route) {
-            ContactUsScreen()
+            ContactUsScreen(
+                navHostController = navHostController,
+            )
         }
     }
 }
