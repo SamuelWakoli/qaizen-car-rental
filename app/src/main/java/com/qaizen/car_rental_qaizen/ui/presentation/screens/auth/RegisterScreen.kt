@@ -3,6 +3,7 @@ package com.qaizen.car_rental_qaizen.ui.presentation.screens.auth
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -100,295 +102,305 @@ fun RegisterScreen(
     }
 
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
-    ) { innerPadding ->
-        Column(
-            Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
+    Box {
+        Image(
+            painter = painterResource(id = R.drawable.slide5),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
 
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+        ) { innerPadding ->
             Column(
-                modifier = Modifier
-                    .widthIn(max = 500.dp)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Row(
+
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp),
+                        .widthIn(max = 500.dp)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_round),
-                        contentDescription = "Qaizen Logo",
-                        modifier = Modifier.size(100.dp),
-                    )
-                }
-                Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                    text = "Qaizen Car Rental",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Start,
-                )
-                Spacer(modifier = Modifier.size(4.dp))
-                HorizontalDivider(
-                    modifier = Modifier.padding(end = 64.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Sign In",
+                    Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(24.dp))
-                            .clickable {
-                                if (navHostController.canUserNavigateUp) navHostController.navigateUp()
-                            }
-                            .padding(8.dp),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        textDecoration = TextDecoration.Underline,
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    VerticalDivider(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .height(32.dp)
-                    )
+                            .fillMaxWidth()
+                            .padding(start = 16.dp),
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_launcher_round),
+                            contentDescription = "Qaizen Logo",
+                            modifier = Modifier.size(100.dp),
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(16.dp))
                     Text(
-                        text = "Register",
-                        style = MaterialTheme.typography.displaySmall,
+                        text = "Qaizen Car Rental",
+                        style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Start,
                     )
-
+                    Spacer(modifier = Modifier.size(4.dp))
+                    HorizontalDivider(
+                        modifier = Modifier.padding(end = 64.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     Spacer(modifier = Modifier.size(8.dp))
-                } // End of Sign In Title Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Sign In",
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(24.dp))
+                                .clickable {
+                                    if (navHostController.canUserNavigateUp) navHostController.navigateUp()
+                                }
+                                .padding(8.dp),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            textDecoration = TextDecoration.Underline,
+                        )
+                        Spacer(modifier = Modifier.size(8.dp))
+                        VerticalDivider(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .height(32.dp)
+                        )
+                        Text(
+                            text = "Register",
+                            style = MaterialTheme.typography.displaySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+
+                        Spacer(modifier = Modifier.size(8.dp))
+                    } // End of Sign In Title Row
 
 
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedTextField(
-                    value = uiState.name,
-                    onValueChange = { value ->
-                        authViewModel.updateName(value)
-                    },
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    label = {
-                        Text(
-                            text = "Name",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    singleLine = false,
-                    maxLines = 2,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.AccountCircle,
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    isError = uiState.showNameError,
-                    supportingText = if (uiState.showNameError) {
-                        {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    OutlinedTextField(
+                        value = uiState.name,
+                        onValueChange = { value ->
+                            authViewModel.updateName(value)
+                        },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        label = {
                             Text(
-                                text = "Name cannot be empty",
-                                style = MaterialTheme.typography.bodySmall
+                                text = "Name",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.primary
                             )
-                        }
-                    } else null,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Words,
-                        autoCorrect = false,
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
-                    ),
-                    visualTransformation = VisualTransformation.None,
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedTextField(
-                    value = uiState.email,
-                    onValueChange = { value ->
-                        authViewModel.updateEmail(value)
-                    },
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    label = {
-                        Text(
-                            text = "Email",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    singleLine = false,
-                    maxLines = 2,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.Email,
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    isError = uiState.showEmailError,
-                    supportingText = if (uiState.showEmailError) {
-                        {
-                            Text(
-                                text = "Email cannot be empty",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    } else null,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.None,
-                        autoCorrect = false,
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next,
-                    ),
-                    visualTransformation = VisualTransformation.None,
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                OutlinedTextField(
-                    value = uiState.password,
-                    onValueChange = { value ->
-                        authViewModel.updatePassword(value)
-                    },
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    label = {
-                        Text(
-                            text = "Password",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    singleLine = true,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = if (uiState.showPassword) Icons.TwoTone.LockOpen
-                            else Icons.TwoTone.Lock,
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = { authViewModel.hideOrShowPassword() }) {
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        singleLine = false,
+                        maxLines = 2,
+                        leadingIcon = {
                             Icon(
-                                imageVector = if (uiState.showPassword) Icons.TwoTone.VisibilityOff else Icons.TwoTone.Visibility,
-                                contentDescription = if (uiState.showPassword) "Hide Password" else "Show Password",
+                                imageVector = Icons.TwoTone.AccountCircle,
+                                contentDescription = null,
                                 modifier = Modifier.size(28.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                        }
-                    },
-                    isError = uiState.showEmailError,
-                    supportingText = if (uiState.showEmailError) {
-                        {
+                        },
+                        isError = uiState.showNameError,
+                        supportingText = if (uiState.showNameError) {
+                            {
+                                Text(
+                                    text = "Name cannot be empty",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        } else null,
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words,
+                            autoCorrect = false,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                        ),
+                        visualTransformation = VisualTransformation.None,
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    OutlinedTextField(
+                        value = uiState.email,
+                        onValueChange = { value ->
+                            authViewModel.updateEmail(value)
+                        },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        label = {
                             Text(
-                                text = "Password cannot be empty",
-                                style = MaterialTheme.typography.bodySmall
+                                text = "Email",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        singleLine = false,
+                        maxLines = 2,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.Email,
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        isError = uiState.showEmailError,
+                        supportingText = if (uiState.showEmailError) {
+                            {
+                                Text(
+                                    text = "Email cannot be empty",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        } else null,
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.None,
+                            autoCorrect = false,
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next,
+                        ),
+                        visualTransformation = VisualTransformation.None,
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    OutlinedTextField(
+                        value = uiState.password,
+                        onValueChange = { value ->
+                            authViewModel.updatePassword(value)
+                        },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        label = {
+                            Text(
+                                text = "Password",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(24.dp),
+                        singleLine = true,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = if (uiState.showPassword) Icons.TwoTone.LockOpen
+                                else Icons.TwoTone.Lock,
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = { authViewModel.hideOrShowPassword() }) {
+                                Icon(
+                                    imageVector = if (uiState.showPassword) Icons.TwoTone.VisibilityOff else Icons.TwoTone.Visibility,
+                                    contentDescription = if (uiState.showPassword) "Hide Password" else "Show Password",
+                                    modifier = Modifier.size(28.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        },
+                        isError = uiState.showEmailError,
+                        supportingText = if (uiState.showEmailError) {
+                            {
+                                Text(
+                                    text = "Password cannot be empty",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        } else null,
+                        visualTransformation = if (uiState.showPassword)
+                            VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.None,
+                            autoCorrect = false,
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                    )
+
+
+
+                    Spacer(modifier = Modifier.size(32.dp))
+                    OutlinedButton(
+                        onClick = {
+                            if (uiState.isSignInButtonLoading) return@OutlinedButton
+                            keyboardController?.hide()
+                            authViewModel.registerWithEmailPwd()
+                        },
+                        modifier = Modifier
+                            .widthIn(max = 300.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Register",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                        if (uiState.isSignInButtonLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp)
+                                    .size(24.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.tertiary
                             )
                         }
-                    } else null,
-                    visualTransformation = if (uiState.showPassword)
-                        VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.None,
-                        autoCorrect = false,
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    ),
-                )
-
-
-
-                Spacer(modifier = Modifier.size(32.dp))
-                OutlinedButton(
-                    onClick = {
-                        if (uiState.isSignInButtonLoading) return@OutlinedButton
-                        keyboardController?.hide()
-                        authViewModel.registerWithEmailPwd()
-                    },
-                    modifier = Modifier
-                        .widthIn(max = 300.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Register",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center
-                    )
-                    if (uiState.isSignInButtonLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp)
-                                .size(24.dp),
-                            strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
                     }
+                    Spacer(modifier = Modifier.size(16.dp))
+                    GoogleSignInButton(
+                        modifier = Modifier
+                            .widthIn(max = 300.dp)
+                            .fillMaxWidth(),
+                        onClick = onSignInWithGoogle
+                    )
                 }
-                Spacer(modifier = Modifier.size(16.dp))
-                GoogleSignInButton(
-                    modifier = Modifier
-                        .widthIn(max = 300.dp)
-                        .fillMaxWidth(),
-                    onClick = onSignInWithGoogle
-                )
-            }
 
 
-            Row(
-                modifier = Modifier
-                    .widthIn(max = 600.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Start
-            ) {
                 Row(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .clickable {
-                            navHostController.navigate(Screens.ContactUsScreen.route) {
-                                launchSingleTop = true
-                            }
-                        }
+                        .widthIn(max = 600.dp)
+                        .fillMaxWidth()
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.TwoTone.Help,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = "Help",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.tertiary,
-                    )
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(24.dp))
+                            .clickable {
+                                navHostController.navigate(Screens.ContactUsScreen.route) {
+                                    launchSingleTop = true
+                                }
+                            }
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.TwoTone.Help,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            text = "Help",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                    }
                 }
             }
         }
