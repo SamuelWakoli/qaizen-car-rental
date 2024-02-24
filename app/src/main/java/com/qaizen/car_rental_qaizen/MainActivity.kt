@@ -7,16 +7,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseAuth
+import com.qaizen.car_rental_qaizen.data.repositories.UserPreferencesRepository
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.NavGraph
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.sign_in_with_google.GoogleAuthUiClient
 import com.qaizen.car_rental_qaizen.ui.theme.QaizenTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -28,13 +32,28 @@ class MainActivity : ComponentActivity() {
     }
     private val currentUser = FirebaseAuth.getInstance().currentUser
 
+    @Inject
+    lateinit var userDataStore: UserPreferencesRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
 
+            val themeData = userDataStore.getThemeData.collectAsState(initial = "Light").value
+            val dynamicColor = userDataStore.getDynamicColor.collectAsState(initial = false).value
 
-            QaizenTheme {
+
+
+
+            QaizenTheme(
+                darkTheme = when (themeData) {
+                    "Light" -> false
+                    "Dark" -> true
+                    else -> isSystemInDarkTheme()
+                },
+                dynamicColor = dynamicColor,
+            ) {
                 val authViewModel = hiltViewModel<AuthViewModel>()
                 // handles Google Sign in
                 val launcher = rememberLauncherForActivityResult(
