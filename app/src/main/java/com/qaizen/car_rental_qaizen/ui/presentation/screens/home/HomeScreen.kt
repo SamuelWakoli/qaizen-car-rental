@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -23,6 +24,7 @@ import com.qaizen.car_rental_qaizen.R
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.favorites.FavoritesPage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.home.HomePage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePage
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.service.ServicePage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.bottomNavItems
@@ -30,7 +32,10 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.top_app_bar.Hom
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navHostController: NavHostController,
+    morePageViewModel: MorePageViewModel
+) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -55,7 +60,9 @@ fun HomeScreen() {
             topBar = {
                 HomeTopAppBar(
                     topAppBarScrollBehavior = topAppBarScrollBehavior,
+                    navHostController = navHostController,
                     bottomNavHostController = bottomNavHostController,
+                    morePageViewModel = morePageViewModel,
                 )
             },
             bottomBar = {

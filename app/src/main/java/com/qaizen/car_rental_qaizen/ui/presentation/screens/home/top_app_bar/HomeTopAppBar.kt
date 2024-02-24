@@ -24,6 +24,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -34,17 +37,23 @@ import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.car_rental_qaizen.R
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.dialogs.ThemeSelectDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(
     modifier: Modifier = Modifier,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    navHostController: NavHostController,
     bottomNavHostController: NavHostController,
+    morePageViewModel: MorePageViewModel,
 ) {
 
     val navBackStackEntry by bottomNavHostController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
         scrollBehavior = topAppBarScrollBehavior,
@@ -89,13 +98,17 @@ fun HomeTopAppBar(
                 }
             }
 
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { showThemeDialog = true }) {
                 Icon(
                     imageVector = if (isSystemInDarkTheme()) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
                     contentDescription = "Update theme"
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                navHostController.navigate(Screens.ContactUsScreen.route) {
+                    launchSingleTop = true
+                }
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.ContactSupport,
                     contentDescription = "Contact Us"
@@ -116,4 +129,10 @@ fun HomeTopAppBar(
             actionIconContentColor = MaterialTheme.colorScheme.primary
         )
     )
+
+    if (showThemeDialog) {
+        ThemeSelectDialog(onDismissRequest = {
+            showThemeDialog = false
+        }, morePageViewModel = morePageViewModel)
+    }
 }

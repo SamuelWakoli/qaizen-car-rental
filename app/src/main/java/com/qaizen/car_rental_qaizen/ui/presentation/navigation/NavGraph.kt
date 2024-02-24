@@ -2,6 +2,7 @@ package com.qaizen.car_rental_qaizen.ui.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,6 +13,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.ForgotPasswordScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.RegisterScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.SignInScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.contact_us.ContactUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.HomeScreen
 
@@ -27,6 +29,8 @@ fun NavGraph(
     onSignInWithGoogle: () -> Unit,
 ) {
     val navHostController = rememberNavController()
+
+    val morePageViewModel: MorePageViewModel = hiltViewModel()
 
 
     NavHost(
@@ -52,7 +56,10 @@ fun NavGraph(
             ForgotPasswordScreen(navHostController = navHostController, viewModel = authViewModel)
         }
         composable(Screens.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(
+                navHostController = navHostController,
+                morePageViewModel = morePageViewModel,
+            )
         }
         composable(Screens.ContactUsScreen.route) {
             ContactUsScreen(
