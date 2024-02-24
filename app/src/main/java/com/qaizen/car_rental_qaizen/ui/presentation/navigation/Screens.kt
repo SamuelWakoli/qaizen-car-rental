@@ -13,4 +13,6 @@ sealed class Screens(val route: String) {
     data object FavouritesPage : Screens("favourites_page")
     data object MorePage : Screens("more_page")
 
+
+    data object SearchScreen : Screens("search_screen")
 }

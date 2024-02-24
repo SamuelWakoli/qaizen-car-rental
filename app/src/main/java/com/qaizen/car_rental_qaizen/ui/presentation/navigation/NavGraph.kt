@@ -16,6 +16,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.SignInScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.contact_us.ContactUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.HomeScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.search.SearchScreen
 
 
 val NavHostController.canUserNavigateUp: Boolean
@@ -65,6 +66,9 @@ fun NavGraph(
             ContactUsScreen(
                 navHostController = navHostController,
             )
+        }
+        composable(Screens.SearchScreen.route){
+            SearchScreen()
         }
     }
 }

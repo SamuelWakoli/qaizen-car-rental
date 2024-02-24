@@ -92,7 +92,11 @@ fun HomeTopAppBar(
         actions = {
             when (currentRoute) {
                 Screens.HomePage.route -> {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navHostController.navigate(Screens.SearchScreen.route) {
+                            launchSingleTop = true
+                        }
+                    }) {
                         Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
                     }
                 }
