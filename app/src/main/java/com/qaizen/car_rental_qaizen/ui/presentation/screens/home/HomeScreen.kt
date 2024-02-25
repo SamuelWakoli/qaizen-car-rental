@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.top_app_bar.Hom
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    windowSize: WindowSizeClass,
     navHostController: NavHostController,
     morePageViewModel: MorePageViewModel
 ) {
@@ -83,7 +85,10 @@ fun HomeScreen(
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             ) {
                 composable(bottomNavItems.first().route) {
-                    HomePage()
+                    HomePage(
+                        windowSize = windowSize,
+                        navHostController = navHostController,
+                    )
                 }
                 composable(bottomNavItems[1].route) {
                     ServicePage()

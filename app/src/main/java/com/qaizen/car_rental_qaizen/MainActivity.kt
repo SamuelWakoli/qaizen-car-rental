@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
@@ -35,17 +37,15 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var userDataStore: UserPreferencesRepository
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val windowSize = calculateWindowSizeClass(this)
 
             val themeData = userDataStore.getThemeData.collectAsState(initial = "Light").value
             val dynamicColor = userDataStore.getDynamicColor.collectAsState(initial = false).value
-
-
-
-
             QaizenTheme(
                 darkTheme = when (themeData) {
                     "Light" -> false
@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                 NavGraph(
+                    windowSize = windowSize,
                     currentUser = currentUser,
                     authViewModel = authViewModel,
                     onSignInWithGoogle = {

@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +29,7 @@ fun NavGraph(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     onSignInWithGoogle: () -> Unit,
+    windowSize: WindowSizeClass,
 ) {
     val navHostController = rememberNavController()
 
@@ -58,6 +60,7 @@ fun NavGraph(
         }
         composable(Screens.HomeScreen.route) {
             HomeScreen(
+                windowSize = windowSize,
                 navHostController = navHostController,
                 morePageViewModel = morePageViewModel,
             )
@@ -68,7 +71,10 @@ fun NavGraph(
             )
         }
         composable(Screens.SearchScreen.route){
-            SearchScreen()
+            SearchScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
         }
     }
 }
