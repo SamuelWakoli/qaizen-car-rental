@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseUser
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.about_us.AboutUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.ForgotPasswordScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.RegisterScreen
@@ -68,6 +69,11 @@ fun NavGraph(
         }
         composable(Screens.ContactUsScreen.route) {
             ContactUsScreen(
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.AboutUsScreen.route) {
+            AboutUsScreen(
                 navHostController = navHostController,
             )
         }

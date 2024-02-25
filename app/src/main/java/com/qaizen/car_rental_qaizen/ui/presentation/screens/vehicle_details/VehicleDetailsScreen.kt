@@ -68,7 +68,6 @@ fun VehicleDetailsScreen(windowSize: WindowSizeClass, navHostController: NavHost
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                     ) {
-                        Text(text = "Subaru Legacy B4", style = MaterialTheme.typography.titleLarge)
                         Text(text = "Mid-size Sedan", style = MaterialTheme.typography.titleMedium)
                         Text(text = "Available")
                         Text(text = "Ksh. 10,000 /day", fontWeight = FontWeight.Bold)

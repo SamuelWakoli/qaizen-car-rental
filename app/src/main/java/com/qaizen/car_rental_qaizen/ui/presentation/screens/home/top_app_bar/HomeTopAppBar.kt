@@ -59,6 +59,11 @@ fun HomeTopAppBar(
         scrollBehavior = topAppBarScrollBehavior,
         navigationIcon = {
             Card(
+                onClick = {
+                    navHostController.navigate(Screens.AboutUsScreen.route) {
+                        launchSingleTop = true
+                    }
+                },
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primary
