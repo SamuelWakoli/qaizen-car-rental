@@ -4,9 +4,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.More
 import androidx.compose.material.icons.automirrored.outlined.More
 import androidx.compose.material.icons.filled.Cases
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Cases
+import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,9 +30,9 @@ val bottomNavItems = listOf(
     ),
     BottomNavItem(
         route = Screens.ServicesPage.route,
-        label = "Service",
-        selectedIcon = Icons.Filled.Cases,
-        unselectedIcon = Icons.Outlined.Cases,
+        label = "Dashboard",
+        selectedIcon = Icons.Filled.Dashboard,
+        unselectedIcon = Icons.Outlined.Dashboard,
     ),
     BottomNavItem(
         route = Screens.FavouritesPage.route,
