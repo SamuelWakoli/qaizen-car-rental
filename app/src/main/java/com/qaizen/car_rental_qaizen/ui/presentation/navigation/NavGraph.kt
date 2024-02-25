@@ -18,6 +18,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.mor
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.contact_us.ContactUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.HomeScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.search.SearchScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreen
 
 
 val NavHostController.canUserNavigateUp: Boolean
@@ -72,6 +73,12 @@ fun NavGraph(
         }
         composable(Screens.SearchScreen.route){
             SearchScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.VehicleDetailsScreen.route) {
+            VehicleDetailsScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
             )
