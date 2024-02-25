@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Expand
+import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,10 +50,10 @@ fun CoilImage(
     showOpenImageButton: Boolean = false,
     openImageButtonContent: @Composable () -> Unit = {
         Icon(
-            imageVector = Icons.Outlined.Expand,
+            imageVector = Icons.Outlined.OpenInFull,
             contentDescription = "Expand image",
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(4.dp)
         )
     },
     errorContent: @Composable (() -> Unit)? = null,
