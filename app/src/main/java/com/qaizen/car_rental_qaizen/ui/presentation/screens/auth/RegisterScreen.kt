@@ -206,8 +206,7 @@ fun RegisterScreen(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        singleLine = false,
-                        maxLines = 2,
+                        singleLine = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.TwoTone.AccountCircle,
@@ -249,8 +248,7 @@ fun RegisterScreen(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        singleLine = false,
-                        maxLines = 2,
+                        singleLine = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.TwoTone.Email,
