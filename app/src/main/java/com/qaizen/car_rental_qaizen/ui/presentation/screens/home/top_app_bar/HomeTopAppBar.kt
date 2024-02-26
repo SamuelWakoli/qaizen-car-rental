@@ -131,7 +131,11 @@ fun HomeTopAppBar(
                     .padding(end = 8.dp)
                     .size(42.dp)
                     .clip(CircleShape)
-                    .clickable { }
+                    .clickable {
+                        navHostController.navigate(Screens.ProfileScreen.route) {
+                            launchSingleTop = true
+                        }
+                    }
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
