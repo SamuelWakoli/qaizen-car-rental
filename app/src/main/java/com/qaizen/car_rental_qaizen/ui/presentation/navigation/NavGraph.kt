@@ -18,7 +18,12 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.SignInScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.contact_us.ContactUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.HomeScreen
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile.ProfileScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.notifications.NotificationsScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.edit_profile.EditProfileScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.payment_history.PaymentHistoryScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.payment_info.PaymentInfoScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile.ProfileScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.rental_history.RentalHistoryScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.search.SearchScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreen
 
@@ -80,6 +85,36 @@ fun NavGraph(
         }
         composable(Screens.ProfileScreen.route) {
             ProfileScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.EditProfileScreen.route) {
+            EditProfileScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.PaymentInfoScreen.route) {
+            PaymentInfoScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.PaymentHistoryScreen.route) {
+            PaymentHistoryScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.RentalHistoryScreen.route) {
+            RentalHistoryScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.NotificationsScreen.route) {
+            NotificationsScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
             )

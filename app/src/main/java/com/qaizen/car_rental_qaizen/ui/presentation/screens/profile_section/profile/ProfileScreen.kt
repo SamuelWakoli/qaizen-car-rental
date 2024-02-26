@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile
+package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
@@ -16,6 +16,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +40,11 @@ fun ProfileScreen(
                 },
                 title = { Text(text = "Profile") },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navHostController.navigate(Screens.EditProfileScreen.route) {
+                            launchSingleTop = true
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
                             contentDescription = "Edit Profile",

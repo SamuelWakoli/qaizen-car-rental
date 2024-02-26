@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile
+package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
+import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 
 @Composable
 fun ProfileScreenCompact(innerPadding: PaddingValues, navHostController: NavHostController) {
@@ -51,26 +52,45 @@ fun ProfileScreenCompact(innerPadding: PaddingValues, navHostController: NavHost
                     Text(text = FirebaseAuth.getInstance().currentUser?.displayName.toString())
                 },
                 supportingContent = { Text(text = FirebaseAuth.getInstance().currentUser?.email.toString()) })
+
+
             Spacer(modifier = Modifier.size(16.dp))
-            //TODO: Update click listeners to navigate to the correct screen
             ProfileListItem(
                 leadingIcon = Icons.Outlined.Payment,
-                label = "Payment Information", onClick = {})
+                label = "Payment Information",
+                onClick = {
+                    navHostController.navigate(Screens.PaymentInfoScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
 
             ProfileListItem(leadingIcon = Icons.Outlined.Payments,
-                label = "Payment History", onClick = {})
+                label = "Payment History", onClick = {
+                    navHostController.navigate(Screens.PaymentHistoryScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
 
             ProfileListItem(leadingIcon = Icons.Outlined.History,
-                label = "Rental History", onClick = {})
+                label = "Rental History", onClick = {
+                    navHostController.navigate(Screens.RentalHistoryScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
 
             ProfileListItem(leadingIcon = Icons.Outlined.Notifications,
-                label = "Notifications", onClick = {})
+                label = "Notifications", onClick = {
+                    navHostController.navigate(Screens.NotificationsScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
 
             ProfileListItem(leadingIcon = Icons.AutoMirrored.Outlined.ContactSupport,
-                label = "Support", onClick = {})
-
-
-
+                label = "Support", onClick = {
+                    navHostController.navigate(Screens.ContactUsScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
             Spacer(modifier = Modifier.size(16.dp))
         }
     }

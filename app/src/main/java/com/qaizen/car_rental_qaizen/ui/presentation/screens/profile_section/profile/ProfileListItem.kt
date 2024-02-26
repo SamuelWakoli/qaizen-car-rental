@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile
+package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
