@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,6 +49,9 @@ fun ProfileScreenCompact(innerPadding: PaddingValues, navHostController: NavHost
                         .size(100.dp),
                 )
             },
+                overlineContent = {
+                    Text(text = "0712345678")
+                },
                 headlineContent = {
                     Text(text = FirebaseAuth.getInstance().currentUser?.displayName.toString())
                 },
@@ -88,6 +92,13 @@ fun ProfileScreenCompact(innerPadding: PaddingValues, navHostController: NavHost
             ProfileListItem(leadingIcon = Icons.AutoMirrored.Outlined.ContactSupport,
                 label = "Support", onClick = {
                     navHostController.navigate(Screens.ContactUsScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
+
+            ProfileListItem(leadingIcon = Icons.Outlined.Policy,
+                label = "Privacy Policy", onClick = {
+                    navHostController.navigate(Screens.PrivacyPolicyScreen.route) {
                         launchSingleTop = true
                     }
                 })

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,14 +55,20 @@ fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHos
                     .size(100.dp),
             )
             Spacer(modifier = Modifier.size(16.dp))
-            Text(
-                text = FirebaseAuth.getInstance().currentUser?.displayName.toString(),
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                text = FirebaseAuth.getInstance().currentUser?.email.toString(),
-                style = MaterialTheme.typography.titleMedium,
-            )
+            Column {
+                Text(
+                    text = "0712345678",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Text(
+                    text = FirebaseAuth.getInstance().currentUser?.displayName.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Text(
+                    text = FirebaseAuth.getInstance().currentUser?.email.toString(),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
         }
 
 
@@ -108,6 +115,13 @@ fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHos
             ProfileListItem(leadingIcon = Icons.AutoMirrored.Outlined.ContactSupport,
                 label = "Support", onClick = {
                     navHostController.navigate(Screens.ContactUsScreen.route) {
+                        launchSingleTop = true
+                    }
+                })
+
+            ProfileListItem(leadingIcon = Icons.Outlined.Policy,
+                label = "Privacy Policy", onClick = {
+                    navHostController.navigate(Screens.PrivacyPolicyScreen.route) {
                         launchSingleTop = true
                     }
                 })
