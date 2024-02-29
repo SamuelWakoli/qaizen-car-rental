@@ -78,7 +78,7 @@ fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHos
         Column(
             modifier = Modifier
                 .widthIn(max = 380.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState()).padding(end = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.rental_history
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,7 +53,7 @@ fun RentalHistoryScreen(windowSize: WindowSizeClass, navHostController: NavHostC
         )
     }) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
+            modifier = Modifier.fillMaxSize()
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

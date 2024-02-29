@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.notifications
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -73,7 +74,7 @@ fun NotificationsScreen(windowSize: WindowSizeClass, navHostController: NavHostC
         )
     }) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
+            modifier = Modifier.fillMaxSize()
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
