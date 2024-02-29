@@ -35,7 +35,12 @@ fun HomePage(
                         navHostController.navigate(Screens.VehicleDetailsScreen.route) {
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    onClickBook = {
+                        navHostController.navigate(Screens.BookingScreen.route) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
         }
