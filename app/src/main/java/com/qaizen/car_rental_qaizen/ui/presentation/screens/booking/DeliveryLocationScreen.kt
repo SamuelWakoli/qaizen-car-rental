@@ -19,20 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
+import org.w3c.dom.Text
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeliveryLocationScreen(windowSize: WindowSizeClass, navHostController: NavHostController) {
 
     val context = LocalContext.current
-
-    val appInfo = context.packageManager.getApplicationInfo(context.packageName, 0)
-
-    val mapKey = appInfo.metaData.getString("com.google.android.geo.API_KEY")
-    val webKey = appInfo.metaData.getString("web_client_id")
-
-    println("MAPS SCREEN: mapKey: $mapKey")
-    println("MAPS SCREEN: webKey: $webKey")
 
     Scaffold(
         topBar = {
