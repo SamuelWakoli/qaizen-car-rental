@@ -15,6 +15,7 @@ lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.2"
 composeBom = "2024.02.00"
 lifecycleViewmodelCompose = "2.7.0"
+mapsCompose = "4.3.3"
 material3 = "1.2.0"
 material3Adaptive = "1.0.0-alpha06"
 material3AdaptiveNavigationSuite = "1.0.0-alpha03"
@@ -57,6 +58,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 lifecycle-viewmodel-compose = { module = " androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 navigation-compose = { module = " androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }

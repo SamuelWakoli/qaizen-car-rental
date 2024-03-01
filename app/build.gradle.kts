@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
 
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
@@ -98,7 +100,7 @@ dependencies {
 
     // Adaptive Screen
     implementation(libs.material3)
-    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.0")
     implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
 
@@ -112,6 +114,9 @@ dependencies {
     // Permissions
     implementation(libs.accompanist.permissions)
 
+    // Android Maps Compose composables for the Maps SDK for Android
+    implementation(libs.maps.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -119,4 +124,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+secrets {
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+    defaultPropertiesFileName = "local.properties"
+
+    // Configure which keys should be ignored by the plugin by providing regular expressions.
+    // "sdk.dir" is ignored by default.
+    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
 }

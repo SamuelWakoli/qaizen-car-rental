@@ -15,6 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Qaizen"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <meta-data
+            android:name="web_client_id"
+            android:value="${WEB_CLIENT_ID}" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
