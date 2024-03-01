@@ -15,7 +15,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.ForgotPasswordScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.RegisterScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.SignInScreen
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.BookingScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.booking_screen.BookingScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.DeliveryLocationScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.SummaryScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel

@@ -22,7 +22,8 @@ import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
 fun VehicleDetailsScreenAppbar(
     navHostController: NavHostController,
     vehicleName: String,
-    onClickShare: () -> Unit,
+    showShareButton: Boolean = true,
+    onClickShare: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
 
@@ -41,7 +42,7 @@ fun VehicleDetailsScreenAppbar(
         },
         title = { Text(text = vehicleName) },
         actions = {
-            IconButton(onClick = onClickShare) {
+            if (showShareButton) IconButton(onClick = onClickShare) {
                 Icon(imageVector = Icons.TwoTone.Share, contentDescription = "Share")
             }
         },
