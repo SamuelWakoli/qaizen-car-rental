@@ -128,6 +128,7 @@ dependencies {
 
     // Android Maps Compose composables for the Maps SDK for Android
     implementation(libs.maps.compose)
+    implementation("com.google.android.libraries.places:places:3.3.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
