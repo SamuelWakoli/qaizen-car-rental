@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Qaizen</string>
     <string name="web_client_id">87554971667-4pn7ch1vg3tousjpcl22hbr5g8k2upb6.apps.googleusercontent.com</string>
+    <string name="permission_request_text">To get the best experience, this application requires permission to access your location. Denying this permission may restrict your ability to use location-based features.</string>
+    <string name="go_to_settings_description">In case you are unable to give permission from here, please go to Settings > Permissions > Location and allow the permission manually.</string>
 </resources>
