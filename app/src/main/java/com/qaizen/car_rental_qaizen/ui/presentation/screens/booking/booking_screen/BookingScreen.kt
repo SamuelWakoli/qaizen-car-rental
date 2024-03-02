@@ -22,6 +22,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ElevatedButton
@@ -157,6 +160,13 @@ fun BookingScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Card(onClick = { showDatePickerDialog = true }) {
                     ListItem(
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.DateRange,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        },
                         headlineContent = { Text(text = "Pick up date") },
                         supportingContent = {
                             Text(text = datePickerState.selectedDateMillis?.let {
@@ -172,6 +182,13 @@ fun BookingScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Card(onClick = { showTimePickerDialog = true }) {
                     ListItem(
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.AccessTime,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        },
                         headlineContent = { Text(text = "Pick up time") },
                         supportingContent = {
                             val formattedTime = if (timePickerState.is24hour) {
@@ -267,6 +284,13 @@ fun BookingScreen(
                         }
                     }) {
                         ListItem(
+                            leadingContent = {
+                                Icon(
+                                    imageVector = Icons.Outlined.LocationOn,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            },
                             headlineContent = { Text(text = "Select delivery location") },
                             supportingContent = {
                                 Text(
