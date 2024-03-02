@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.booking_screen
 
+import android.Manifest
 import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -41,6 +42,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -50,20 +52,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.qaizen.car_rental_qaizen.R
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.delivery_location.LocationPermissionDialog
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreenAppbar
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun BookingScreen(
     modifier: Modifier = Modifier,
@@ -74,6 +82,12 @@ fun BookingScreen(
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val verticalScrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
+
+    val fineLocationPermission =
+        rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)
+    var showPermissionReqDialog by remember {
+        mutableStateOf(false)
+    }
 
 
     val datePickerState = rememberDatePickerState(
@@ -244,8 +258,12 @@ fun BookingScreen(
                 if (needsDelivery == "Yes") {
                     Spacer(modifier = Modifier.height(8.dp))
                     Card(onClick = {
-                        navHostController.navigate(Screens.DeliveryLocationScreen.route) {
-                            launchSingleTop = true
+                        if (fineLocationPermission.status.isGranted) {
+                            navHostController.navigate(Screens.DeliveryLocationScreen.route) {
+                                launchSingleTop = true
+                            }
+                        } else {
+                            showPermissionReqDialog = true
                         }
                     }) {
                         ListItem(
@@ -298,6 +316,16 @@ fun BookingScreen(
             BookingTimePickerDialog(
                 onDismissRequest = { showTimePickerDialog = false },
                 timePickerState = timePickerState
+            )
+        }
+
+        if (showPermissionReqDialog) {
+            LocationPermissionDialog(
+                onDismissRequest = {
+                    showPermissionReqDialog = false
+                    fineLocationPermission.launchPermissionRequest()
+                },
+                message = stringResource(R.string.permission_request_text)
             )
         }
     }
