@@ -1,7 +1,5 @@
 package com.qaizen.car_rental_qaizen.data.repositories
 
-import android.util.Log
-import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -15,7 +13,7 @@ import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 class QaizenAuthRepository : AuthRepository {
@@ -59,9 +57,10 @@ class QaizenAuthRepository : AuthRepository {
             val userData = UserData(
                 currentUser.uid, name, currentUser.photoUrl, email, tokenList
             )
+            onSuccess.invoke()
 
             // Update the user data in Firestore.
-            updateUserFirestoreData(currentUser, userData, onSuccess, onFailure)
+            updateUserFirestoreData(currentUser, userData, onFailure)
         } catch (e: Exception) {
             // Handle any exceptions.
             onFailure(e)
@@ -79,7 +78,6 @@ class QaizenAuthRepository : AuthRepository {
     override suspend fun updateUserFirestoreData(
         currentUser: FirebaseUser?,
         data: UserData,
-        onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
         try {
@@ -91,12 +89,13 @@ class QaizenAuthRepository : AuthRepository {
                 }
             )?.await()
 
+            delay(10_000)
             // Update the user data in Firestore.
             firestore.collection(FirebaseDirectories.UsersCollection.name)
-                .document(currentUser?.uid!!).set(data).await() //always use uid for the purpose of security best practice
+                .document(currentUser?.uid!!).set(data)
+                .await() //always use uid for the purpose of security best practice
 
-            // Notify success.
-            onSuccess()
+
         } catch (e: Exception) {
             // Handle any exceptions.
             onFailure(e)
