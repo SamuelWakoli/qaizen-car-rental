@@ -10,7 +10,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
-import com.qaizen.car_rental_qaizen.R
+import com.qaizen.car_rental_qaizen.BuildConfig
 import com.qaizen.car_rental_qaizen.domain.model.UserData
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
@@ -25,9 +25,7 @@ class GoogleAuthUiClient(
         BeginSignInRequest.builder().setGoogleIdTokenRequestOptions(
             GoogleIdTokenRequestOptions.builder().setSupported(true)
                 .setFilterByAuthorizedAccounts(false).setServerClientId(
-                    context.getString(
-                        R.string.web_client_id
-                    )
+                    BuildConfig.WEB_CLIENT_ID
                 ).build()
         ).setAutoSelectEnabled(true).build()
 

@@ -32,6 +32,8 @@ android {
         // Set API keys in BuildConfig
         buildConfigField("String", "MAPS_API_KEY", "\"${properties.getProperty(" MAPS_API_KEY ")}\"")
 
+        buildConfigField("String", "WEB_CLIENT_ID", "\"${properties.getProperty(" WEB_CLIENT_ID ")}\"")
+
     }
 
     buildTypes {
@@ -128,7 +130,7 @@ dependencies {
 
     // Android Maps Compose composables for the Maps SDK for Android
     implementation(libs.maps.compose)
-    implementation("com.google.android.libraries.places:places:3.3.0")
+    implementation(libs.places)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

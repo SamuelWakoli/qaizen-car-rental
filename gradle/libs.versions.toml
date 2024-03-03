@@ -1,11 +1,11 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
-agp = "8.2.2"
+agp = "8.3.0"
 coilCompose = "2.4.0"
 datastorePreferences = "1.0.0"
 hiltAndroid = "2.50"
-hiltCompilerVersion = "1.1.0"
-hiltNavigationCompose = "1.1.0"
+hiltCompilerVersion = "1.2.0"
+hiltNavigationCompose = "1.2.0"
 kotlin = "1.9.20"
 coreKtx = "1.12.0"
 junit = "4.13.2"
@@ -13,21 +13,22 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.2"
-composeBom = "2024.02.00"
+composeBom = "2024.02.01"
 lifecycleViewmodelCompose = "2.7.0"
 mapsCompose = "4.3.3"
 material3 = "1.2.0"
 material3Adaptive = "1.0.0-alpha06"
-material3AdaptiveNavigationSuite = "1.0.0-alpha03"
-materialIconsExtended = "1.6.1"
+material3AdaptiveNavigationSuite = "1.0.0-alpha03" #1.0.0-alpha04 has duplicate class
+materialIconsExtended = "1.6.2"
 media3Exoplayer = "1.2.1"
 navigationCompose = "2.7.7"
-googleServices = "4.4.0"
+googleServices = "4.4.1"
 firebaseAuth = "22.3.1"
-firebaseFirestore = "24.10.1"
+firebaseFirestore = "24.10.3"
 firebaseStorage = "20.3.0"
-playServicesAuth = "20.7.0"
-firebaseMessaging = "23.4.0"
+playServicesAuth = "21.0.0"
+firebaseMessaging = "23.4.1"
+places = "3.3.0"
 secretsGradlePlugin = "2.0.1"
 
 [libraries]
@@ -68,6 +69,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 
 [plugins]
