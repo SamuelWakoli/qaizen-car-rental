@@ -57,7 +57,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.car_rental_qaizen.R
@@ -75,7 +74,6 @@ fun RegisterScreen(
 ) {
 
     val uiState = authViewModel.uiState.collectAsState().value
-    val coroutineScope = authViewModel.viewModelScope
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -363,7 +361,11 @@ fun RegisterScreen(
                         modifier = Modifier
                             .widthIn(max = 300.dp)
                             .fillMaxWidth(),
-                        onClick = onSignInWithGoogle
+                        isLoading = uiState.isGoogleSignInButtonLoading,
+                        onClick = {
+                            authViewModel.updateGoogleBtnLoading()
+                            onSignInWithGoogle()
+                        }
                     )
                 }
 

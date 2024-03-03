@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.twotone.ArrowBack
 import androidx.compose.material.icons.automirrored.twotone.Send
 import androidx.compose.material.icons.twotone.Email
@@ -165,8 +164,7 @@ fun ForgotPasswordScreen(
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                             .focusRequester(focusRequester),
                         shape = RoundedCornerShape(24.dp),
-                        singleLine = false,
-                        maxLines = 2,
+                        singleLine = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.TwoTone.Email,

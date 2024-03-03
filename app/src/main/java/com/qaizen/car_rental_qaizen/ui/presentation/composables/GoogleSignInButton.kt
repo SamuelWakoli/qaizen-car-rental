@@ -1,4 +1,5 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.composables
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.qaizen.car_rental_qaizen.R
 
 @Composable
@@ -28,7 +28,10 @@ fun GoogleSignInButton(
 ) {
     ElevatedButton(
         modifier = modifier,
-        onClick = onClick
+        onClick = {
+            if (isLoading) return@ElevatedButton
+            onClick.invoke()
+        }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
@@ -19,15 +20,25 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     private var _uiState: MutableStateFlow<AuthUiState> = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
+    companion object {
+        private const val TAG = "AuthViewModel"
+    }
+
+    fun updateGoogleBtnLoading() {
+        _uiState.update { it.copy(isGoogleSignInButtonLoading = !it.isGoogleSignInButtonLoading) }
+    }
+
     fun onSignInResult(result: GoogleSignInResult) = viewModelScope.launch {
+        Log.d(TAG, "onSignInResult: $result")
+        _uiState.update { state ->
+            state.copy(
+                isGoogleSignInButtonLoading = false,
+                isSignInSuccess = true
+            )
+        }
         authRepository.updateUserFirestoreData(
             currentUser = Firebase.auth.currentUser,
             data = result.data!!,
-            onSuccess = {
-                _uiState.update { state ->
-                    state.copy(isSignInSuccess = true)
-                }
-            },
             onFailure = {
                 _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
             }

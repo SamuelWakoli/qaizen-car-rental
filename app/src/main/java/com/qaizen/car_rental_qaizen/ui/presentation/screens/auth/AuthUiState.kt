@@ -11,6 +11,7 @@ data class AuthUiState(
     val errorMessage: String? = null,
 
     val isSignInButtonLoading: Boolean = false,
+    val isGoogleSignInButtonLoading: Boolean = false,
     val showPassword: Boolean = false,
     val showNameError: Boolean = false,
     val showEmailError: Boolean = false,
