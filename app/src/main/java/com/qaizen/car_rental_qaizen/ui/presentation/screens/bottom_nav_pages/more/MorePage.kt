@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.qaizen.car_rental_qaizen.BuildConfig
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CustomQaizenListItem
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 
@@ -161,7 +162,28 @@ fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController
                 leadingIcon = Icons.Outlined.Share,
                 label = "Share with friends",
                 onClick = {
-                    // TODO: An intent to share the app
+                    val appId = BuildConfig.APPLICATION_ID
+                    val appUrl = "https://play.google.com/store/apps/details?id=$appId"
+
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        putExtra(Intent.EXTRA_SUBJECT, "Qaizen Car Rental")
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Download Qaizen car rental app from Google Play: $appUrl"
+                        )
+                        type = "text/plain"
+                    }
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast
+                            .makeText(
+                                context,
+                                "No sharing app found",
+                                Toast.LENGTH_LONG
+                            )
+                            .show()
+                    }
                 },
             )
             HorizontalDivider(
