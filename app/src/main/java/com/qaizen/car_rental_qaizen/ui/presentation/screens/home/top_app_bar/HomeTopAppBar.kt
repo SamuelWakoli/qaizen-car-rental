@@ -44,6 +44,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.dialogs.ThemeSelectD
 @Composable
 fun HomeTopAppBar(
     modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     navHostController: NavHostController,
     bottomNavHostController: NavHostController,
@@ -109,7 +110,7 @@ fun HomeTopAppBar(
 
             IconButton(onClick = { showThemeDialog = true }) {
                 Icon(
-                    imageVector = if (isSystemInDarkTheme()) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
+                    imageVector = if (darkTheme) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
                     contentDescription = "Update theme"
                 )
             }

@@ -38,6 +38,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.top_app_bar.Hom
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    darkTheme: Boolean,
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
     morePageViewModel: MorePageViewModel,
@@ -56,6 +57,7 @@ fun HomeScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             HomeTopAppBar(
+                darkTheme = darkTheme,
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 navHostController = navHostController,
                 bottomNavHostController = bottomNavHostController,

@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseUser
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.about_us.AboutUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.ForgotPasswordScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.RegisterScreen
@@ -19,9 +18,10 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.booking_scre
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.delivery_location.DeliveryLocationScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.summary.SummaryScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.contact_us.ContactUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.HomeScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.notifications.NotificationsScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.about_us.AboutUsScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.contact_us.ContactUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.privacy_policy.PrivacyPolicyScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.edit_profile.EditProfileScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.payment_history.PaymentHistoryScreen
@@ -37,6 +37,7 @@ val NavHostController.canUserNavigateUp: Boolean
 
 @Composable
 fun NavGraph(
+    darkTheme: Boolean,
     currentUser: FirebaseUser?,
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
@@ -72,6 +73,7 @@ fun NavGraph(
         }
         composable(Screens.HomeScreen.route) {
             HomeScreen(
+                darkTheme = darkTheme,
                 windowSize = windowSize,
                 navHostController = navHostController,
                 morePageViewModel = morePageViewModel,

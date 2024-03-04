@@ -70,6 +70,11 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                 NavGraph(
+                    darkTheme = when (themeData) {
+                        "Light" -> false
+                        "Dark" -> true
+                        else -> isSystemInDarkTheme()
+                    },
                     windowSize = windowSize,
                     currentUser = currentUser,
                     authViewModel = authViewModel,
