@@ -13,7 +13,6 @@ import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 class QaizenAuthRepository : AuthRepository {
@@ -60,7 +59,7 @@ class QaizenAuthRepository : AuthRepository {
             onSuccess.invoke()
 
             // Update the user data in Firestore.
-            updateUserFirestoreData(currentUser, userData, onFailure)
+            updateUserFirestoreDataOnAuth(currentUser, userData, onFailure)
         } catch (e: Exception) {
             // Handle any exceptions.
             onFailure(e)
@@ -68,14 +67,13 @@ class QaizenAuthRepository : AuthRepository {
     }
 
     /**
-     * Updates the user's data in Firestore.
+     * Updates the user's data in Firestore when the user authenticates.
      *
      * @param currentUser The current Firebase user.
      * @param data The user data to update.
-     * @param onSuccess The callback to be executed if the update is successful.
-     * @param onFailure The callback to be executed if the update fails.
+     * @param onFailure A callback function to handle any exceptions.
      */
-    override suspend fun updateUserFirestoreData(
+    override suspend fun updateUserFirestoreDataOnAuth(
         currentUser: FirebaseUser?,
         data: UserData,
         onFailure: (Exception) -> Unit,
@@ -89,13 +87,24 @@ class QaizenAuthRepository : AuthRepository {
                 }
             )?.await()
 
-            delay(10_000)
+            val userDocReference = firestore.collection(FirebaseDirectories.UsersCollection.name)
+                .document(currentUser?.uid!!)//always use uid for the purpose of security best practice
+
             // Update the user data in Firestore.
-            firestore.collection(FirebaseDirectories.UsersCollection.name)
-                .document(currentUser?.uid!!).set(data)
-                .await() //always use uid for the purpose of security best practice
-
-
+            userDocReference.addSnapshotListener { value, error ->
+                if (error != null) {
+                    onFailure(error)
+                    return@addSnapshotListener
+                }
+                if (value != null && value.exists()) {
+                    return@addSnapshotListener
+                } else {
+                    userDocReference.set(data).addOnSuccessListener {
+                        return@addOnSuccessListener
+                    }
+                    return@addSnapshotListener
+                }
+            }
         } catch (e: Exception) {
             // Handle any exceptions.
             onFailure(e)

@@ -36,7 +36,7 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
                 isSignInSuccess = true
             )
         }
-        authRepository.updateUserFirestoreData(
+        authRepository.updateUserFirestoreDataOnAuth(
             currentUser = Firebase.auth.currentUser,
             data = result.data!!,
             onFailure = {
