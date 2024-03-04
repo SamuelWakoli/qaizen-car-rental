@@ -2,6 +2,7 @@ package com.qaizen.car_rental_qaizen.ui.presentation.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +12,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,6 +31,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.mor
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.service.ServicePage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.bottomNavItems
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.rail_nav.RailNav
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.top_app_bar.HomeTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +39,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.top_app_bar.Hom
 fun HomeScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
-    morePageViewModel: MorePageViewModel
+    morePageViewModel: MorePageViewModel,
 ) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -47,7 +50,6 @@ fun HomeScreen(
     // TODO: Add a firestore listener to check for new version of the app.
     //  Set the initial version to 1.0.0
     //  Do this check inside the view model
-
 
     Box {
         Image(
@@ -68,36 +70,47 @@ fun HomeScreen(
                 )
             },
             bottomBar = {
-                HomeBottomNavBar(
-                    bottomNavHostController = bottomNavHostController,
-                    bottomNavItems = bottomNavItems
-                )
+                if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
+                    HomeBottomNavBar(
+                        bottomNavHostController = bottomNavHostController,
+                        bottomNavItems = bottomNavItems
+                    )
+                }
             },
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
         ) { innerPadding ->
 
-            NavHost(
-                navController = bottomNavHostController,
-                startDestination = bottomNavItems.first().route,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-            ) {
-                composable(bottomNavItems.first().route) {
-                    HomePage(
-                        windowSize = windowSize,
-                        navHostController = navHostController,
+            Row {
+                if (windowSize.widthSizeClass != WindowWidthSizeClass.Compact) {
+                    RailNav(
+                        modifier = Modifier.padding(innerPadding),
+                        bottomNavHostController = bottomNavHostController,
+                        bottomNavItems = bottomNavItems
                     )
                 }
-                composable(bottomNavItems[1].route) {
-                    ServicePage()
-                }
-                composable(bottomNavItems[2].route) {
-                    FavoritesPage()
-                }
-                composable(bottomNavItems[3].route) {
-                    MorePage()
+                NavHost(
+                    navController = bottomNavHostController,
+                    startDestination = bottomNavItems.first().route,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                ) {
+                    composable(bottomNavItems.first().route) {
+                        HomePage(
+                            windowSize = windowSize,
+                            navHostController = navHostController,
+                        )
+                    }
+                    composable(bottomNavItems[1].route) {
+                        ServicePage()
+                    }
+                    composable(bottomNavItems[2].route) {
+                        FavoritesPage()
+                    }
+                    composable(bottomNavItems[3].route) {
+                        MorePage()
+                    }
                 }
             }
         }
