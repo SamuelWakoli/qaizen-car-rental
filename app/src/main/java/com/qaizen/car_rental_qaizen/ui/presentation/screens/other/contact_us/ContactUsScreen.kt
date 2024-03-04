@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.contact_us
+package com.qaizen.car_rental_qaizen.ui.presentation.screens.other.contact_us
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

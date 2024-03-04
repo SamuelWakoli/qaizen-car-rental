@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.privacy_policy
+package com.qaizen.car_rental_qaizen.ui.presentation.screens.other.privacy_policy
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

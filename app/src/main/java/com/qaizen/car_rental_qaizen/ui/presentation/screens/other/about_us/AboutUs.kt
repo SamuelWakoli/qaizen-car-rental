@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.about_us
+package com.qaizen.car_rental_qaizen.ui.presentation.screens.other.about_us
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
