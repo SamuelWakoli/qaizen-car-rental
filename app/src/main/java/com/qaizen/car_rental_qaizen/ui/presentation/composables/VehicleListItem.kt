@@ -58,7 +58,7 @@ fun VehicleListItem(
 
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clip(RoundedCornerShape(16.dp)),
+            .clip(RoundedCornerShape(24.dp)),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp,
             focusedElevation = 16.dp,
@@ -81,7 +81,7 @@ fun VehicleListItem(
                     modifier = Modifier
                         .heightIn(max = 300.dp)
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(24.dp))
                 )
                 Text(
                     text = buildAnnotatedString {
@@ -106,7 +106,7 @@ fun VehicleListItem(
                         )
                     ),
                     modifier = Modifier
-                        .padding(4.dp)
+                        .padding(bottom = 8.dp).padding(horizontal = 16.dp)
                 )
             }
             Spacer(modifier = Modifier.size(2.dp))

@@ -134,20 +134,23 @@ fun BookingScreen(
                     .padding(horizontal = 16.dp),
             ) {
                 Card(
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .clip(RoundedCornerShape(24.dp))
                 ) {
                     CoilImage(
                         imageUrl = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
                         modifier = Modifier
                             .padding(4.dp)
                             .fillMaxWidth()
-                            .heightIn(max = 300.dp),
+                            .heightIn(max = 300.dp)
+                            .clip(RoundedCornerShape(24.dp)),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Ksh. 10,000 /day",
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
