@@ -11,10 +11,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ContactSupport
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material.icons.outlined.Policy
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +31,12 @@ import com.qaizen.car_rental_qaizen.ui.presentation.composables.CustomQaizenList
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 
 @Composable
-fun ProfileScreenCompact(innerPadding: PaddingValues, navHostController: NavHostController) {
+fun ProfileScreenCompact(
+    innerPadding: PaddingValues,
+    navHostController: NavHostController,
+    onClickSignOut: () -> Unit,
+    onClickDeleteAccount: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .padding(innerPadding)
@@ -97,6 +105,18 @@ fun ProfileScreenCompact(innerPadding: PaddingValues, navHostController: NavHost
                         launchSingleTop = true
                     }
                 })
+
+            HorizontalDivider(modifier = Modifier.padding(16.dp))
+
+            CustomQaizenListItem(
+                leadingIcon = Icons.AutoMirrored.Outlined.Logout,
+                label = "Sign Out", onClick = onClickSignOut
+            )
+
+            CustomQaizenListItem(
+                leadingIcon = Icons.Outlined.PersonOff,
+                label = "Delete Account", onClick = onClickDeleteAccount
+            )
             Spacer(modifier = Modifier.size(16.dp))
         }
     }

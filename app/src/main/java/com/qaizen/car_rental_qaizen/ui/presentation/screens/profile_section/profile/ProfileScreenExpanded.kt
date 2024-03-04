@@ -14,11 +14,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ContactSupport
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.History
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.Payments
-import androidx.compose.material.icons.outlined.Policy
+import androidx.compose.material.icons.outlined.PersonOff
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +33,12 @@ import com.qaizen.car_rental_qaizen.ui.presentation.composables.CustomQaizenList
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 
 @Composable
-fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHostController) {
+fun ProfileScreenExpanded(
+    innerPadding: PaddingValues,
+    navHostController: NavHostController,
+    onClickSignOut: () -> Unit,
+    onClickDeleteAccount: () -> Unit,
+) {
 
     Row(
         modifier = Modifier
@@ -79,7 +85,8 @@ fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHos
         Column(
             modifier = Modifier
                 .widthIn(max = 380.dp)
-                .verticalScroll(rememberScrollState()).padding(end = 8.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(end = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -106,13 +113,6 @@ fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHos
                     }
                 })
 
-            CustomQaizenListItem(leadingIcon = Icons.Outlined.Notifications,
-                label = "Notifications", onClick = {
-                    navHostController.navigate(Screens.NotificationsScreen.route) {
-                        launchSingleTop = true
-                    }
-                })
-
             CustomQaizenListItem(leadingIcon = Icons.AutoMirrored.Outlined.ContactSupport,
                 label = "Support", onClick = {
                     navHostController.navigate(Screens.ContactUsScreen.route) {
@@ -120,12 +120,18 @@ fun ProfileScreenExpanded(innerPadding: PaddingValues, navHostController: NavHos
                     }
                 })
 
-            CustomQaizenListItem(leadingIcon = Icons.Outlined.Policy,
-                label = "Privacy Policy", onClick = {
-                    navHostController.navigate(Screens.PrivacyPolicyScreen.route) {
-                        launchSingleTop = true
-                    }
-                })
+            HorizontalDivider(modifier = Modifier.padding(16.dp))
+
+            CustomQaizenListItem(
+                leadingIcon = Icons.AutoMirrored.Outlined.Logout,
+                label = "Sign Out", onClick = onClickSignOut
+            )
+
+            CustomQaizenListItem(
+                leadingIcon = Icons.Outlined.PersonOff,
+                label = "Delete Account", onClick = onClickDeleteAccount
+            )
+
             Spacer(modifier = Modifier.size(16.dp))
         }
     }

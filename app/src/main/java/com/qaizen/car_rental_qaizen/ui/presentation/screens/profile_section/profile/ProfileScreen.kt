@@ -62,14 +62,18 @@ fun ProfileScreen(
             WindowWidthSizeClass.Expanded, WindowWidthSizeClass.Medium -> {
                 ProfileScreenExpanded(
                     innerPadding = innerPadding,
-                    navHostController = navHostController
+                    navHostController = navHostController,
+                    onClickSignOut = {},
+                    onClickDeleteAccount = {}
                 )
             }
 
             else -> {
                 ProfileScreenCompact(
                     innerPadding = innerPadding,
-                    navHostController = navHostController
+                    navHostController = navHostController,
+                    onClickSignOut = {},
+                    onClickDeleteAccount = {}
                 )
             }
         }
