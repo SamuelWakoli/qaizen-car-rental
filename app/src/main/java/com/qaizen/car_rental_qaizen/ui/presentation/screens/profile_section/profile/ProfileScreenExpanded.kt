@@ -129,7 +129,7 @@ fun ProfileScreenExpanded(
 
             CustomQaizenListItem(
                 leadingIcon = Icons.Outlined.PersonOff,
-                label = "Delete Account", onClick = onClickDeleteAccount
+                label = "Delete Account", onClick = onClickDeleteAccount,
             )
 
             Spacer(modifier = Modifier.size(16.dp))

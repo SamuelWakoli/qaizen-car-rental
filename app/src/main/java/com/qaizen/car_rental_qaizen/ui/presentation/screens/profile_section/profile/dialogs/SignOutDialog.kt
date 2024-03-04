@@ -35,7 +35,7 @@ fun SignOutDialog(
     BasicAlertDialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
+                containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.6f),
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
             )
         ) {

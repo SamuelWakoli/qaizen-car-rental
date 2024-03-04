@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.NoAccounts
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,7 +35,7 @@ fun DeleteProfileDialog(
     BasicAlertDialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
+                containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.6f),
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
             )
         ) {
@@ -43,7 +43,7 @@ fun DeleteProfileDialog(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.NoAccounts,
+                    imageVector = Icons.Outlined.WarningAmber,
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
