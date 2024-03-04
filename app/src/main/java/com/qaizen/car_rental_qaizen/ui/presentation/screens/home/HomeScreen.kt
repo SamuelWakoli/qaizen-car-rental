@@ -1,6 +1,7 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,48 +52,48 @@ fun HomeScreen(
     //  Set the initial version to 1.0.0
     //  Do this check inside the view model
 
-    Box {
-        Image(
-            painter = painterResource(id = R.drawable.slide5),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                HomeTopAppBar(
-                    topAppBarScrollBehavior = topAppBarScrollBehavior,
-                    navHostController = navHostController,
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            HomeTopAppBar(
+                topAppBarScrollBehavior = topAppBarScrollBehavior,
+                navHostController = navHostController,
+                bottomNavHostController = bottomNavHostController,
+                morePageViewModel = morePageViewModel,
+            )
+        },
+        bottomBar = {
+            if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
+                HomeBottomNavBar(
                     bottomNavHostController = bottomNavHostController,
-                    morePageViewModel = morePageViewModel,
+                    bottomNavItems = bottomNavItems
                 )
-            },
-            bottomBar = {
-                if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
-                    HomeBottomNavBar(
-                        bottomNavHostController = bottomNavHostController,
-                        bottomNavItems = bottomNavItems
-                    )
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-        ) { innerPadding ->
+            }
+        },
+    ) { innerPadding ->
 
-            Row {
-                if (windowSize.widthSizeClass != WindowWidthSizeClass.Compact) {
-                    RailNav(
-                        modifier = Modifier.padding(innerPadding),
-                        bottomNavHostController = bottomNavHostController,
-                        bottomNavItems = bottomNavItems
-                    )
-                }
+        Row {
+            if (windowSize.widthSizeClass != WindowWidthSizeClass.Compact) {
+                RailNav(
+                    modifier = Modifier.padding(innerPadding),
+                    bottomNavHostController = bottomNavHostController,
+                    bottomNavItems = bottomNavItems
+                )
+            }
+            Box {
+                Image(
+                    painter = painterResource(id = R.drawable.slide5),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+
                 NavHost(
                     navController = bottomNavHostController,
                     startDestination = bottomNavItems.first().route,
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.85f))
                         .padding(innerPadding)
                         .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 ) {
