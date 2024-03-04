@@ -75,7 +75,7 @@ fun PrivacyPolicyScreen(navHostController: NavHostController) {
                         )
                     }
                 },
-                title = { Text(text = "Privacy Policy") },
+                title = {},
                 actions = {
                     ElevatedButton(onClick = {
                         val url =

@@ -112,7 +112,10 @@ fun HomeScreen(
                         FavoritesPage()
                     }
                     composable(bottomNavItems[3].route) {
-                        MorePage()
+                        MorePage(
+                            navHostController = navHostController,
+                            modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                        )
                     }
                 }
             }
