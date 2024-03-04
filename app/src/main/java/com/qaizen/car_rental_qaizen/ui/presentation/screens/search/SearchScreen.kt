@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -27,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -59,6 +61,11 @@ fun SearchScreen(
 ) {
     val itemMaxWidth = when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> 600.dp
+        else -> 300.dp
+    }
+
+    val maxVehicleImageHeight = when (windowSize.heightSizeClass) {
+        WindowHeightSizeClass.Compact -> 200.dp
         else -> 300.dp
     }
 
@@ -180,6 +187,7 @@ fun SearchScreen(
                     ) {
                         items(20) {
                             VehicleListItem(
+                                modifier = Modifier.heightIn(max = maxVehicleImageHeight),
                                 onClickDetails = {
                                     navHostController.navigate(Screens.VehicleDetailsScreen.route) {
                                         launchSingleTop = true

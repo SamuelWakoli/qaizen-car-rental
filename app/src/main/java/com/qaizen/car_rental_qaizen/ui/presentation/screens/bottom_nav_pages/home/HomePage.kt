@@ -1,8 +1,10 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -23,6 +25,11 @@ fun HomePage(
         else -> 300.dp
     }
 
+    val maxVehicleImageHeight = when (windowSize.heightSizeClass) {
+        WindowHeightSizeClass.Compact -> 200.dp
+        else -> 300.dp
+    }
+
     Column(
         modifier = Modifier
     ) {
@@ -31,6 +38,7 @@ fun HomePage(
         ) {
             items(20) {
                 VehicleListItem(
+                    modifier = Modifier.heightIn(max = maxVehicleImageHeight),
                     onClickDetails = {
                         navHostController.navigate(Screens.VehicleDetailsScreen.route) {
                             launchSingleTop = true

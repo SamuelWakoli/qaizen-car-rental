@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun VehicleListItem(
     modifier: Modifier = Modifier,
@@ -82,6 +83,7 @@ fun VehicleListItem(
                         .heightIn(max = 300.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(24.dp))
+                        .then(modifier)
                 )
                 Text(
                     text = buildAnnotatedString {
@@ -106,7 +108,8 @@ fun VehicleListItem(
                         )
                     ),
                     modifier = Modifier
-                        .padding(bottom = 8.dp).padding(horizontal = 16.dp)
+                        .padding(bottom = 8.dp)
+                        .padding(horizontal = 16.dp)
                 )
             }
             Spacer(modifier = Modifier.size(2.dp))
@@ -134,7 +137,7 @@ fun VehicleListItem(
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
-                if (isAvailable)TextButton(onClick = onClickBook) {
+                if (isAvailable) TextButton(onClick = onClickBook) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
@@ -149,7 +152,7 @@ fun VehicleListItem(
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
-                } else{
+                } else {
                     Text(
                         text = "Unavailable",
                         style = MaterialTheme.typography.titleMedium,
