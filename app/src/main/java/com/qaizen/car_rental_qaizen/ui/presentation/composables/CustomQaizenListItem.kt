@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile
+package com.qaizen.car_rental_qaizen.ui.presentation.composables
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,11 +16,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProfileListItem(
+fun CustomQaizenListItem(
     leadingIcon: ImageVector,
     label: String,
     description: String? = null,
     onClick: () -> Unit,
+    trailingContent: @Composable (() -> Unit)? = null,
 ) {
     Card(
         onClick = onClick,
@@ -40,6 +41,7 @@ fun ProfileListItem(
             supportingContent = if (description != null) {
                 { Text(description) }
             } else null,
+            trailingContent = trailingContent,
             colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
     }
