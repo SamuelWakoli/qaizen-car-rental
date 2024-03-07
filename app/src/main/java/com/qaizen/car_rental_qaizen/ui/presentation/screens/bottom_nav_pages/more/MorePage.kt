@@ -39,10 +39,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.BuildConfig
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CustomQaizenListItem
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.utils.openImage
 
 @Composable
 fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController) {
@@ -154,7 +156,9 @@ fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController
                 leadingIcon = Icons.AutoMirrored.Outlined.Assignment,
                 label = "Lease with us",
                 onClick = {
-                    // TODO: Go to lease with us screen
+                    val uri =
+                        "https://firebasestorage.googleapis.com/v0/b/qaizen-49e94.appspot.com/o/lease_with_us.jpeg?alt=media&token=64c91709-be13-4643-a184-99f1bc33832c".toUri()
+                    openImage(context = context, uri = uri)
                 },
             )
 
