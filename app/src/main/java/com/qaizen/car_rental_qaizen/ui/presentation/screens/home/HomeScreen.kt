@@ -109,7 +109,10 @@ fun HomeScreen(
                         ServicePage()
                     }
                     composable(bottomNavItems[2].route) {
-                        FavoritesPage()
+                        FavoritesPage(
+                            windowSize = windowSize,
+                            navHostController = navHostController,
+                        )
                     }
                     composable(bottomNavItems[3].route) {
                         MorePage(
