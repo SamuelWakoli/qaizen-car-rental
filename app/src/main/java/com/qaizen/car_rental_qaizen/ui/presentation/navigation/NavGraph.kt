@@ -22,6 +22,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.HomeScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.notifications.NotificationsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.about_us.AboutUsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.contact_us.ContactUsScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.more_services.MoreServicesScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.privacy_policy.PrivacyPolicyScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.edit_profile.EditProfileScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.payment_history.PaymentHistoryScreen
@@ -156,6 +157,12 @@ fun NavGraph(
         }
         composable(Screens.SummaryScreen.route) {
             SummaryScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.MoreServicesScreen.route) {
+            MoreServicesScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
             )

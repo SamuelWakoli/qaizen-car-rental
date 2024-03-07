@@ -148,7 +148,9 @@ fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController
                 leadingIcon = Icons.Outlined.Cases,
                 label = "More Services",
                 onClick = {
-                    // TODO: Go to more services screen
+                    navHostController.navigate(Screens.MoreServicesScreen.route) {
+                        launchSingleTop = true
+                    }
                 },
             )
 
