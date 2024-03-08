@@ -25,11 +25,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.car_rental_qaizen.R
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.dashboard.DashboardPage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.favorites.FavoritesPage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.home.HomePage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.service.ServicePage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.bottomNavItems
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.rail_nav.RailNav
@@ -106,7 +106,9 @@ fun HomeScreen(
                         )
                     }
                     composable(bottomNavItems[1].route) {
-                        ServicePage()
+                        DashboardPage(
+                            navHostController = navHostController,
+                        )
                     }
                     composable(bottomNavItems[2].route) {
                         FavoritesPage(

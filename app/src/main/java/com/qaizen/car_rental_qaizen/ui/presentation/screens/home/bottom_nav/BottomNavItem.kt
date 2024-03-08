@@ -3,11 +3,9 @@ package com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.More
 import androidx.compose.material.icons.automirrored.outlined.More
-import androidx.compose.material.icons.filled.Cases
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Cases
 import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
@@ -29,7 +27,7 @@ val bottomNavItems = listOf(
         unselectedIcon = Icons.Outlined.Home,
     ),
     BottomNavItem(
-        route = Screens.ServicesPage.route,
+        route = Screens.DashboardPage.route,
         label = "Dashboard",
         selectedIcon = Icons.Filled.Dashboard,
         unselectedIcon = Icons.Outlined.Dashboard,

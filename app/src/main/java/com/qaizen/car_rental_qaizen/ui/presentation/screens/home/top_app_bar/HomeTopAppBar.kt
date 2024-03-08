@@ -83,7 +83,7 @@ fun HomeTopAppBar(
 
             when (currentRoute) {
                 Screens.HomePage.route -> "Qaizen"
-                Screens.ServicesPage.route -> "Dashboard"
+                Screens.DashboardPage.route -> "Dashboard"
                 Screens.FavouritesPage.route -> "Favorites"
                 Screens.MorePage.route -> "More"
                 else -> ""

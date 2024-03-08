@@ -57,7 +57,6 @@ fun VehicleListItem(
 
     Card(
         modifier = Modifier
-
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .clip(RoundedCornerShape(24.dp)),
