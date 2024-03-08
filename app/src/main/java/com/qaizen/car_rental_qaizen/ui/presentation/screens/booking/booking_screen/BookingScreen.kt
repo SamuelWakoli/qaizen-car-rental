@@ -96,8 +96,9 @@ fun BookingScreen(
 
     val datePickerState = rememberDatePickerState(
         initialDisplayMode = DisplayMode.Picker,
-        initialSelectedDateMillis = System.currentTimeMillis(),
-        initialDisplayedMonthMillis = System.currentTimeMillis(),
+        initialSelectedDateMillis = System.currentTimeMillis()
+            .plus(3 * 60 * 60 * 1000), // EAT is 3 hours ahead of UTC
+        initialDisplayedMonthMillis = System.currentTimeMillis().plus(3 * 60 * 60 * 1000),
     )
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
