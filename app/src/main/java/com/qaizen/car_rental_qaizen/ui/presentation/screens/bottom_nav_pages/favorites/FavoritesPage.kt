@@ -49,7 +49,8 @@ fun FavoritesPage(
                             launchSingleTop = true
                         }
                     },
-                    isFavorite = true
+                    isFavorite = true,
+                    showFavoriteIcon = false,
                 )
             }
         }

@@ -48,6 +48,7 @@ fun VehicleListItem(
     pricePerDay: String = "10,000",
     isAvailable: Boolean = true,
     isFavorite: Boolean = false,
+    showFavoriteIcon: Boolean = true,
     onClickFavorite: (Boolean) -> Unit = {},
     onClickDetails: () -> Unit = {},
     onClickBook: () -> Unit = {},
@@ -120,16 +121,20 @@ fun VehicleListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = {
-                    isFavoriteState = !isFavoriteState
-                    onClickFavorite(isFavoriteState)
-                }) {
-                    Icon(
-                        imageVector = if (isFavoriteState) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                        contentDescription = if (isFavoriteState) "Remove from favorites" else "Add to favorites",
-                        modifier = Modifier.size(36.dp),
-                        tint = if (isFavoriteState) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                    )
+                if (showFavoriteIcon) {
+                    IconButton(onClick = {
+                        isFavoriteState = !isFavoriteState
+                        onClickFavorite(isFavoriteState)
+                    }) {
+                        Icon(
+                            imageVector = if (isFavoriteState) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = if (isFavoriteState) "Remove from favorites" else "Add to favorites",
+                            modifier = Modifier.size(36.dp),
+                            tint = if (isFavoriteState) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.size(16.dp))
                 }
                 TextButton(onClick = onClickDetails) {
                     Text(
