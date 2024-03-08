@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Qaizen"
 include(":app")
- 
+include(":admin")
