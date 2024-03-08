@@ -13,14 +13,13 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.2"
-composeBom = "2024.02.01"
+composeBom = "2024.02.02"
 lifecycleViewmodelCompose = "2.7.0"
 mapsCompose = "4.3.3"
-material3 = "1.2.0"
+material3 = "1.2.1"
 material3Adaptive = "1.0.0-alpha06"
 material3AdaptiveNavigationSuite = "1.0.0-alpha03" #1.0.0-alpha04 has duplicate class
-materialIconsExtended = "1.6.2"
-media3Exoplayer = "1.2.1"
+materialIconsExtended = "1.6.3"
 navigationCompose = "2.7.7"
 googleServices = "4.4.1"
 firebaseAuth = "22.3.1"
@@ -40,9 +39,6 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-material3-adaptive = { module = "androidx.compose.material3:material3-adaptive", version.ref = "material3Adaptive" }
 androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3AdaptiveNavigationSuite" }
-androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3Exoplayer" }
-androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
-androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Exoplayer" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }

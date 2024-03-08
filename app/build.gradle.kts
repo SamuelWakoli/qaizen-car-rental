@@ -96,12 +96,6 @@ dependencies {
     // Datastore
     implementation(libs.androidx.datastore.preferences)
 
-    // Media3
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.ui)
-    implementation(libs.androidx.media3.common)
-
-
     // Google Play Services Auth
     implementation(libs.play.services.auth)
 
