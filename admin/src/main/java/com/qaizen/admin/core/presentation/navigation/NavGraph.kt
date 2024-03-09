@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseUser
+import com.qaizen.admin.admins.presentation.AdminsScreen
 import com.qaizen.admin.auth.presentation.AuthViewModel
 import com.qaizen.admin.auth.presentation.ForgotPasswordScreen
 import com.qaizen.admin.auth.presentation.RegisterScreen
@@ -63,6 +64,11 @@ fun NavGraph(
                 windowSize = windowSize,
                 navHostController = navHostController,
                 morePageViewModel = morePageViewModel,
+            )
+        }
+        composable(Screens.AdminsScreen.route) {
+            AdminsScreen(
+                navHostController = navHostController,
             )
         }
     }
