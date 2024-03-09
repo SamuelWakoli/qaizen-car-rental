@@ -37,7 +37,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.qaizen.admin.BuildConfig
 import com.qaizen.admin.core.presentation.composables.CustomQaizenListItem
-import com.qaizen.admin.core.presentation.navigation.Screens
+import com.qaizen.admin.core.navigation.Screens
 import com.qaizen.admin.utils.openImage
 
 @Composable

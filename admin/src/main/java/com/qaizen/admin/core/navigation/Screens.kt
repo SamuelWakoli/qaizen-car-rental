@@ -1,4 +1,4 @@
-package com.qaizen.admin.core.presentation.navigation
+package com.qaizen.admin.core.navigation
 
 sealed class Screens(val route: String) {
     data object OnBoardingScreen : Screens("on_boarding_screen")

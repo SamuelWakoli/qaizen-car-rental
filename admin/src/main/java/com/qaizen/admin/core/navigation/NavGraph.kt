@@ -1,4 +1,4 @@
-package com.qaizen.admin.core.presentation.navigation
+package com.qaizen.admin.core.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -17,6 +17,7 @@ import com.qaizen.admin.auth.presentation.RegisterScreen
 import com.qaizen.admin.auth.presentation.SignInScreen
 import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
+import com.qaizen.admin.profile.presentation.profile.ProfileScreen
 
 
 val NavHostController.canUserNavigateUp: Boolean
@@ -68,6 +69,12 @@ fun NavGraph(
         }
         composable(Screens.AdminsScreen.route) {
             AdminsScreen(
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.ProfileScreen.route) {
+            ProfileScreen(
+                windowSize = windowSize,
                 navHostController = navHostController,
             )
         }

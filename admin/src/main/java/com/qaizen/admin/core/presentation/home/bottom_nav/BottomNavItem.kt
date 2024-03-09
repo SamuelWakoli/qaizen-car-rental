@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.qaizen.admin.core.presentation.navigation.Screens
+import com.qaizen.admin.core.navigation.Screens
 
 data class BottomNavItem(
     val route: String,
