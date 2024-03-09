@@ -1,4 +1,4 @@
-package com.qaizen.admin.home_pages.dashboard
+package com.qaizen.admin.bookings.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

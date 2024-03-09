@@ -104,7 +104,8 @@ fun AdminListItem(modifier: Modifier = Modifier) {
                     },
                     colors = ListItemDefaults.colors(
                         containerColor = Color.Transparent,
-                        headlineColor = MaterialTheme.colorScheme.primary
+                        headlineColor = MaterialTheme.colorScheme.tertiary,
+                        leadingIconColor = MaterialTheme.colorScheme.tertiary
                     )
                 )
             }

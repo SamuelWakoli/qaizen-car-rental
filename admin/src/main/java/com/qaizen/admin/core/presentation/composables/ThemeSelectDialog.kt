@@ -35,7 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.qaizen.admin.home_pages.more.MorePageViewModel
+import com.qaizen.admin.more.MorePageViewModel
 
 @Composable
 fun ThemeSelectDialog(

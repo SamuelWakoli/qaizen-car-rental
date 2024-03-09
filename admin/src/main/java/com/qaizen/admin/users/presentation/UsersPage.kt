@@ -1,4 +1,4 @@
-package com.qaizen.admin.home_pages.home
+package com.qaizen.admin.users.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
@@ -15,7 +15,7 @@ import com.qaizen.admin.core.presentation.composables.VehicleListItem
 import com.qaizen.admin.core.presentation.navigation.Screens
 
 @Composable
-fun HomePage(
+fun UsersPage(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
 ) {
@@ -49,6 +49,8 @@ fun HomePage(
                             launchSingleTop = true
                         }
                     },
+                    isFavorite = true,
+                    showFavoriteIcon = false,
                 )
             }
         }

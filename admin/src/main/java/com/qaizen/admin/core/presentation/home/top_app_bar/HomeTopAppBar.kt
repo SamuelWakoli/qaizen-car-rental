@@ -37,7 +37,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.admin.R
 import com.qaizen.admin.core.presentation.composables.ThemeSelectDialog
 import com.qaizen.admin.core.presentation.navigation.Screens
-import com.qaizen.admin.home_pages.more.MorePageViewModel
+import com.qaizen.admin.more.MorePageViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

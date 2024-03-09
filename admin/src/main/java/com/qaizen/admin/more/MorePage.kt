@@ -1,4 +1,4 @@
-package com.qaizen.admin.home_pages.more
+package com.qaizen.admin.more
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

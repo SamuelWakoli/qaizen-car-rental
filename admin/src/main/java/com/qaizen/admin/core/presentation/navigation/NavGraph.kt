@@ -16,7 +16,7 @@ import com.qaizen.admin.auth.presentation.ForgotPasswordScreen
 import com.qaizen.admin.auth.presentation.RegisterScreen
 import com.qaizen.admin.auth.presentation.SignInScreen
 import com.qaizen.admin.core.presentation.home.HomeScreen
-import com.qaizen.admin.home_pages.more.MorePageViewModel
+import com.qaizen.admin.more.MorePageViewModel
 
 
 val NavHostController.canUserNavigateUp: Boolean

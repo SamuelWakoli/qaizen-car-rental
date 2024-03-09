@@ -1,4 +1,4 @@
-package com.qaizen.admin.home_pages.dashboard
+package com.qaizen.admin.bookings.presentation
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
