@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.summary.MpesaDialog
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.summary.MpesaPaymentInitiatedDialog
 
@@ -72,7 +73,12 @@ fun DashboardPage(modifier: Modifier = Modifier, navHostController: NavHostContr
                         )
                         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                         DashboardListItem(
-                            modifier = Modifier.clickable { },
+                            modifier = Modifier.clickable {
+                                // TODO: Update current vehicle
+                                navHostController.navigate(Screens.VehicleDetailsScreen.route) {
+                                    launchSingleTop = true
+                                }
+                            },
                             overlineText = "Vehicle",
                             headlineText = "Subaru Legacy B4",
                             trailingContent = {
@@ -108,7 +114,10 @@ fun DashboardPage(modifier: Modifier = Modifier, navHostController: NavHostContr
                                     InitiatePaymentItem(
                                         showMenu = showInitiatePayment,
                                         onDismissRequest = { showInitiatePayment = false },
-                                        onClickInitiatePayment = { showMpesaDialog = true },
+                                        onClickInitiatePayment = {
+                                            showInitiatePayment = false
+                                            showMpesaDialog = true
+                                        },
                                     )
                                 }
                             }

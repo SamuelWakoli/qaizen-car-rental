@@ -25,15 +25,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.R
+import com.qaizen.admin.bookings.presentation.BookingsPage
 import com.qaizen.admin.core.presentation.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.admin.core.presentation.home.bottom_nav.bottomNavItems
 import com.qaizen.admin.core.presentation.home.rail_nav.RailNav
 import com.qaizen.admin.core.presentation.home.top_app_bar.HomeTopAppBar
-import com.qaizen.admin.bookings.presentation.BookingsPage
-import com.qaizen.admin.users.presentation.UsersPage
-import com.qaizen.admin.vehicles.presentation.home.HomePage
 import com.qaizen.admin.more.MorePage
 import com.qaizen.admin.more.MorePageViewModel
+import com.qaizen.admin.users.presentation.UsersPage
+import com.qaizen.admin.vehicles.presentation.home.HomePage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,6 +107,7 @@ fun HomeScreen(
                     }
                     composable(bottomNavItems[1].route) {
                         BookingsPage(
+                            windowSize = windowSize,
                             navHostController = navHostController,
                         )
                     }

@@ -31,7 +31,8 @@ fun CustomQaizenListItem(
         colors = CardDefaults.cardColors(
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         ListItem(
             leadingContent = {
