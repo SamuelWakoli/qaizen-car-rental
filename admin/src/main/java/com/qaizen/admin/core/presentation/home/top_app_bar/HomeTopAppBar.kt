@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ContactSupport
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Search
@@ -82,9 +81,9 @@ fun HomeTopAppBar(
         title = {
 
             when (currentRoute) {
-                Screens.HomePage.route -> "Qaizen"
-                Screens.DashboardPage.route -> "Dashboard"
-                Screens.FavouritesPage.route -> "Favorites"
+                Screens.HomePage.route -> "Admin"
+                Screens.BookingsPage.route -> "Bookings"
+                Screens.UsersPage.route -> "Users"
                 Screens.MorePage.route -> "More"
                 else -> ""
             }.let { text ->
@@ -114,16 +113,6 @@ fun HomeTopAppBar(
                     contentDescription = "Update theme"
                 )
             }
-            IconButton(onClick = {
-                navHostController.navigate(Screens.ContactUsScreen.route) {
-                    launchSingleTop = true
-                }
-            }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ContactSupport,
-                    contentDescription = "Contact Us"
-                )
-            }
             Spacer(modifier = Modifier.size(8.dp))
             AsyncImage(
                 model = FirebaseAuth.getInstance().currentUser?.photoUrl,
@@ -145,9 +134,10 @@ fun HomeTopAppBar(
     )
 
     if (showThemeDialog) {
-        ThemeSelectDialog(onDismissRequest = {
-            showThemeDialog = false
-        },
+        ThemeSelectDialog(
+            onDismissRequest = {
+                showThemeDialog = false
+            },
             morePageViewModel = morePageViewModel
         )
     }

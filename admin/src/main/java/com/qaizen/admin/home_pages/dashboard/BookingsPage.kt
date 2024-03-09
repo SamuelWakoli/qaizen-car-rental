@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @Composable
-fun DashboardPage(modifier: Modifier = Modifier, navHostController: NavHostController) {
+fun BookingsPage(modifier: Modifier = Modifier, navHostController: NavHostController) {
     var showInitiatePayment by remember { mutableStateOf(false) }
 
     var showSummarySentDialog by remember { mutableStateOf(false) }

@@ -15,7 +15,7 @@ import com.qaizen.admin.core.presentation.composables.VehicleListItem
 import com.qaizen.admin.core.presentation.navigation.Screens
 
 @Composable
-fun FavoritesPage(
+fun UsersPage(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
 ) {

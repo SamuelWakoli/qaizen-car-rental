@@ -29,8 +29,8 @@ import com.qaizen.admin.core.presentation.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.admin.core.presentation.home.bottom_nav.bottomNavItems
 import com.qaizen.admin.core.presentation.home.rail_nav.RailNav
 import com.qaizen.admin.core.presentation.home.top_app_bar.HomeTopAppBar
-import com.qaizen.admin.home_pages.dashboard.DashboardPage
-import com.qaizen.admin.home_pages.favorites.FavoritesPage
+import com.qaizen.admin.home_pages.dashboard.BookingsPage
+import com.qaizen.admin.home_pages.favorites.UsersPage
 import com.qaizen.admin.home_pages.home.HomePage
 import com.qaizen.admin.home_pages.more.MorePage
 import com.qaizen.admin.home_pages.more.MorePageViewModel
@@ -106,12 +106,12 @@ fun HomeScreen(
                         )
                     }
                     composable(bottomNavItems[1].route) {
-                        DashboardPage(
+                        BookingsPage(
                             navHostController = navHostController,
                         )
                     }
                     composable(bottomNavItems[2].route) {
-                        FavoritesPage(
+                        UsersPage(
                             windowSize = windowSize,
                             navHostController = navHostController,
                         )

@@ -1,13 +1,13 @@
 package com.qaizen.admin.core.presentation.home.bottom_nav
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.automirrored.filled.More
+import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
 import androidx.compose.material.icons.automirrored.outlined.More
-import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Dashboard
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.qaizen.admin.core.presentation.navigation.Screens
@@ -27,16 +27,16 @@ val bottomNavItems = listOf(
         unselectedIcon = Icons.Outlined.Home,
     ),
     BottomNavItem(
-        route = Screens.DashboardPage.route,
-        label = "Dashboard",
-        selectedIcon = Icons.Filled.Dashboard,
-        unselectedIcon = Icons.Outlined.Dashboard,
+        route = Screens.BookingsPage.route,
+        label = "Bookings",
+        selectedIcon = Icons.AutoMirrored.Filled.LibraryBooks,
+        unselectedIcon = Icons.AutoMirrored.Outlined.LibraryBooks,
     ),
     BottomNavItem(
-        route = Screens.FavouritesPage.route,
-        label = "Favorites",
-        selectedIcon = Icons.Filled.Favorite,
-        unselectedIcon = Icons.Outlined.FavoriteBorder,
+        route = Screens.UsersPage.route,
+        label = "Users",
+        selectedIcon = Icons.Filled.Group,
+        unselectedIcon = Icons.Outlined.Group,
     ),
     BottomNavItem(
         route = Screens.MorePage.route,
@@ -45,4 +45,4 @@ val bottomNavItems = listOf(
         unselectedIcon = Icons.AutoMirrored.Outlined.More,
     ),
 
-)
+    )
