@@ -60,7 +60,7 @@ fun HomeTopAppBar(
         navigationIcon = {
             Card(
                 onClick = {
-                    navHostController.navigate(Screens.AboutUsScreen.route) {
+                    navHostController.navigate(Screens.AdminsScreen.route) {
                         launchSingleTop = true
                     }
                 },
