@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -15,6 +19,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -23,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.R
 import com.qaizen.admin.bookings.presentation.BookingsPage
@@ -32,6 +38,7 @@ import com.qaizen.admin.core.presentation.home.rail_nav.RailNav
 import com.qaizen.admin.core.presentation.home.top_app_bar.HomeTopAppBar
 import com.qaizen.admin.more.MorePage
 import com.qaizen.admin.more.MorePageViewModel
+import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.users.presentation.UsersPage
 import com.qaizen.admin.vehicles.presentation.home.HomePage
 
@@ -49,30 +56,39 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val bottomNavHostController = rememberNavController()
 
+    val bottomNavBackStackEntry by bottomNavHostController.currentBackStackEntryAsState()
+    val currentRoute = bottomNavBackStackEntry?.destination?.route
+
     // TODO: Add a firestore listener to check for new version of the app.
     //  Set the initial version to 1.0.0
     //  Do this check inside the view model
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            HomeTopAppBar(
-                darkTheme = darkTheme,
-                topAppBarScrollBehavior = topAppBarScrollBehavior,
-                navHostController = navHostController,
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }, topBar = {
+        HomeTopAppBar(
+            darkTheme = darkTheme,
+            topAppBarScrollBehavior = topAppBarScrollBehavior,
+            navHostController = navHostController,
+            bottomNavHostController = bottomNavHostController,
+            morePageViewModel = morePageViewModel,
+        )
+    }, bottomBar = {
+        if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
+            HomeBottomNavBar(
                 bottomNavHostController = bottomNavHostController,
-                morePageViewModel = morePageViewModel,
+                bottomNavItems = bottomNavItems
             )
-        },
-        bottomBar = {
-            if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
-                HomeBottomNavBar(
-                    bottomNavHostController = bottomNavHostController,
-                    bottomNavItems = bottomNavItems
-                )
+        }
+    }, floatingActionButton = {
+        if (currentRoute == bottomNavItems.first().route) {
+            FloatingActionButton(onClick = {
+                navHostController.navigate(Screens.AddVehicleScreen.route) {
+                    launchSingleTop = true
+                }
+            }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Vehicle")
             }
-        },
-    ) { innerPadding ->
+        }
+    }) { innerPadding ->
 
         Row {
             if (windowSize.widthSizeClass != WindowWidthSizeClass.Compact) {
