@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.qaizen.admin.admins.presentation.AdminsScreen
 import com.qaizen.admin.auth.presentation.AuthViewModel
 import com.qaizen.admin.auth.presentation.ForgotPasswordScreen
-import com.qaizen.admin.auth.presentation.RegisterScreen
 import com.qaizen.admin.auth.presentation.SignInScreen
 import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
@@ -44,13 +43,6 @@ fun NavGraph(
     ) {
         composable(Screens.SignInScreen.route) {
             SignInScreen(
-                authViewModel = authViewModel,
-                navHostController = navHostController,
-                onSignInWithGoogle = onSignInWithGoogle,
-            )
-        }
-        composable(Screens.RegisterScreen.route) {
-            RegisterScreen(
                 authViewModel = authViewModel,
                 navHostController = navHostController,
                 onSignInWithGoogle = onSignInWithGoogle,

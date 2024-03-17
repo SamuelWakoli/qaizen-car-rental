@@ -144,7 +144,7 @@ fun SignInScreen(
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     Text(
-                        text = "Qaizen Car Rental",
+                        text = "Qaizen Admin App",
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.fillMaxWidth(),
@@ -165,27 +165,6 @@ fun SignInScreen(
                             text = "Sign In",
                             style = MaterialTheme.typography.displaySmall,
                             color = MaterialTheme.colorScheme.primary,
-                        )
-                        Spacer(modifier = Modifier.size(8.dp))
-                        VerticalDivider(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .height(32.dp)
-                        )
-
-                        Text(
-                            text = "Register",
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(24.dp))
-                                .clickable {
-                                    navHostController.navigate(Screens.RegisterScreen.route) {
-                                        launchSingleTop = true
-                                    }
-                                }
-                                .padding(8.dp),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            textDecoration = TextDecoration.Underline,
                         )
 
                         Spacer(modifier = Modifier.size(8.dp))
@@ -354,40 +333,6 @@ fun SignInScreen(
                             onSignInWithGoogle()
                         }
                     )
-                }
-
-
-                Row(
-                    modifier = Modifier
-                        .widthIn(max = 600.dp)
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(24.dp))
-                            .clickable {
-                                navHostController.navigate(Screens.ContactUsScreen.route) {
-                                    launchSingleTop = true
-                                }
-                            }
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.TwoTone.Help,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
-                        Spacer(modifier = Modifier.size(8.dp))
-                        Text(
-                            text = "Help",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.tertiary,
-                        )
-                    }
                 }
             }
         }
