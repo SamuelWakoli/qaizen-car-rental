@@ -21,8 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
-import com.qaizen.admin.core.navigation.Screens
-import com.qaizen.admin.core.navigation.canUserNavigateUp
+import com.qaizen.admin.navigation.Screens
+import com.qaizen.admin.navigation.canUserNavigateUp
 import com.qaizen.admin.profile.presentation.profile.dialogs.DeleteProfileDialog
 import com.qaizen.admin.profile.presentation.profile.dialogs.SignOutDialog
 import kotlinx.coroutines.launch

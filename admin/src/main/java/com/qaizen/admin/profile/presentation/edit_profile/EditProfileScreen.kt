@@ -51,7 +51,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.qaizen.admin.core.presentation.composables.CoilImage
-import com.qaizen.admin.core.navigation.canUserNavigateUp
+import com.qaizen.admin.navigation.canUserNavigateUp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

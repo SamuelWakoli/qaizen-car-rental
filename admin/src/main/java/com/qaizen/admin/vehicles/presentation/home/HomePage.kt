@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.qaizen.admin.core.presentation.composables.VehicleListItem
-import com.qaizen.admin.core.navigation.Screens
+import com.qaizen.admin.navigation.Screens
 
 @Composable
 fun HomePage(

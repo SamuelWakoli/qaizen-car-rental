@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.admin.R
 import com.qaizen.admin.core.presentation.composables.ThemeSelectDialog
-import com.qaizen.admin.core.navigation.Screens
+import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.more.MorePageViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

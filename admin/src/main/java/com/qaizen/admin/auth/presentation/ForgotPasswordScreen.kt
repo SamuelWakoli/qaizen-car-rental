@@ -58,7 +58,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.R
 import com.qaizen.admin.auth.data.repositories.QaizenAuthRepository
-import com.qaizen.admin.core.navigation.canUserNavigateUp
+import com.qaizen.admin.navigation.canUserNavigateUp
 import com.qaizen.admin.ui.theme.QaizenTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

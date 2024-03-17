@@ -63,7 +63,7 @@ import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.R
 import com.qaizen.admin.auth.data.repositories.QaizenAuthRepository
 import com.qaizen.admin.core.presentation.composables.GoogleSignInButton
-import com.qaizen.admin.core.navigation.Screens
+import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.ui.theme.QaizenTheme
 
 @Composable

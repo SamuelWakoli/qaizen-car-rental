@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.LayoutDirectionPreviews
 import com.qaizen.admin.OrientationPreviews
 import com.qaizen.admin.ThemePreviews
-import com.qaizen.admin.core.navigation.canUserNavigateUp
+import com.qaizen.admin.navigation.canUserNavigateUp
 import com.qaizen.admin.ui.theme.QaizenTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

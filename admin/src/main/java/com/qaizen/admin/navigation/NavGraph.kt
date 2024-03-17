@@ -1,4 +1,4 @@
-package com.qaizen.admin.core.navigation
+package com.qaizen.admin.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable

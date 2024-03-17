@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.admin.auth.data.repositories.UserPreferencesRepository
 import com.qaizen.admin.auth.presentation.AuthViewModel
 import com.qaizen.admin.auth.presentation.sign_in_with_google.GoogleAuthUiClient
-import com.qaizen.admin.core.navigation.NavGraph
+import com.qaizen.admin.navigation.NavGraph
 import com.qaizen.admin.ui.theme.QaizenTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
