@@ -5,10 +5,10 @@ import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.automirrored.filled.More
 import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
 import androidx.compose.material.icons.automirrored.outlined.More
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.qaizen.admin.navigation.Screens
 
@@ -22,9 +22,9 @@ data class BottomNavItem(
 val bottomNavItems = listOf(
     BottomNavItem(
         route = Screens.HomePage.route,
-        label = "Home",
-        selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Home,
+        label = "Vehicles",
+        selectedIcon = Icons.Filled.DirectionsCar,
+        unselectedIcon = Icons.Outlined.DirectionsCar,
     ),
     BottomNavItem(
         route = Screens.BookingsPage.route,
