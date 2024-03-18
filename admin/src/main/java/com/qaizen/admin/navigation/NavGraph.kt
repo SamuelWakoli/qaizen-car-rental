@@ -18,6 +18,7 @@ import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.profile.presentation.profile.ProfileScreen
 import com.qaizen.admin.vehicles.presentation.add_vehicle.AddVehicleScreen
+import com.qaizen.admin.vehicles.presentation.details.VehicleDetailsScreen
 
 
 val NavHostController.canUserNavigateUp: Boolean
@@ -73,6 +74,12 @@ fun NavGraph(
         }
         composable(Screens.AddVehicleScreen.route) {
             AddVehicleScreen(
+                windowSize = windowSize,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.VehicleDetailsScreen.route) {
+            VehicleDetailsScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
             )
