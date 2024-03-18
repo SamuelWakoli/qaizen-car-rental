@@ -12,14 +12,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Assignment
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,13 +46,11 @@ fun VehicleListItem(
     name: String = "Subaru Legacy B4",
     pricePerDay: String = "10,000",
     isAvailable: Boolean = true,
-    isFavorite: Boolean = false,
-    showFavoriteIcon: Boolean = true,
-    onClickFavorite: (Boolean) -> Unit = {},
+    onSwitchAvailability: (Boolean) -> Unit = {},
     onClickDetails: () -> Unit = {},
-    onClickBook: () -> Unit = {},
+    onClickEdit: () -> Unit = {},
 ) {
-    var isFavoriteState by remember { mutableStateOf(isFavorite) }
+    var isAvailableState by remember { mutableStateOf(isAvailable) }
 
     Card(
         modifier = Modifier
@@ -113,6 +110,7 @@ fun VehicleListItem(
                 )
             }
             Spacer(modifier = Modifier.size(2.dp))
+
             Row(
                 modifier = Modifier
                     .widthIn(max = 500.dp)
@@ -120,49 +118,56 @@ fun VehicleListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                if (showFavoriteIcon) {
-                    IconButton(onClick = {
-                        isFavoriteState = !isFavoriteState
-                        onClickFavorite(isFavoriteState)
-                    }) {
-                        Icon(
-                            imageVector = if (isFavoriteState) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = if (isFavoriteState) "Remove from favorites" else "Add to favorites",
-                            modifier = Modifier.size(36.dp),
-                            tint = if (isFavoriteState) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                } else {
-                    Spacer(modifier = Modifier.size(16.dp))
-                }
                 TextButton(onClick = onClickDetails) {
-                    Text(
-                        text = "Details",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-                if (isAvailable) TextButton(onClick = onClickBook) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Assignment,
+                            imageVector = Icons.Outlined.Info,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.size(4.dp))
                         Text(
-                            text = "Book",
+                            text = "Details",
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
-                } else {
-                    Text(
-                        text = "Unavailable",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
                 }
+                TextButton(onClick = onClickEdit) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.size(4.dp))
+                        Text(
+                            text = "Edit",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(12.dp))
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Available",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                Switch(checked = isAvailableState, onCheckedChange = { value ->
+                    isAvailableState = value
+                    onSwitchAvailability(value)
+                })
             }
         }
     }

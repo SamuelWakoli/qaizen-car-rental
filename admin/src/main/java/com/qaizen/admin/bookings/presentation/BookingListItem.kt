@@ -173,7 +173,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                     .clickable {
                         // TODO: navigate to payment history
                     }, headlineContent = {
-                    Text(text = "Payment Status: Paid")
+                    Text(text = "Payment Status: ")
                 }, leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.Payments,
@@ -206,7 +206,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                         .clickable {
                             // TODO: Approve Booking
                         }, headlineContent = {
-                        Text(text = "Approve")
+                        Text(text = "Approve Payment")
                     }, leadingContent = {
                         Icon(
                             imageVector = Icons.Outlined.CheckCircle,
@@ -227,7 +227,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                         .clickable {
                             // TODO: Decline Booking
                         }, headlineContent = {
-                        Text(text = "Decline")
+                        Text(text = "Decline & Delete")
                     }, leadingContent = {
                         Icon(
                             imageVector = Icons.Default.Close,

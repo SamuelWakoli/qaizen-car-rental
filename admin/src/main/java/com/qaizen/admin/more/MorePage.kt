@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AdminPanelSettings
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material3.Switch
@@ -21,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.core.presentation.composables.CustomQaizenListItem
+import com.qaizen.admin.navigation.Screens
 
 @Composable
 fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController) {
@@ -60,6 +61,14 @@ fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController
                     navHostController.navigate(Screens.AdminsScreen.route) {
                         launchSingleTop = true
                     }
+                })
+            CustomQaizenListItem(
+                leadingIcon = Icons.Outlined.History,
+                label = "Records",
+                onClick = {
+//                    navHostController.navigate(Screens.AdminsScreen.route) {
+//                        launchSingleTop = true
+//                    }
                 })
             CustomQaizenListItem(
                 leadingIcon = Icons.Outlined.Policy,
