@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
@@ -49,6 +50,7 @@ fun VehicleListItem(
     onSwitchAvailability: (Boolean) -> Unit = {},
     onClickDetails: () -> Unit = {},
     onClickEdit: () -> Unit = {},
+    onClickDelete: () -> Unit = {},
 ) {
     var isAvailableState by remember { mutableStateOf(isAvailable) }
 
@@ -130,6 +132,22 @@ fun VehicleListItem(
                         Spacer(modifier = Modifier.size(4.dp))
                         Text(
                             text = "Details",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+                TextButton(onClick = onClickDelete) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteForever,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.size(4.dp))
+                        Text(
+                            text = "Delete",
                             style = MaterialTheme.typography.titleLarge
                         )
                     }

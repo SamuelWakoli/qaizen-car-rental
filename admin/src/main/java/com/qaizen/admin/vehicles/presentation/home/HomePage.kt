@@ -8,6 +8,10 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -30,6 +34,8 @@ fun HomePage(
         else -> 300.dp
     }
 
+    var showDeleteVehicleDialog by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
     ) {
@@ -44,6 +50,9 @@ fun HomePage(
                             launchSingleTop = true
                         }
                     },
+                    onClickDelete = {
+                        showDeleteVehicleDialog = true
+                    },
                     onClickEdit = {
                         navHostController.navigate(Screens.AddVehicleScreen.route) {
                             launchSingleTop = true
@@ -51,6 +60,16 @@ fun HomePage(
                     },
                 )
             }
+        }
+
+        if (showDeleteVehicleDialog) {
+            DeleteVehicleDialog(
+                onDismissRequest = { showDeleteVehicleDialog = false },
+                onConfirmRequest = {
+                    showDeleteVehicleDialog = false
+                    // Delete vehicle here
+                }
+            )
         }
     }
 }
