@@ -130,52 +130,6 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     }
 
-    fun registerWithEmailPwd(
-        onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {},
-    ) {
-        val name = uiState.value.name
-        val email = uiState.value.email
-        val password = uiState.value.password
-
-        if (name.isEmpty()) {
-            _uiState.update { it.copy(showNameError = true) }
-        } else if (email.isEmpty()) {
-            _uiState.update { it.copy(showEmailError = true) }
-        } else if (password.isEmpty()) {
-            _uiState.update { it.copy(showPasswordError = true) }
-        } else {
-            _uiState.update {
-                it.copy(
-                    isSignInButtonLoading = true
-                )
-            }
-
-
-            viewModelScope.launch {
-                authRepository.registerWithEmailPwd(name, email, password,
-                    onSuccess = {
-                        _uiState.update {
-                            it.copy(
-                                isSignInButtonLoading = false,
-                                isSignInSuccess = true,
-                                errorMessage = null
-                            )
-                        }
-                        onSuccess()
-                    }, onFailure = { exception ->
-                        _uiState.update {
-                            it.copy(
-                                isSignInButtonLoading = false,
-                                isSignInSuccess = false,
-                                errorMessage = exception.message
-                            )
-                        }
-                        onFailure(exception)
-                    })
-            }
-        }
-    }
-
 
     fun sendPwdResetLink(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) =
         viewModelScope.launch {
@@ -206,12 +160,4 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
             _uiState.update { it.copy(isSignInButtonLoading = false) }
         }
 
-    fun signInAnonymously(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isSignInButtonLoading = true) }
-            authRepository.signInAnonymously(onSuccess, onFailure)
-        }.invokeOnCompletion {
-            _uiState.update { it.copy(isSignInButtonLoading = false) }
-        }
-    }
 }

@@ -7,7 +7,6 @@ import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
 import com.qaizen.admin.auth.data.FirebaseDirectories
 import com.qaizen.admin.auth.domain.model.UserData
 import com.qaizen.admin.auth.domain.repositories.AuthRepository
@@ -37,34 +36,6 @@ class QaizenAuthRepository : AuthRepository {
         }
     }
 
-    override suspend fun registerWithEmailPwd(
-        name: String, email: String, password: String,
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit,
-    ) {
-        try {
-            // Create the user with email and password.
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            // Get the current user.
-            val currentUser = authResult.user!!
-
-            // Get the FCM token.
-            val tokenList = mutableListOf<String>()
-            Firebase.messaging.token.addOnSuccessListener { tokenList.add(it) }
-
-            // Create the user data object.
-            val userData = UserData(
-                currentUser.uid, name, currentUser.photoUrl, email, tokenList
-            )
-            onSuccess.invoke()
-
-            // Update the user data in Firestore.
-            updateUserFirestoreDataOnAuth(currentUser, userData, onFailure)
-        } catch (e: Exception) {
-            // Handle any exceptions.
-            onFailure(e)
-        }
-    }
 
     /**
      * Updates the user's data in Firestore when the user authenticates.
@@ -100,6 +71,8 @@ class QaizenAuthRepository : AuthRepository {
                     return@addSnapshotListener
                 } else {
                     userDocReference.set(data).addOnSuccessListener {
+                        firestore.collection("admins").document(currentUser.uid)
+                            .update("fcmTokens", data.fcmTokens)
                         return@addOnSuccessListener
                     }
                     return@addSnapshotListener
@@ -111,16 +84,6 @@ class QaizenAuthRepository : AuthRepository {
         }
     }
 
-    override suspend fun sendVerificationEmail(
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit,
-    ) {
-        auth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
-            onSuccess()
-        }?.addOnFailureListener {
-            onFailure(it)
-        }
-    }
 
     override suspend fun sendPwdResetLink(
         email: String,
@@ -128,14 +91,6 @@ class QaizenAuthRepository : AuthRepository {
         onFailure: (Exception) -> Unit,
     ) {
         auth.sendPasswordResetEmail(email).addOnSuccessListener {
-            onSuccess()
-        }.addOnFailureListener {
-            onFailure(it)
-        }
-    }
-
-    override suspend fun signInAnonymously(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        auth.signInAnonymously().addOnSuccessListener {
             onSuccess()
         }.addOnFailureListener {
             onFailure(it)
