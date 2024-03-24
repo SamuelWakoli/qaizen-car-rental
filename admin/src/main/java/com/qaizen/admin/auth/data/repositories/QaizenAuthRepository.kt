@@ -7,6 +7,7 @@ import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.qaizen.admin.auth.data.FirebaseDirectories
 import com.qaizen.admin.auth.domain.model.UserData
 import com.qaizen.admin.auth.domain.repositories.AuthRepository
@@ -31,6 +32,29 @@ class QaizenAuthRepository : AuthRepository {
     ) {
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
             onSuccess()
+
+            var fcmTokens: MutableList<String>
+            val currentUser = auth.currentUser
+
+            firestore.collection("users").document(currentUser?.uid!!)
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+//                    onFailure(error)
+                        return@addSnapshotListener
+                    }
+                    if (value != null && value.exists()) {
+                        fcmTokens = value.get("fcmTokens") as MutableList<String>;
+
+                        val tokenList: MutableList<String> = mutableListOf()
+                        Firebase.messaging.token.addOnSuccessListener { token ->
+                            if (!fcmTokens.contains(token)) {
+                                fcmTokens.add(token)
+                                firestore.collection("admins").document(currentUser.uid)
+                                    .update("fcmTokens", fcmTokens)
+                            }
+                        }
+                    }
+                }
         }.addOnFailureListener {
             onFailure(it)
         }
