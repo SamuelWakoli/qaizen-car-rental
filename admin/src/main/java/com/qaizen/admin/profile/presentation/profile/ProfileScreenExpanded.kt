@@ -14,15 +14,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
+import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.core.presentation.composables.CoilImage
 import com.qaizen.admin.core.presentation.composables.CustomQaizenListItem
 
@@ -31,8 +32,10 @@ fun ProfileScreenExpanded(
     innerPadding: PaddingValues,
     navHostController: NavHostController,
     onClickSignOut: () -> Unit,
-    onClickDeleteAccount: () -> Unit,
+    viewModel: AdminViewModel,
 ) {
+
+    val admin = viewModel.admin?.collectAsState()?.value
 
     Row(
         modifier = Modifier
@@ -58,7 +61,7 @@ fun ProfileScreenExpanded(
             Spacer(modifier = Modifier.size(16.dp))
             Column {
                 Text(
-                    text = "0712345678",
+                    text = admin?.phone ?: "Phone Number Not Set",
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
@@ -89,11 +92,6 @@ fun ProfileScreenExpanded(
             CustomQaizenListItem(
                 leadingIcon = Icons.AutoMirrored.Outlined.Logout,
                 label = "Sign Out", onClick = onClickSignOut
-            )
-
-            CustomQaizenListItem(
-                leadingIcon = Icons.Outlined.PersonOff,
-                label = "Delete Account", onClick = onClickDeleteAccount,
             )
 
             Spacer(modifier = Modifier.size(16.dp))

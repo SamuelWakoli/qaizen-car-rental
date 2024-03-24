@@ -3,6 +3,7 @@ package com.qaizen.admin.admins.presentation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.LayoutDirectionPreviews
 import com.qaizen.admin.OrientationPreviews
 import com.qaizen.admin.ThemePreviews
+import com.qaizen.admin.admins.data.QaizenAdminRepository
 import com.qaizen.admin.navigation.canUserNavigateUp
 import com.qaizen.admin.ui.theme.QaizenTheme
 
@@ -32,7 +35,10 @@ import com.qaizen.admin.ui.theme.QaizenTheme
 fun AdminsScreen(
     modifier: Modifier = Modifier,
     navHostController: NavHostController,
+    viewModel: AdminViewModel,
 ) {
+
+    val admins = viewModel.admins.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -60,8 +66,9 @@ fun AdminsScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(5) {
+            items(admins) {admin ->
                 AdminListItem(
+                    admin = admin,
                     modifier = Modifier.padding(
                         horizontal = 8.dp,
                         vertical = 4.dp
@@ -81,8 +88,9 @@ fun AdminsScreen(
 private fun AdminsScreenPreview() {
     val context = LocalContext.current
     val navHostController = rememberNavController()
+    val adminViewModel = AdminViewModel(adminRepository = QaizenAdminRepository())
 
     QaizenTheme {
-        AdminsScreen(navHostController = navHostController)
+        AdminsScreen(navHostController = navHostController, viewModel = adminViewModel)
     }
 }

@@ -1,5 +1,9 @@
 package com.qaizen.admin.admins.presentation
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,18 +30,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.admin.LayoutDirectionPreviews
 import com.qaizen.admin.OrientationPreviews
 import com.qaizen.admin.ThemePreviews
+import com.qaizen.admin.admins.domain.model.Admin
 
 @Composable
-fun AdminListItem(modifier: Modifier = Modifier) {
+fun AdminListItem(modifier: Modifier = Modifier, admin: Admin) {
 
     var isExpanded by remember { mutableStateOf(false) }
     var rotationState by remember { mutableFloatStateOf(0f) }
+    val context = LocalContext.current
 
     Card(
         shape = MaterialTheme.shapes.large,
@@ -55,7 +61,7 @@ fun AdminListItem(modifier: Modifier = Modifier) {
                     },
                 leadingContent = {
                     AsyncImage(
-                        model = FirebaseAuth.getInstance().currentUser?.photoUrl,
+                        model = admin.photoUrl,
                         contentDescription = "Profile Picture",
                         modifier = Modifier
                             .padding(end = 8.dp)
@@ -64,10 +70,10 @@ fun AdminListItem(modifier: Modifier = Modifier) {
                     )
                 },
                 headlineContent = {
-                    Text(text = "Admin Name")
+                    Text(text = admin.name)
                 },
                 supportingContent = {
-                    Text(text = "admin@qaizen.com")
+                    Text(text = admin.email)
                 },
                 trailingContent = {
                     IconButton(onClick = {
@@ -91,7 +97,17 @@ fun AdminListItem(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.large)
                         .clickable {
-                            // TODO: Call intent
+                            val phoneNumber = admin.phone
+                            val intent = Intent(Intent.ACTION_DIAL).apply {
+                                data = Uri.parse("tel:$phoneNumber")
+                            }
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                Toast
+                                    .makeText(context, "No phone app found", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         },
                     headlineContent = {
                         Text(text = "Call")
@@ -118,5 +134,5 @@ fun AdminListItem(modifier: Modifier = Modifier) {
 @LayoutDirectionPreviews
 @Composable
 fun AdminListItemPreview() {
-    AdminListItem()
+    AdminListItem(admin = Admin("", "Sam", "sam@gmail.com", "", "1234567890", listOf()))
 }

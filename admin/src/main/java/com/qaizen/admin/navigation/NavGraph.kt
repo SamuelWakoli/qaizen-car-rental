@@ -3,6 +3,7 @@ package com.qaizen.admin.navigation
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -10,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseUser
+import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.admins.presentation.AdminsScreen
 import com.qaizen.admin.auth.presentation.AuthViewModel
 import com.qaizen.admin.auth.presentation.ForgotPasswordScreen
@@ -36,6 +38,7 @@ fun NavGraph(
 ) {
     val navHostController = rememberNavController()
 
+    val adminViewModel: AdminViewModel = hiltViewModel()
     val morePageViewModel = viewModel<MorePageViewModel>()
 
 
@@ -64,6 +67,7 @@ fun NavGraph(
         }
         composable(Screens.AdminsScreen.route) {
             AdminsScreen(
+                viewModel = adminViewModel,
                 navHostController = navHostController,
             )
         }
@@ -71,6 +75,7 @@ fun NavGraph(
             ProfileScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                viewModel = adminViewModel,
             )
         }
         composable(Screens.AddVehicleScreen.route) {

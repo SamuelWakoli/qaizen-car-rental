@@ -3,7 +3,6 @@ package com.qaizen.admin.profile.presentation.profile
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,9 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.navigation.canUserNavigateUp
-import com.qaizen.admin.profile.presentation.profile.dialogs.DeleteProfileDialog
 import com.qaizen.admin.profile.presentation.profile.dialogs.SignOutDialog
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,7 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
+    viewModel: AdminViewModel,
 ) {
 
     var showSignOutDialog by remember { mutableStateOf(false) }
@@ -40,94 +42,54 @@ fun ProfileScreen(
 
 
     Scaffold(topBar = {
-        CenterAlignedTopAppBar(navigationIcon = {
-            IconButton(onClick = { if (navHostController.canUserNavigateUp) navHostController.navigateUp() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Navigate back"
-                )
-            }
-        }, title = { Text(text = "Profile") }, actions = {
-            IconButton(onClick = {
-                navHostController.navigate(Screens.EditProfileScreen.route) {
-                    launchSingleTop = true
+        CenterAlignedTopAppBar(
+            navigationIcon = {
+                IconButton(onClick = { if (navHostController.canUserNavigateUp) navHostController.navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate back"
+                    )
                 }
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Edit Profile",
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
-            }
-        }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            titleContentColor = MaterialTheme.colorScheme.primary,
-        )
+            },
+            title = { Text(text = "Profile") },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            )
         )
     }) { innerPadding: PaddingValues ->
         when (windowSize.widthSizeClass) {
             WindowWidthSizeClass.Expanded, WindowWidthSizeClass.Medium -> {
-                ProfileScreenExpanded(innerPadding = innerPadding,
+                ProfileScreenExpanded(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel,
                     navHostController = navHostController,
                     onClickSignOut = { showSignOutDialog = true },
-                    onClickDeleteAccount = { showDeleteProfileDialog = true })
+                )
             }
 
             else -> {
-                ProfileScreenCompact(innerPadding = innerPadding,
+                ProfileScreenCompact(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel,
                     navHostController = navHostController,
                     onClickSignOut = { showSignOutDialog = true },
-                    onClickDeleteAccount = { showDeleteProfileDialog = true })
+                )
             }
         }
 
         if (showSignOutDialog) SignOutDialog(onConfirmation = {
             coroutineScope.launch {
-//                    profileScreenViewModel.signOut(
-//                        onSuccess = {
-//                            navController.navigate(route = Screens.SignInScreen.route) {
-//                                popUpTo(Screens.HomeScreen.route) {
-//                                    inclusive = true
-//                                }
-//                            }
-//                        },
-//                        onFailure = {
-//                            profileScreenViewModel.hideOrShowSignOutDialog()
-//                            Toast.makeText(
-//                                context,
-//                                "Failed to sign out, Please try again later",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    )
+                Firebase.auth.signOut()
+            }.invokeOnCompletion {
+                navHostController.navigate(route = Screens.SignInScreen.route) {
+                    popUpTo(Screens.HomeScreen.route) {
+                        inclusive = true
+                    }
+                }
             }
         }, onDismissRequest = {
             showSignOutDialog = false
-//                profileScreenViewModel.hideOrShowSignOutDialog()
         })
 
-        if (showDeleteProfileDialog) DeleteProfileDialog(onConfirmation = {
-            coroutineScope.launch {
-//                    profileScreenViewModel.deleteProfileAndData(
-//                        onSuccess = {
-//                            navController.navigate(route = Screens.SignInScreen.route) {
-//                                popUpTo(Screens.HomeScreen.route) {
-//                                    inclusive = true
-//                                }
-//                            }
-//                        },
-//                        onFailure = { exception: Exception ->
-//                            profileScreenViewModel.hideOrShowDeleteProfileDialog()
-//                            Toast.makeText(
-//                                context,
-//                                "Failed to delete profile and data: ${exception.message}",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    )
-            }
-        }, onDismissRequest = {
-            showDeleteProfileDialog = false
-//                profileScreenViewModel.hideOrShowDeleteProfileDialog()
-        })
     }
 }
