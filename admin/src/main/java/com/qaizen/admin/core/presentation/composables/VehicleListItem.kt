@@ -38,21 +38,19 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.qaizen.admin.vehicles.domain.model.Vehicle
 
 
 @Composable
 fun VehicleListItem(
     modifier: Modifier = Modifier,
-    imageUrl: String = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
-    name: String = "Subaru Legacy B4",
-    pricePerDay: String = "10,000",
-    isAvailable: Boolean = true,
+    vehicle: Vehicle,
     onSwitchAvailability: (Boolean) -> Unit = {},
     onClickDetails: () -> Unit = {},
     onClickEdit: () -> Unit = {},
     onClickDelete: () -> Unit = {},
 ) {
-    var isAvailableState by remember { mutableStateOf(isAvailable) }
+    var isAvailableState by remember { mutableStateOf(vehicle.available ?: false) }
 
     Card(
         modifier = Modifier
@@ -76,7 +74,7 @@ fun VehicleListItem(
                 contentAlignment = Alignment.BottomStart
             ) {
                 CoilImage(
-                    imageUrl = imageUrl,
+                    imageUrl = vehicle.images.first(),
                     showOpenImageButton = true,
                     modifier = Modifier
                         .heightIn(max = 300.dp)
@@ -86,7 +84,7 @@ fun VehicleListItem(
                 )
                 Text(
                     text = buildAnnotatedString {
-                        append(name)
+                        append(vehicle.name)
                         append(" | ")
                         withStyle(
                             style = SpanStyle(
@@ -94,7 +92,7 @@ fun VehicleListItem(
                                 fontWeight = FontWeight.ExtraBold,
                             )
                         ) {
-                            append("Ksh $pricePerDay/day")
+                            append("Ksh ${vehicle.pricePerDay}/day")
                         }
                     },
                     color = Color.White,

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminViewModel @Inject constructor(adminRepository: AdminRepository) : ViewModel() {
+class AdminViewModel @Inject constructor(private val adminRepository: AdminRepository) : ViewModel() {
     private val userId = Firebase.auth.currentUser?.uid
 
     val admins = adminRepository.getAdmins().stateIn(
