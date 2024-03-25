@@ -1,5 +1,6 @@
 package com.qaizen.admin.vehicles.presentation.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.qaizen.admin.core.presentation.composables.VehicleListItem
@@ -38,6 +40,7 @@ fun HomePage(
     vehiclesViewModel: VehiclesViewModel,
 ) {
 
+    val context = LocalContext.current
     val uiState = vehiclesViewModel.uiState.collectAsState().value
 
     val vehicles = vehiclesViewModel.vehicles.collectAsState().value
@@ -111,7 +114,9 @@ fun HomePage(
                             vehiclesViewModel.updateVehicle(
                                 vehicle = vehicle.copy(available = value),
                                 onSuccess = {},
-                                onFailure = {})
+                                onFailure = {
+                                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                                })
                         },
                     )
                 }
@@ -120,10 +125,31 @@ fun HomePage(
 
         if (showDeleteVehicleDialog) {
             DeleteVehicleDialog(
+                vehicleName = uiState.currentVehicle!!.name,
                 onDismissRequest = { showDeleteVehicleDialog = false },
                 onConfirmRequest = {
                     showDeleteVehicleDialog = false
-                    // Delete vehicle here
+                    vehiclesViewModel.deleteVehicle(
+                        vehicle = uiState.currentVehicle,
+                        onSuccess = {
+                            vehiclesViewModel.deleteImages(
+                                uiState.currentVehicle.images,
+                                onSuccess = {
+                                    Toast.makeText(
+                                        context,
+                                        "${uiState.currentVehicle.name} has been deleted",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                onFailure = { exception ->
+                                    Toast.makeText(context, exception.message, Toast.LENGTH_SHORT)
+                                        .show()
+                                })
+                        },
+                        onFailure = { exception ->
+                            Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                        })
+
                 }
             )
         }

@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun DeleteVehicleDialog(
     modifier: Modifier = Modifier,
+    vehicleName: String,
     onDismissRequest: () -> Unit,
     onConfirmRequest: () -> Unit,
 ) {
@@ -41,7 +42,7 @@ fun DeleteVehicleDialog(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Text(
-                    text = "Are you sure you want to delete Subaru Legacy B4?",
+                    text = "Are you sure you want to delete $vehicleName?",
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Spacer(modifier = Modifier.size(16.dp))

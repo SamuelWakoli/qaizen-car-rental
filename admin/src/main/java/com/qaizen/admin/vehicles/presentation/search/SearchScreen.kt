@@ -1,5 +1,6 @@
 package com.qaizen.admin.vehicles.presentation.search
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -88,6 +90,7 @@ fun SearchScreen(
         focusRequester.requestFocus()
     }
 
+    val context = LocalContext.current
     val uiState = vehiclesViewModel.uiState.collectAsState().value
 
 
@@ -241,7 +244,10 @@ fun SearchScreen(
                                         vehiclesViewModel.updateVehicle(
                                             vehicle = vehicle.copy(available = value),
                                             onSuccess = {},
-                                            onFailure = {})
+                                            onFailure = {
+                                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT)
+                                                    .show()
+                                            })
                                     },
                                 )
                             }
@@ -251,10 +257,31 @@ fun SearchScreen(
 
             if (showDeleteVehicleDialog) {
                 DeleteVehicleDialog(
+                    vehicleName = uiState.currentVehicle!!.name,
                     onDismissRequest = { showDeleteVehicleDialog = false },
                     onConfirmRequest = {
                         showDeleteVehicleDialog = false
-                        // Delete vehicle here
+                        vehiclesViewModel.deleteVehicle(
+                            vehicle = uiState.currentVehicle,
+                            onSuccess = {
+                                vehiclesViewModel.deleteImages(
+                                    uiState.currentVehicle.images,
+                                    onSuccess = {
+                                        Toast.makeText(
+                                            context,
+                                            "${uiState.currentVehicle.name} has been deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    },
+                                    onFailure = { exception ->
+                                        Toast.makeText(context, exception.message, Toast.LENGTH_SHORT)
+                                            .show()
+                                    })
+                            },
+                            onFailure = { exception ->
+                                Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                            })
+
                     }
                 )
             }
