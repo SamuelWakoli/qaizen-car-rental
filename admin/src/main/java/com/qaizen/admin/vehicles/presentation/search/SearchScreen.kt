@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -33,6 +34,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,17 +51,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.qaizen.admin.R
 import com.qaizen.admin.core.presentation.composables.VehicleListItem
 import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.navigation.canUserNavigateUp
+import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
 import com.qaizen.admin.vehicles.presentation.home.DeleteVehicleDialog
 
 @Composable
 fun SearchScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
+    vehiclesViewModel: VehiclesViewModel,
 ) {
     val itemMaxWidth = when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> 600.dp
@@ -83,6 +88,7 @@ fun SearchScreen(
         focusRequester.requestFocus()
     }
 
+    val uiState = vehiclesViewModel.uiState.collectAsState().value
 
 
     Box {
@@ -110,6 +116,7 @@ fun SearchScreen(
                     OutlinedTextField(value = searchQuery,
                         onValueChange = { value ->
                             searchQuery = value
+                            vehiclesViewModel.searchVehicles(query = value)
                         },
                         isError = isSearchError,
                         supportingText = if (isSearchError) {
@@ -187,27 +194,57 @@ fun SearchScreen(
 
                 } else
 
-                    LazyVerticalStaggeredGrid(
-                        modifier = Modifier, columns = StaggeredGridCells.Adaptive(itemMaxWidth)
-                    ) {
-                        items(20) {
-                            VehicleListItem(
-                                modifier = Modifier.heightIn(max = maxVehicleImageHeight),
-                                onClickDetails = {
-                                    navHostController.navigate(Screens.VehicleDetailsScreen.route) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                onClickDelete = {
-                                    showDeleteVehicleDialog = true
-                                },
-                                onClickEdit = {
-                                    navHostController.navigate(Screens.AddVehicleScreen.route) {
-                                        launchSingleTop = true
-                                    }
-                                },
+                    if (uiState.vehicleSearchResults.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface)
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Spacer(modifier = Modifier.size(100.dp))
+                            Text(text = "😕", fontSize = 100.sp, modifier = Modifier.padding(16.dp))
+                            Text(
+                                text = "Vehicle not found",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                color = MaterialTheme.colorScheme.primary
                             )
-
+                            Spacer(modifier = Modifier.size(100.dp))
+                        }
+                    } else {
+                        LazyVerticalStaggeredGrid(
+                            modifier = Modifier, columns = StaggeredGridCells.Adaptive(itemMaxWidth)
+                        ) {
+                            items(uiState.vehicleSearchResults) { vehicle ->
+                                VehicleListItem(
+                                    modifier = Modifier.heightIn(max = maxVehicleImageHeight),
+                                    vehicle = vehicle,
+                                    onClickDetails = {
+                                        vehiclesViewModel.updateCurrentVehicle(vehicle = vehicle)
+                                        navHostController.navigate(Screens.VehicleDetailsScreen.route) {
+                                            launchSingleTop = true
+                                        }
+                                    },
+                                    onClickDelete = {
+                                        vehiclesViewModel.updateCurrentVehicle(vehicle = vehicle)
+                                        showDeleteVehicleDialog = true
+                                    },
+                                    onClickEdit = {
+                                        vehiclesViewModel.updateCurrentVehicle(vehicle = vehicle)
+                                        navHostController.navigate(Screens.AddVehicleScreen.route) {
+                                            launchSingleTop = true
+                                        }
+                                    },
+                                    onSwitchAvailability = { value ->
+                                        vehiclesViewModel.updateVehicle(
+                                            vehicle = vehicle.copy(available = value),
+                                            onSuccess = {},
+                                            onFailure = {})
+                                    },
+                                )
+                            }
                         }
                     }
             }
