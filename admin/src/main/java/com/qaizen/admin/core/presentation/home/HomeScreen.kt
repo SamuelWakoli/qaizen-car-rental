@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.R
+import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.bookings.presentation.BookingsPage
 import com.qaizen.admin.core.presentation.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.admin.core.presentation.home.bottom_nav.bottomNavItems
@@ -51,6 +52,7 @@ fun HomeScreen(
     navHostController: NavHostController,
     morePageViewModel: MorePageViewModel,
     vehiclesViewModel: VehiclesViewModel,
+    adminViewModel: AdminViewModel,
 ) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -141,6 +143,7 @@ fun HomeScreen(
                         MorePage(
                             navHostController = navHostController,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            adminViewModel = adminViewModel,
                         )
                     }
                 }

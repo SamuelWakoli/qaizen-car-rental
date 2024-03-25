@@ -12,4 +12,6 @@ interface AdminRepository {
     fun getAdminById(id: String): Flow<Admin>
 
     fun getAdmins(): Flow<List<Admin>>
+
+    suspend fun updateAdmin(admin: Admin, onSuccess: () -> Unit, onError: (Exception) -> Unit)
 }

@@ -31,6 +31,7 @@ class QaizenAdminRepository : AdminRepository {
                         photoUrl = value.getString("photoUrl").toString(),
                         phone = value.getString("phone").toString(),
                         fcmTokens = value["fcmTokens"] as List<String>,
+                        notificationsOn = value.getBoolean("notificationsOn") ?: true,
                     )
 
                     trySend(admin)
@@ -57,6 +58,7 @@ class QaizenAdminRepository : AdminRepository {
                             photoUrl = doc.getString("photoUrl").toString(),
                             phone = doc.getString("phone").toString(),
                             fcmTokens = doc["fcmTokens"] as List<String>,
+                            notificationsOn = doc.getBoolean("notificationsOn") ?: true,
                         )
                     )
                 }
@@ -66,5 +68,17 @@ class QaizenAdminRepository : AdminRepository {
         }
 
         awaitClose { snapshotListener.remove() }
+    }
+
+    override suspend fun updateAdmin(
+        admin: Admin,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit,
+    ) {
+        fireStore.collection("admins").document(admin.id).set(admin).addOnSuccessListener {
+            onSuccess()
+        }.addOnFailureListener {
+            onError(it)
+        }
     }
 }

@@ -7,4 +7,5 @@ data class Admin(
     val photoUrl: String,
     val phone:String,
     val fcmTokens: List<String>,
+    val notificationsOn: Boolean = true,
 )

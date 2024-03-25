@@ -66,6 +66,7 @@ fun NavGraph(
                 navHostController = navHostController,
                 morePageViewModel = morePageViewModel,
                 vehiclesViewModel = vehiclesViewModel,
+                adminViewModel = adminViewModel,
             )
         }
         composable(Screens.AdminsScreen.route) {

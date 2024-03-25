@@ -1,5 +1,6 @@
 package com.qaizen.admin.more
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,12 +24,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.core.presentation.composables.CustomQaizenListItem
 import com.qaizen.admin.navigation.Screens
 
 @Composable
-fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController) {
-    var isNotificationOn by remember { mutableStateOf(true) }
+fun MorePage(
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController,
+    adminViewModel: AdminViewModel,
+) {
+
+    val admin = adminViewModel.admin?.collectAsState()?.value
+    var isNotificationOn by remember { mutableStateOf(admin?.notificationsOn ?: true) }
     val context = LocalContext.current
 
     Column(
@@ -52,7 +61,25 @@ fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController
                 },
                 trailingContent = {
                     Switch(checked = isNotificationOn,
-                        onCheckedChange = { value -> isNotificationOn = value })
+                        onCheckedChange = { value ->
+                            isNotificationOn = value
+                            adminViewModel.updateAdmin(
+                                admin!!.copy(notificationsOn = isNotificationOn),
+                                onSuccess = {
+                                    Toast.makeText(
+                                        context,
+                                        "Notifications turned ${if (isNotificationOn) "on" else "off"}.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                onError = { exception ->
+                                    Toast.makeText(
+                                        context,
+                                        "Error: ${exception.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                })
+                        })
                 })
             CustomQaizenListItem(
                 leadingIcon = Icons.Outlined.AdminPanelSettings,
