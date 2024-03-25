@@ -83,6 +83,7 @@ fun HomeScreen(
     }, floatingActionButton = {
         if (currentRoute == bottomNavItems.first().route) {
             FloatingActionButton(onClick = {
+                vehiclesViewModel.clearCurrentVehicle()
                 navHostController.navigate(Screens.AddVehicleScreen.route) {
                     launchSingleTop = true
                 }
