@@ -19,6 +19,7 @@ import com.qaizen.admin.auth.presentation.SignInScreen
 import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.profile.presentation.profile.ProfileScreen
+import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
 import com.qaizen.admin.vehicles.presentation.add_vehicle.AddVehicleScreen
 import com.qaizen.admin.vehicles.presentation.details.VehicleDetailsScreen
 import com.qaizen.admin.vehicles.presentation.search.SearchScreen
@@ -40,6 +41,7 @@ fun NavGraph(
 
     val adminViewModel: AdminViewModel = hiltViewModel()
     val morePageViewModel = viewModel<MorePageViewModel>()
+    val vehiclesViewModel: VehiclesViewModel = hiltViewModel()
 
 
     NavHost(
@@ -63,6 +65,7 @@ fun NavGraph(
                 windowSize = windowSize,
                 navHostController = navHostController,
                 morePageViewModel = morePageViewModel,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.AdminsScreen.route) {
@@ -80,20 +83,22 @@ fun NavGraph(
         }
         composable(Screens.AddVehicleScreen.route) {
             AddVehicleScreen(
-                windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.VehicleDetailsScreen.route) {
             VehicleDetailsScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.SearchScreen.route) {
             SearchScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
     }
