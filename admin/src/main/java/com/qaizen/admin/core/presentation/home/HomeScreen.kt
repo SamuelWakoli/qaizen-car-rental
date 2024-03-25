@@ -40,6 +40,7 @@ import com.qaizen.admin.more.MorePage
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.users.presentation.UsersPage
+import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
 import com.qaizen.admin.vehicles.presentation.home.HomePage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +50,7 @@ fun HomeScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
     morePageViewModel: MorePageViewModel,
+    vehiclesViewModel: VehiclesViewModel,
 ) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -119,6 +121,7 @@ fun HomeScreen(
                         HomePage(
                             windowSize = windowSize,
                             navHostController = navHostController,
+                            vehiclesViewModel = vehiclesViewModel,
                         )
                     }
                     composable(bottomNavItems[1].route) {
