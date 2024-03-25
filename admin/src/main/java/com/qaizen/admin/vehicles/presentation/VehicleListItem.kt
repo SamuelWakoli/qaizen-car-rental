@@ -1,5 +1,6 @@
-package com.qaizen.admin.core.presentation.composables
+package com.qaizen.admin.vehicles.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,11 +34,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.qaizen.admin.core.presentation.composables.CoilImage
 import com.qaizen.admin.vehicles.domain.model.Vehicle
 
 
@@ -50,6 +53,7 @@ fun VehicleListItem(
     onClickEdit: () -> Unit = {},
     onClickDelete: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     var isAvailableState by remember { mutableStateOf(vehicle.available ?: false) }
 
     Card(
@@ -181,6 +185,11 @@ fun VehicleListItem(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Switch(checked = isAvailableState, onCheckedChange = { value ->
+                    Toast.makeText(
+                        context,
+                        "${vehicle.name} is now ${if (value) "available" else "unavailable"}",
+                        Toast.LENGTH_LONG
+                    ).show()
                     isAvailableState = value
                     onSwitchAvailability(value)
                 })

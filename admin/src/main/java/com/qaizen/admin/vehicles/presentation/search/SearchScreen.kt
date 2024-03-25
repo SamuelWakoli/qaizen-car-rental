@@ -56,7 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.qaizen.admin.R
-import com.qaizen.admin.core.presentation.composables.VehicleListItem
+import com.qaizen.admin.vehicles.presentation.VehicleListItem
 import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.navigation.canUserNavigateUp
 import com.qaizen.admin.vehicles.presentation.VehiclesViewModel

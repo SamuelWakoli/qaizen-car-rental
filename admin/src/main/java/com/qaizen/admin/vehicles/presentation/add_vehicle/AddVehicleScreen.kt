@@ -393,7 +393,7 @@ fun AddVehicleScreen(
                             pricePerDay = pricePerDay,
                             numberPlate = numberPlate,
                             type = type,
-                            available = currentVehicle?.available,
+                            available = currentVehicle?.available ?: true,
                             images = images,
                             description = description,
                         ), onSuccess = {
