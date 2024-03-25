@@ -60,6 +60,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.qaizen.admin.core.presentation.composables.CoilImage
+import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.navigation.canUserNavigateUp
 import com.qaizen.admin.vehicles.domain.model.Vehicle
 import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
@@ -397,9 +398,8 @@ fun AddVehicleScreen(
                             description = description,
                         ), onSuccess = {
                             isSaving = false
-                            if (navHostController.canUserNavigateUp) {
-                                navHostController.navigateUp()
-                            }
+                            navHostController.popBackStack(Screens.HomeScreen.route, false)
+
                         }, onFailure = { exception ->
                             errorMessage = "An error occurred: [${exception.message}]"
                         })
