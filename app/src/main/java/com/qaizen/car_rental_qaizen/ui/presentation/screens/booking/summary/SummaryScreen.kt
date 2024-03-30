@@ -25,10 +25,15 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,13 +46,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreenAppbar
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SummaryScreen(windowSize: WindowSizeClass, navHostController: NavHostController) {
+fun SummaryScreen(
+    windowSize: WindowSizeClass,
+    navHostController: NavHostController,
+    vehiclesViewModel: VehiclesViewModel,
+    profileViewModel: ProfileViewModel,
+) {
+
+    val uiState = vehiclesViewModel.uiState.collectAsState().value
+    val userData = profileViewModel.userData.collectAsState().value
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSendingSummary by rememberSaveable { mutableStateOf(false) }
@@ -57,7 +71,21 @@ fun SummaryScreen(windowSize: WindowSizeClass, navHostController: NavHostControl
 
     val coroutineScope = rememberCoroutineScope()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    var errorMessage by remember { mutableStateOf("") }
+    LaunchedEffect(errorMessage) {
+        if (errorMessage.isNotEmpty()) {
+            snackbarHostState.showSnackbar(
+                errorMessage,
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true,
+            )
+            errorMessage = ""
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             VehicleDetailsScreenAppbar(
                 navHostController = navHostController,
@@ -81,8 +109,8 @@ fun SummaryScreen(windowSize: WindowSizeClass, navHostController: NavHostControl
                 verticalArrangement = Arrangement.Top,
             ) {
                 ListItem(
-                    headlineContent = { Text(text = "John Doe") },
-                    supportingContent = { Text(text = "0712345678") },
+                    headlineContent = { Text(text = userData?.displayName.toString()) },
+                    supportingContent = { Text(text = userData?.phone ?: "Phone number not set") },
                     trailingContent = {
                         IconButton(onClick = {
                             navHostController.navigate(Screens.EditProfileScreen.route) {
@@ -107,13 +135,26 @@ fun SummaryScreen(windowSize: WindowSizeClass, navHostController: NavHostControl
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                 )
-                SummaryListItem(label = "Vehicle:", value = "Subaru Legacy B4")
-                SummaryListItem(label = "Booked at:", value = "12:30am | 12/12/2024")
-                SummaryListItem(label = "Delivery address:", value = "KICC Parliament Road, London")
-                SummaryListItem(label = "Number of days:", value = "4")
+                SummaryListItem(label = "Vehicle:", value = uiState.currentVehicle?.name!!)
+                SummaryListItem(
+                    label = "Booked at:",
+                    value = "${uiState.currentBookingData.pickupTime} | ${uiState.currentBookingData.pickupDate}"
+                )
+                if (uiState.currentBookingData.deliveryAddress != null) SummaryListItem(
+                    label = "Delivery address:",
+                    value = uiState.currentBookingData.deliveryAddress
+                )
+                SummaryListItem(
+                    label = "Number of days:",
+                    value = uiState.currentBookingData.days!!
+                )
+                SummaryListItem(
+                    label = "Price:",
+                    value = "${uiState.currentVehicle.pricePerDay} /day"
+                )
                 SummaryListItem(
                     label = "Total Price (Exclusive of delivery fee):",
-                    value = "Ksh. 40,000"
+                    value = "Ksh. ${uiState.currentBookingData.totalPrice}"
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 HorizontalDivider(
@@ -128,9 +169,16 @@ fun SummaryScreen(windowSize: WindowSizeClass, navHostController: NavHostControl
 
                         coroutineScope.launch {
                             isSendingSummary = true
-                            delay(3_000)
-                            isSendingSummary = false
-                            showSummarySentDialog = true
+                            vehiclesViewModel.sendBookingData(
+                                onSuccess = {
+                                    isSendingSummary = false
+                                    showSummarySentDialog = true
+                                },
+                                onError = { exception ->
+                                    isSendingSummary = false
+                                    errorMessage = exception.message.toString()
+                                }
+                            )
                         }
                     },
                     modifier = Modifier

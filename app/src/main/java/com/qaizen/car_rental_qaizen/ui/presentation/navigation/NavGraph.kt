@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseUser
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.AuthViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.ForgotPasswordScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.RegisterScreen
@@ -48,6 +50,8 @@ fun NavGraph(
     val navHostController = rememberNavController()
 
     val morePageViewModel: MorePageViewModel = hiltViewModel()
+    val vehiclesViewModel: VehiclesViewModel = hiltViewModel()
+    val profileViewModel: ProfileViewModel = hiltViewModel()
 
 
     NavHost(
@@ -78,6 +82,8 @@ fun NavGraph(
                 windowSize = windowSize,
                 navHostController = navHostController,
                 morePageViewModel = morePageViewModel,
+                vehiclesViewModel = vehiclesViewModel,
+                profileViewModel = profileViewModel,
             )
         }
         composable(Screens.ContactUsScreen.route) {
@@ -94,12 +100,14 @@ fun NavGraph(
             ProfileScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                profileViewModel = profileViewModel,
             )
         }
         composable(Screens.EditProfileScreen.route) {
             EditProfileScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                profileViewModel = profileViewModel,
             )
         }
         composable(Screens.PaymentInfoScreen.route) {
@@ -135,30 +143,36 @@ fun NavGraph(
             SearchScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.VehicleDetailsScreen.route) {
             VehicleDetailsScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.BookingScreen.route) {
             BookingScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.DeliveryLocationScreen.route) {
             DeliveryLocationScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
             )
         }
         composable(Screens.SummaryScreen.route) {
             SummaryScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                vehiclesViewModel = vehiclesViewModel,
+                profileViewModel = profileViewModel,
             )
         }
         composable(Screens.MoreServicesScreen.route) {
