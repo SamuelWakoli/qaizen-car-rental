@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile.dialogs.DeleteProfileDialog
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile.dialogs.SignOutDialog
 import kotlinx.coroutines.launch
@@ -32,8 +34,10 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
+    profileViewModel: ProfileViewModel,
 ) {
 
+    val userData = profileViewModel.userData.collectAsState().value
     var showSignOutDialog by remember { mutableStateOf(false) }
     var showDeleteProfileDialog by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -66,17 +70,23 @@ fun ProfileScreen(
     }) { innerPadding: PaddingValues ->
         when (windowSize.widthSizeClass) {
             WindowWidthSizeClass.Expanded, WindowWidthSizeClass.Medium -> {
-                ProfileScreenExpanded(innerPadding = innerPadding,
+                ProfileScreenExpanded(
+                    innerPadding = innerPadding,
                     navHostController = navHostController,
                     onClickSignOut = { showSignOutDialog = true },
-                    onClickDeleteAccount = { showDeleteProfileDialog = true })
+                    onClickDeleteAccount = { showDeleteProfileDialog = true },
+                    userData = userData,
+                )
             }
 
             else -> {
-                ProfileScreenCompact(innerPadding = innerPadding,
+                ProfileScreenCompact(
+                    innerPadding = innerPadding,
                     navHostController = navHostController,
                     onClickSignOut = { showSignOutDialog = true },
-                    onClickDeleteAccount = { showDeleteProfileDialog = true })
+                    onClickDeleteAccount = { showDeleteProfileDialog = true },
+                    userData = userData,
+                )
             }
         }
 

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
+import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CustomQaizenListItem
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
@@ -36,6 +37,7 @@ fun ProfileScreenCompact(
     navHostController: NavHostController,
     onClickSignOut: () -> Unit,
     onClickDeleteAccount: () -> Unit,
+    userData: UserData?,
 ) {
     Column(
         modifier = Modifier
@@ -51,17 +53,17 @@ fun ProfileScreenCompact(
         ) {
             ListItem(leadingContent = {
                 CoilImage(
-                    imageUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString(),
+                    imageUrl = userData?.photoURL.toString(),
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(100.dp),
                 )
             },
                 overlineContent = {
-                    Text(text = "0712345678")
+                    Text(text = userData?.phone ?: "Phone not set")
                 },
                 headlineContent = {
-                    Text(text = FirebaseAuth.getInstance().currentUser?.displayName.toString())
+                    Text(text = userData?.displayName ?: "Could not get name")
                 },
                 supportingContent = { Text(text = FirebaseAuth.getInstance().currentUser?.email.toString()) })
 
