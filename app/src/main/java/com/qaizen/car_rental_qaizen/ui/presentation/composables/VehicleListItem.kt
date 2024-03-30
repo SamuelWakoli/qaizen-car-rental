@@ -38,15 +38,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.qaizen.car_rental_qaizen.domain.model.Vehicle
 
 
 @Composable
 fun VehicleListItem(
     modifier: Modifier = Modifier,
-    imageUrl: String = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
-    name: String = "Subaru Legacy B4",
-    pricePerDay: String = "10,000",
-    isAvailable: Boolean = true,
+    vehicle: Vehicle,
     isFavorite: Boolean = false,
     showFavoriteIcon: Boolean = true,
     onClickFavorite: (Boolean) -> Unit = {},
@@ -54,6 +52,7 @@ fun VehicleListItem(
     onClickBook: () -> Unit = {},
 ) {
     var isFavoriteState by remember { mutableStateOf(isFavorite) }
+    val isAvailableState by remember { mutableStateOf(vehicle.available ?: false) }
 
     Card(
         modifier = Modifier
@@ -77,7 +76,7 @@ fun VehicleListItem(
                 contentAlignment = Alignment.BottomStart
             ) {
                 CoilImage(
-                    imageUrl = imageUrl,
+                    imageUrl = vehicle.images.first(),
                     showOpenImageButton = true,
                     modifier = Modifier
                         .heightIn(max = 300.dp)
@@ -87,7 +86,7 @@ fun VehicleListItem(
                 )
                 Text(
                     text = buildAnnotatedString {
-                        append(name)
+                        append(vehicle.name)
                         append(" | ")
                         withStyle(
                             style = SpanStyle(
@@ -95,7 +94,7 @@ fun VehicleListItem(
                                 fontWeight = FontWeight.ExtraBold,
                             )
                         ) {
-                            append("Ksh $pricePerDay/day")
+                            append("Ksh ${vehicle.pricePerDay}/day")
                         }
                     },
                     color = Color.White,
@@ -126,10 +125,10 @@ fun VehicleListItem(
                         onClickFavorite(isFavoriteState)
                     }) {
                         Icon(
-                            imageVector = if (isFavoriteState) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = if (isFavoriteState) "Remove from favorites" else "Add to favorites",
+                            imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
                             modifier = Modifier.size(36.dp),
-                            tint = if (isFavoriteState) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                            tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 } else {
@@ -141,7 +140,7 @@ fun VehicleListItem(
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
-                if (isAvailable) TextButton(onClick = onClickBook) {
+                if (isAvailableState) TextButton(onClick = onClickBook) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
