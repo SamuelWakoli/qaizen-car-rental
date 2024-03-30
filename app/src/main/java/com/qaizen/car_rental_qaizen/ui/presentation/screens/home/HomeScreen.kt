@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -25,6 +26,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.car_rental_qaizen.R
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.dashboard.DashboardPage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.favorites.FavoritesPage
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.home.HomePage
@@ -42,12 +45,16 @@ fun HomeScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
     morePageViewModel: MorePageViewModel,
+    vehiclesViewModel: VehiclesViewModel,
+    profileViewModel: ProfileViewModel,
 ) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val bottomNavHostController = rememberNavController()
+
+    val userData = profileViewModel.userData.collectAsState().value
 
     // TODO: Add a firestore listener to check for new version of the app.
     //  Set the initial version to 1.0.0
@@ -62,6 +69,7 @@ fun HomeScreen(
                 navHostController = navHostController,
                 bottomNavHostController = bottomNavHostController,
                 morePageViewModel = morePageViewModel,
+                userData = userData,
             )
         },
         bottomBar = {
@@ -103,6 +111,7 @@ fun HomeScreen(
                         HomePage(
                             windowSize = windowSize,
                             navHostController = navHostController,
+                            vehiclesViewModel = vehiclesViewModel,
                         )
                     }
                     composable(bottomNavItems[1].route) {
@@ -114,6 +123,7 @@ fun HomeScreen(
                         FavoritesPage(
                             windowSize = windowSize,
                             navHostController = navHostController,
+                            vehiclesViewModel = vehiclesViewModel,
                         )
                     }
                     composable(bottomNavItems[3].route) {

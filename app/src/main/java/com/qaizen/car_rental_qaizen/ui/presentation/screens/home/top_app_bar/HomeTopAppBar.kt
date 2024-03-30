@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ContactSupport
+import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Search
@@ -33,9 +34,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.AsyncImage
-import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.car_rental_qaizen.R
+import com.qaizen.car_rental_qaizen.domain.model.UserData
+import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.more.MorePageViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.dialogs.ThemeSelectDialog
@@ -49,6 +50,7 @@ fun HomeTopAppBar(
     navHostController: NavHostController,
     bottomNavHostController: NavHostController,
     morePageViewModel: MorePageViewModel,
+    userData: UserData?,
 ) {
 
     val navBackStackEntry by bottomNavHostController.currentBackStackEntryAsState()
@@ -125,18 +127,23 @@ fun HomeTopAppBar(
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            AsyncImage(
-                model = FirebaseAuth.getInstance().currentUser?.photoUrl,
-                contentDescription = "Profile Picture",
+            CoilImage(
+                imageUrl = userData?.photoURL.toString(),
+                errorContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.AccountBox,
+                        contentDescription = null
+                    )
+                },
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .size(42.dp)
-                    .clip(CircleShape)
+                    .clip(MaterialTheme.shapes.small)
                     .clickable {
                         navHostController.navigate(Screens.ProfileScreen.route) {
                             launchSingleTop = true
                         }
-                    }
+                    },
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
