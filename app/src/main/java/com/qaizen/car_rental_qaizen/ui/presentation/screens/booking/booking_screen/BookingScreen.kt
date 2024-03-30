@@ -38,11 +38,13 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,13 +67,17 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.qaizen.car_rental_qaizen.R
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.delivery_location.LocationPermissionDialog
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreenAppbar
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Date
 
@@ -81,7 +87,12 @@ fun BookingScreen(
     modifier: Modifier = Modifier,
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
+    vehiclesViewModel: VehiclesViewModel,
 ) {
+    val userId = Firebase.auth.currentUser?.uid
+    val uiState = vehiclesViewModel.uiState.collectAsState().value
+    val currentVehicle = uiState.currentVehicle!!
+
     val context = LocalContext.current
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val verticalScrollState = rememberScrollState()
@@ -116,7 +127,7 @@ fun BookingScreen(
     Scaffold(topBar = {
         VehicleDetailsScreenAppbar(
             navHostController = navHostController,
-            vehicleName = "Subaru Legacy B4",
+            vehicleName = currentVehicle.name,
             scrollBehavior = topAppBarScrollBehavior,
             showShareButton = false,
         )
@@ -141,7 +152,7 @@ fun BookingScreen(
                         .clip(RoundedCornerShape(24.dp))
                 ) {
                     CoilImage(
-                        imageUrl = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
+                        imageUrl = currentVehicle.images.first(),
                         modifier = Modifier
                             .padding(4.dp)
                             .fillMaxWidth()
@@ -150,7 +161,7 @@ fun BookingScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Ksh. 10,000 /day",
+                        text = "Ksh. ${currentVehicle.pricePerDay} /day",
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
@@ -196,25 +207,10 @@ fun BookingScreen(
                         },
                         headlineContent = { Text(text = "Pick up time") },
                         supportingContent = {
-                            val formattedTime = if (timePickerState.is24hour) {
-                                // 24-hour format: show only hour and minute
-                                String.format(
-                                    "%02d:%02d", timePickerState.hour, timePickerState.minute
-                                )
-                            } else {
-                                // 12-hour format: show hour, minute, and AM/PM indicator
-                                val hourString =
-                                    if (timePickerState.hour == 0 || timePickerState.hour == 12) {
-                                        "12"
-                                    } else {
-                                        String.format("%02d", timePickerState.hour % 12)
-                                    }
-                                val minuteString = String.format("%02d", timePickerState.minute)
-                                val amPmTag = if (timePickerState.hour < 12) "AM" else "PM"
-                                "$hourString:$minuteString $amPmTag"
-                            }
-
-                            Text(text = formattedTime, color = MaterialTheme.colorScheme.primary)
+                            Text(
+                                text = context.formatTime(timePickerState),
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent)
                     )
@@ -268,7 +264,9 @@ fun BookingScreen(
                     Row(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .clickable { needsDelivery = "No" },
+                            .clickable {
+                                needsDelivery = "No"
+                            },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RadioButton(selected = (needsDelivery == "No"),
@@ -299,7 +297,8 @@ fun BookingScreen(
                             headlineContent = { Text(text = "Select delivery location") },
                             supportingContent = {
                                 Text(
-                                    text = "No location selected",
+                                    text = uiState.currentBookingData.deliveryAddress
+                                        ?: "No location selected",
                                     color = MaterialTheme.colorScheme.primary
                                 )
                             },
@@ -311,6 +310,23 @@ fun BookingScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 ElevatedButton(
                     onClick = {
+                        vehiclesViewModel.updateCurrentBookingData(
+                            bookingData = uiState.currentBookingData.copy(
+                                timeStamp = LocalDateTime.now().toString(),
+                                userId = userId,
+                                vehicleId = uiState.currentVehicle.id,
+                                totalPrice = (uiState.currentVehicle.pricePerDay.replace(",", "")
+                                    .replace(" ", "")
+                                    .toInt() * days.replace(",", "").replace(" ", "")
+                                    .toInt()).toString(),
+                                pickupDate = context.convertMillisToDate(datePickerState.selectedDateMillis!!),
+                                pickupTime = context.formatTime(timePickerState),
+                                days = days,
+                                needsDelivery = needsDelivery == "Yes",
+                                isPaid = false,
+                                isDeclined = false,
+                            )
+                        )
                         navHostController.navigate(Screens.SummaryScreen.route) {
                             launchSingleTop = true
                         }
@@ -369,4 +385,25 @@ fun BookingScreen(
 fun Context.convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy")
     return formatter.format(Date(millis))
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun Context.formatTime(timePickerState: TimePickerState): String {
+    if (timePickerState.is24hour) {
+        // 24-hour format: show only hour and minute
+        return String.format(
+            "%02d:%02d", timePickerState.hour, timePickerState.minute
+        )
+    } else {
+        // 12-hour format: show hour, minute, and AM/PM indicator
+        val hourString =
+            if (timePickerState.hour == 0 || timePickerState.hour == 12) {
+                "12"
+            } else {
+                String.format("%02d", timePickerState.hour % 12)
+            }
+        val minuteString = String.format("%02d", timePickerState.minute)
+        val amPmTag = if (timePickerState.hour < 12) "AM" else "PM"
+        return "$hourString:$minuteString $amPmTag"
+    }
 }
