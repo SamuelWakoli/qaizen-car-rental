@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +44,16 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeliveryLocationScreen(windowSize: WindowSizeClass, navHostController: NavHostController) {
+fun DeliveryLocationScreen(
+    windowSize: WindowSizeClass,
+    navHostController: NavHostController,
+    vehiclesViewModel: VehiclesViewModel,
+) {
 
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -61,6 +67,8 @@ fun DeliveryLocationScreen(windowSize: WindowSizeClass, navHostController: NavHo
             nairobi, 10f, 0f, 0f
         )
     )
+
+    val uiState = vehiclesViewModel.uiState.collectAsState().value
 
     var loading by remember { mutableStateOf(false) }
 
@@ -98,8 +106,7 @@ fun DeliveryLocationScreen(windowSize: WindowSizeClass, navHostController: NavHo
             },
             title = { Text(text = "Select Delivery Location") },
             actions = {
-                SearchLocationButton(
-                    cameraPositionState = cameraPositionState,
+                SearchLocationButton(cameraPositionState = cameraPositionState,
                     onConfirmRequest = { latLngValue ->
                         var address: Address? = null
                         latLng = latLngValue
@@ -190,19 +197,37 @@ fun DeliveryLocationScreen(windowSize: WindowSizeClass, navHostController: NavHo
                 }
 
                 if (selectedAddress.isNotEmpty() && latLng != null) {
-                    SelectedLocationCard(onDismissRequest = {
-                        // move camera to initial set position
-                        coroutineScope.launch {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newLatLngZoom(/* latLng = */ nairobi, 10f),
-                                2_000
-                            )
-                        }
-                        selectedAddress = ""
-                        markerState = MarkerState(nairobi)
-                    }, onConfirmRequest = {
-                        navHostController.navigateUp()
-                    }, selectedAddress = selectedAddress, latLng = latLng!!
+                    SelectedLocationCard(
+                        onDismissRequest = {
+                            // move camera to initial set position
+                            coroutineScope.launch {
+                                cameraPositionState.animate(
+                                    CameraUpdateFactory.newLatLngZoom(/* latLng = */ nairobi, 10f),
+                                    2_000
+                                )
+                            }
+                            selectedAddress = ""
+                            markerState = MarkerState(nairobi)
+                        },
+                        onConfirmRequest = {
+                            loading = true
+                            coroutineScope.launch {
+                                vehiclesViewModel.updateCurrentBookingData(
+                                    bookingData = uiState.currentBookingData.copy(
+                                        needsDelivery = true,
+                                        deliveryAddress = getAddressFromLocation(
+                                            context, latLng!!.latitude, latLng!!.longitude
+                                        )?.getAddressLine(0),
+                                        deliveryLat = latLng!!.latitude,
+                                        deliveryLng = latLng!!.longitude,
+                                    )
+                                )
+                            }.invokeOnCompletion {
+                                loading = false
+                                navHostController.navigateUp()
+                            }
+                        },
+                        selectedAddress = selectedAddress, latLng = latLng!!,
                     )
                 }
             }
