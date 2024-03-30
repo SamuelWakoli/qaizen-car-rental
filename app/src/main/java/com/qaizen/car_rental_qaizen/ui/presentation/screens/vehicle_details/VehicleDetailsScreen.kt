@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +20,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,10 +28,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VehicleDetailsScreen(windowSize: WindowSizeClass, navHostController: NavHostController) {
+fun VehicleDetailsScreen(
+    windowSize: WindowSizeClass,
+    navHostController: NavHostController,
+    vehiclesViewModel: VehiclesViewModel,
+) {
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val itemMaxWidth = when (windowSize.widthSizeClass) {
@@ -37,15 +44,20 @@ fun VehicleDetailsScreen(windowSize: WindowSizeClass, navHostController: NavHost
         else -> 300.dp
     }
 
+    val uiState = vehiclesViewModel.uiState.collectAsState().value
+    val vehicle = uiState.currentVehicle!!
+    val images: MutableList<String> = vehicle.images.toMutableList()
+    images.removeFirst()
+
     Scaffold(
         topBar = {
             VehicleDetailsScreenAppbar(
                 navHostController = navHostController,
-                vehicleName = "Subaru Legacy B4",
+                vehicleName = vehicle.name,
                 onClickShare = {},
                 scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { innerPadding ->
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(itemMaxWidth),
@@ -57,12 +69,16 @@ fun VehicleDetailsScreen(windowSize: WindowSizeClass, navHostController: NavHost
             item {
                 Card(
                     modifier = Modifier
-                        .padding(vertical = 4.dp, horizontal = 8.dp).clip(RoundedCornerShape(24.dp))
+                        .padding(vertical = 4.dp, horizontal = 8.dp)
+                        .clip(RoundedCornerShape(24.dp))
                 ) {
                     CoilImage(
-                        imageUrl = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
+                        imageUrl = vehicle.images.first(),
                         modifier = Modifier
-                            .padding(4.dp).fillMaxWidth().heightIn(max = 300.dp).clip(RoundedCornerShape(24.dp)),
+                            .padding(4.dp)
+                            .fillMaxWidth()
+                            .heightIn(max = 300.dp)
+                            .clip(RoundedCornerShape(24.dp)),
                         showOpenImageButton = true
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -70,25 +86,31 @@ fun VehicleDetailsScreen(windowSize: WindowSizeClass, navHostController: NavHost
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                     ) {
-                        Text(text = "Mid-size Sedan", style = MaterialTheme.typography.titleMedium)
-                        Text(text = "Available")
-                        Text(text = "Ksh. 10,000 /day", fontWeight = FontWeight.Bold)
+                        Text(text = vehicle.type, style = MaterialTheme.typography.titleMedium)
+                        Text(text = if (vehicle.available == true) "Available" else "Unavailable")
+                        Text(
+                            text = "Ksh. ${vehicle.pricePerDay} /day",
+                            fontWeight = FontWeight.Bold
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ")
+                        Text(text = vehicle.description)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-            items(6) {
+            items(images) { image ->
                 Card(
                     modifier = Modifier
-                        .padding(vertical = 4.dp, horizontal = 8.dp).clip(RoundedCornerShape(24.dp))
+                        .padding(vertical = 4.dp, horizontal = 8.dp)
+                        .clip(RoundedCornerShape(24.dp))
                 ) {
                     CoilImage(
-                        imageUrl = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
+                        imageUrl = image,
                         modifier = Modifier
                             .padding(4.dp)
-                            .fillMaxWidth().heightIn(max = 300.dp).clip(RoundedCornerShape(24.dp)),
+                            .fillMaxWidth()
+                            .heightIn(max = 300.dp)
+                            .clip(RoundedCornerShape(24.dp)),
                         showOpenImageButton = true
                     )
                 }
