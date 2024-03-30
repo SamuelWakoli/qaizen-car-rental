@@ -14,6 +14,7 @@ import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDateTime
 
 class QaizenAuthRepository : AuthRepository {
     override val auth: FirebaseAuth
@@ -54,8 +55,19 @@ class QaizenAuthRepository : AuthRepository {
 
             // Create the user data object.
             val userData = UserData(
-                currentUser.uid, name, currentUser.photoUrl, email, tokenList
-            )
+                userID = currentUser.uid,
+                createdOn = LocalDateTime.now().toString(),
+                displayName = name,
+                photoURL = currentUser.photoUrl,
+                phone = null,
+                mpesaPhone = null,
+                userEmail = email,
+                fcmTokens = tokenList,
+                favorites = emptyList(),
+                rentalHistoryIds = emptyList(),
+                paymentHistoryIds = emptyList(),
+                isNotificationsOn = true,
+                )
             onSuccess.invoke()
 
             // Update the user data in Firestore.

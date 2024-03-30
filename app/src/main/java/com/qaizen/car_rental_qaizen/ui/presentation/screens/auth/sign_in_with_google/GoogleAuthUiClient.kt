@@ -13,6 +13,7 @@ import com.google.firebase.messaging.ktx.messaging
 import com.qaizen.car_rental_qaizen.BuildConfig
 import com.qaizen.car_rental_qaizen.domain.model.UserData
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDateTime
 import java.util.concurrent.CancellationException
 
 class GoogleAuthUiClient(
@@ -59,10 +60,13 @@ class GoogleAuthUiClient(
 
                     UserData(
                         userID = uid,
+                        createdOn = LocalDateTime.now().toString(),
                         displayName = displayName,
                         photoURL = photoUrl,
                         userEmail = email,
-                        fcmTokens = tokenList
+                        fcmTokens = tokenList,
+                        favorites = emptyList(),
+                        isNotificationsOn = true,
                     )
                 },
                 errorMessage = null
@@ -74,31 +78,6 @@ class GoogleAuthUiClient(
                 data = null,
                 errorMessage = e.message
             )
-        }
-    }
-
-    fun getSignedInUserData(): UserData? = auth.currentUser?.run {
-        val tokenList: MutableList<String> = mutableListOf()
-        Firebase.messaging.token.addOnSuccessListener {
-            tokenList.add(it)
-        }
-
-        UserData(
-            userID = uid,
-            displayName = displayName,
-            photoURL = photoUrl,
-            userEmail = email,
-            fcmTokens = tokenList
-        )
-    }
-
-    suspend fun signOut() {
-        try {
-            auth.signOut()
-            oneTapClient.signOut().await()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
         }
     }
 }
