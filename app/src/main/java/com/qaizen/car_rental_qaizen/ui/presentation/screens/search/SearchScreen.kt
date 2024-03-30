@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.search
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -33,6 +35,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,22 +45,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.R
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.VehicleListItem
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
+import okhttp3.internal.toImmutableList
 
 @Composable
 fun SearchScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
+    vehiclesViewModel: VehiclesViewModel,
 ) {
     val itemMaxWidth = when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> 600.dp
@@ -69,6 +77,7 @@ fun SearchScreen(
         else -> 300.dp
     }
 
+
     var searchQuery by remember { mutableStateOf("") }
     var isSearchError by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
@@ -78,6 +87,9 @@ fun SearchScreen(
         focusRequester.requestFocus()
     }
 
+    val context = LocalContext.current
+    val uiState = vehiclesViewModel.uiState.collectAsState().value
+    val favouriteList = vehiclesViewModel.favoritesList.collectAsState().value
 
 
     Box {
@@ -105,6 +117,7 @@ fun SearchScreen(
                     OutlinedTextField(value = searchQuery,
                         onValueChange = { value ->
                             searchQuery = value
+                            vehiclesViewModel.searchVehicles(query = value)
                         },
                         isError = isSearchError,
                         supportingText = if (isSearchError) {
@@ -182,24 +195,74 @@ fun SearchScreen(
 
                 } else
 
-                    LazyVerticalStaggeredGrid(
-                        modifier = Modifier, columns = StaggeredGridCells.Adaptive(itemMaxWidth)
-                    ) {
-                        items(20) {
-                            VehicleListItem(
-                                modifier = Modifier.heightIn(max = maxVehicleImageHeight),
-                                onClickDetails = {
-                                    navHostController.navigate(Screens.VehicleDetailsScreen.route) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                onClickBook = {
-                                    navHostController.navigate(Screens.BookingScreen.route) {
-                                        launchSingleTop = true
-                                    }
-                                },
+                    if (uiState.vehicleSearchResults.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface)
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Spacer(modifier = Modifier.size(100.dp))
+                            Text(text = "😕", fontSize = 100.sp, modifier = Modifier.padding(16.dp))
+                            Text(
+                                text = "Vehicle not found",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                color = MaterialTheme.colorScheme.primary
                             )
+                            Spacer(modifier = Modifier.size(100.dp))
+                        }
+                    } else {
+                        LazyVerticalStaggeredGrid(
+                            modifier = Modifier, columns = StaggeredGridCells.Adaptive(itemMaxWidth)
+                        ) {
+                            items(uiState.vehicleSearchResults) { vehicle ->
+                                VehicleListItem(
+                                    modifier = Modifier.heightIn(max = maxVehicleImageHeight),
+                                    vehicle = vehicle,
+                                    isFavorite = favouriteList?.contains(vehicle.id) ?: false,
+                                    onClickFavorite = { result ->
+                                        val newFavouriteList = if (result) {
+                                            favouriteList?.toMutableList()?.apply {
+                                                add(vehicle.id)
+                                            }
+                                        } else {
+                                            favouriteList?.toMutableList()?.apply {
+                                                remove(vehicle.id)
+                                            }
+                                        }
+                                        vehiclesViewModel.updateFavouriteList(
+                                            newFavouriteList?.toImmutableList().orEmpty(),
+                                            onSuccess = {
+                                                val message = vehicle.name + if (result) {
+                                                    " added to "
+                                                } else {
+                                                    " removed from "
+                                                } + "favorites"
 
+                                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                            },
+                                            onError = {
+                                                val message = vehicle.name + if (result) " failed to add to " else " failed to remove from " + "favorites"
+                                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                            })
+                                    },
+                                    onClickDetails = {
+                                        vehiclesViewModel.updateCurrentVehicle(vehicle = vehicle)
+                                        navHostController.navigate(Screens.VehicleDetailsScreen.route) {
+                                            launchSingleTop = true
+                                        }
+                                    },
+                                    onClickBook = {
+                                        vehiclesViewModel.updateCurrentVehicle(vehicle = vehicle)
+                                        navHostController.navigate(Screens.BookingScreen.route) {
+                                            launchSingleTop = true
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
             }
