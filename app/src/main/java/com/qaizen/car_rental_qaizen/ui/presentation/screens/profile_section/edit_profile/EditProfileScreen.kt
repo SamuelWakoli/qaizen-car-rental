@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,10 +32,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,22 +52,42 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(windowSize: WindowSizeClass, navHostController: NavHostController) {
+fun EditProfileScreen(
+    windowSize: WindowSizeClass,
+    navHostController: NavHostController,
+    profileViewModel: ProfileViewModel,
+) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    var errorMessage by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(errorMessage) {
+        if (errorMessage.isNotEmpty()) {
+            snackbarHostState.showSnackbar(
+                message = errorMessage,
+                withDismissAction = true,
+                duration = SnackbarDuration.Indefinite
+            )
+            errorMessage = ""
+        }
+    }
+
+    val userData = profileViewModel.userData.collectAsState().value
 
     var name by remember {
-        mutableStateOf(Firebase.auth.currentUser?.displayName ?: "")
+        mutableStateOf(userData?.displayName ?: "")
     }
     var phone by remember {
-        mutableStateOf("0700000000")
+        mutableStateOf(userData?.phone ?: "")
     }
     var nameError by remember {
         mutableStateOf(false)
@@ -70,7 +96,9 @@ fun EditProfileScreen(windowSize: WindowSizeClass, navHostController: NavHostCon
         mutableStateOf(false)
     }
 
+
     val context = LocalContext.current
+    var newProfileImageUrl: String? by remember { mutableStateOf(null) }
     var profileImageUri: Uri? by remember { mutableStateOf(null) }
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -80,43 +108,37 @@ fun EditProfileScreen(windowSize: WindowSizeClass, navHostController: NavHostCon
                     context, "Updating image", Toast.LENGTH_LONG
                 ).show()
 
-//                onDismissRequest.invoke()
-//                viewModel.uploadProfileImage(
-//                    uri = uri,
-//                    onUploadSuccess = {
-//                        Toast.makeText(
-//                            context, "Image updated", Toast.LENGTH_LONG
-//                        ).show()
-//                    },
-//                    onUploadFailed = { exception: Exception ->
-//                        viewModel.updateErrorMessage(
-//                            AppErrorMessage(
-//                                title = "Error",
-//                                message = exception.message ?: "An error occurred"
-//                            )
-//                        )
-//                        onDismissRequest.invoke()
-//                    })
+                profileViewModel.uploadProfileImage(image = uri, onSuccess = { downloadUrl ->
+                    newProfileImageUrl = downloadUrl
+                },
+                    onError = { exception ->
+                        errorMessage = exception.message.toString()
+                    }
+                )
             }
         }
 
+    var isSaving by remember { mutableStateOf(false) }
 
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(
-            navigationIcon = {
-                IconButton(onClick = { if (navHostController.canUserNavigateUp) navHostController.navigateUp() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Navigate back",
-                    )
-                }
-            },
-            title = { Text(text = "Edit Profile") },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
-        )
-    }) { innerPadding ->
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { if (navHostController.canUserNavigateUp) navHostController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Navigate back",
+                        )
+                    }
+                },
+                title = { Text(text = "Edit Profile") },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+            )
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -132,8 +154,8 @@ fun EditProfileScreen(windowSize: WindowSizeClass, navHostController: NavHostCon
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CoilImage(
-                    imageUrl = (profileImageUri
-                        ?: FirebaseAuth.getInstance().currentUser?.photoUrl).toString(),
+                    imageUrl = (newProfileImageUrl
+                        ?: userData?.photoURL).toString(),
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(160.dp),
@@ -214,10 +236,35 @@ fun EditProfileScreen(windowSize: WindowSizeClass, navHostController: NavHostCon
 
 
                 Spacer(modifier = Modifier.height(32.dp))
-                OutlinedButton(onClick = { /*TODO*/ }) {
+                OutlinedButton(onClick = {
+                    if (isSaving) return@OutlinedButton
+                    isSaving = true
+                    profileViewModel.updateUserData(
+                        userData = userData?.copy(
+                            displayName = name,
+                            phone = phone,
+                            photoURL = (newProfileImageUrl ?: userData.photoURL ?: "").toString()
+                                .toUri(),
+                        )!!,
+                        onSuccess = {
+                            isSaving = false
+                            navHostController.navigateUp()
+                            Toast.makeText(context, "Profile updated", Toast.LENGTH_LONG).show()
+                        },
+                        onError = {
+                            isSaving = false
+                            errorMessage = it.message.toString()
+                        }
+                    )
+                }) {
                     Text(text = "Save", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Icon(imageVector = Icons.Outlined.CheckCircle, contentDescription = null)
+                    if (isSaving) CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                    ) else Icon(imageVector = Icons.Outlined.CheckCircle, contentDescription = null)
                 }
             }
         }
