@@ -159,6 +159,7 @@ fun NavGraph(
                 windowSize = windowSize,
                 navHostController = navHostController,
                 vehiclesViewModel = vehiclesViewModel,
+                profileViewModel = profileViewModel,
             )
         }
         composable(Screens.DeliveryLocationScreen.route) {

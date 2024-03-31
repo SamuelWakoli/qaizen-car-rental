@@ -16,6 +16,7 @@ import com.qaizen.admin.admins.presentation.AdminsScreen
 import com.qaizen.admin.auth.presentation.AuthViewModel
 import com.qaizen.admin.auth.presentation.ForgotPasswordScreen
 import com.qaizen.admin.auth.presentation.SignInScreen
+import com.qaizen.admin.bookings.presentation.BookingsViewModel
 import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.profile.presentation.profile.ProfileScreen
@@ -42,6 +43,7 @@ fun NavGraph(
     val adminViewModel: AdminViewModel = hiltViewModel()
     val morePageViewModel = viewModel<MorePageViewModel>()
     val vehiclesViewModel: VehiclesViewModel = hiltViewModel()
+    val bookingsViewModel: BookingsViewModel = hiltViewModel()
 
 
     NavHost(
@@ -67,6 +69,7 @@ fun NavGraph(
                 morePageViewModel = morePageViewModel,
                 vehiclesViewModel = vehiclesViewModel,
                 adminViewModel = adminViewModel,
+                bookingsViewModel = bookingsViewModel,
             )
         }
         composable(Screens.AdminsScreen.route) {
