@@ -12,35 +12,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.summary.MpesaDialog
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.summary.MpesaPaymentInitiatedDialog
 
 @Composable
 fun DashboardPage(modifier: Modifier = Modifier, navHostController: NavHostController) {
-    var showInitiatePayment by remember { mutableStateOf(false) }
-
-    var showSummarySentDialog by remember { mutableStateOf(false) }
-    var showMpesaDialog by remember { mutableStateOf(false) }
-    var showPaymentInitiatedDialog by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,44 +88,6 @@ fun DashboardPage(modifier: Modifier = Modifier, navHostController: NavHostContr
                             headlineText = "Ksh. 50,000",
                         )
                         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-                        DashboardListItem(
-                            overlineText = "Payment Status",
-                            headlineText = "Not Paid",
-                            trailingContent = {
-                                IconButton(onClick = { showInitiatePayment = true }) {
-                                    Icon(
-                                        imageVector = Icons.Default.MoreVert,
-                                        contentDescription = "Options"
-                                    )
-                                    InitiatePaymentItem(
-                                        showMenu = showInitiatePayment,
-                                        onDismissRequest = { showInitiatePayment = false },
-                                        onClickInitiatePayment = {
-                                            showInitiatePayment = false
-                                            showMpesaDialog = true
-                                        },
-                                    )
-                                }
-                            }
-                        )
-
-
-                        if (showMpesaDialog) MpesaDialog(
-                            onDismissRequest = {
-                                showMpesaDialog = false
-                            },
-                            onClickPay = {
-                                showMpesaDialog = false
-                                // TODO: Implement / call payment function here
-                                showPaymentInitiatedDialog = true
-                            }
-                        )
-
-                        if (showPaymentInitiatedDialog) MpesaPaymentInitiatedDialog(
-                            onDismissRequest = {
-                                showPaymentInitiatedDialog = false
-                            }
-                        )
                     }
                 }
             }
