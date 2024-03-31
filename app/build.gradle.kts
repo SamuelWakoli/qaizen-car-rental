@@ -126,6 +126,9 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.places)
 
+    // Mpesa
+    implementation(libs.daraja)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

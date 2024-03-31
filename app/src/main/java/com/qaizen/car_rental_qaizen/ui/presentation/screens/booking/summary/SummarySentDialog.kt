@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.summary
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +33,8 @@ import com.qaizen.car_rental_qaizen.R
 
 @Composable
 fun SummarySentDialog(onDismissRequest: () -> Unit, onClickMpesa: () -> Unit) {
+    val context = LocalContext.current
+
     Dialog(onDismissRequest = onDismissRequest) {
         Card {
             Column(
@@ -54,7 +58,7 @@ fun SummarySentDialog(onDismissRequest: () -> Unit, onClickMpesa: () -> Unit) {
                         .padding(bottom = 16.dp)
                 )
                 Text(
-                    text = "We have received your booking. We will contact you shortly for further details."
+                    text = "We have received your booking. We will contact you shortly for further details.\n\nPlease note: Pay with Mpesa is still in development."
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -62,7 +66,18 @@ fun SummarySentDialog(onDismissRequest: () -> Unit, onClickMpesa: () -> Unit) {
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .padding(bottom = 16.dp)
-                        .clickable { onClickMpesa() }
+                        .clickable {
+                            //TODO: Mpesa
+//                            onClickMpesa()
+                            onDismissRequest()
+                            Toast
+                                .makeText(
+                                    context,
+                                    "Pay with Mpesa is still in development.",
+                                    Toast.LENGTH_LONG
+                                )
+                                .show()
+                        }
                         .clip(RoundedCornerShape(16.dp))
                 ) {
                     ListItem(headlineContent = {

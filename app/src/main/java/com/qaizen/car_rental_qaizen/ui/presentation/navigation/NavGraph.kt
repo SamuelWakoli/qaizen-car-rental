@@ -114,6 +114,7 @@ fun NavGraph(
             PaymentInfoScreen(
                 windowSize = windowSize,
                 navHostController = navHostController,
+                profileViewModel = profileViewModel,
             )
         }
         composable(Screens.PaymentHistoryScreen.route) {

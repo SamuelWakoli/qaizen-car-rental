@@ -42,9 +42,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.qaizen.car_rental_qaizen.initiatePayment
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
@@ -62,6 +64,7 @@ fun SummaryScreen(
 
     val uiState = vehiclesViewModel.uiState.collectAsState().value
     val userData = profileViewModel.userData.collectAsState().value
+    val context = LocalContext.current
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSendingSummary by rememberSaveable { mutableStateOf(false) }
@@ -224,13 +227,30 @@ fun SummaryScreen(
     )
 
     if (showMpesaDialog) MpesaDialog(
+        userData = userData,
         onDismissRequest = {
             showMpesaDialog = false
         },
-        onClickPay = {
+        onClickPay = { mpesaPhone ->
             showMpesaDialog = false
-            // TODO: Implement / call payment function here
-            showPaymentInitiatedDialog = true
+            profileViewModel.updateUserData(
+                userData = userData?.copy(mpesaPhone = mpesaPhone)!!,
+                onSuccess = {
+                            initiatePayment(
+                                context,
+                                phoneNumber = mpesaPhone,
+                                amount = uiState.currentBookingData.totalPrice!!.toInt(),
+                                onSuccess = {
+                                    showPaymentInitiatedDialog = true
+                                },
+                                onError = {
+                                    errorMessage = it
+                                })
+
+                },
+                onError = {
+                    errorMessage = it.message.toString()
+                })
         }
     )
 

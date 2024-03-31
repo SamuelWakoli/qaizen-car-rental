@@ -25,10 +25,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.qaizen.car_rental_qaizen.R
+import com.qaizen.car_rental_qaizen.domain.model.UserData
 
 @Composable
-fun MpesaDialog(onDismissRequest: () -> Unit, onClickPay: () -> Unit) {
-    var phone by remember { mutableStateOf("0712345678") }
+fun MpesaDialog(onDismissRequest: () -> Unit, onClickPay: (mpesaPhone: String) -> Unit, userData: UserData?) {
+    var phone by remember { mutableStateOf(userData?.mpesaPhone ?: "") }
     var phoneError by remember { mutableStateOf(false) }
 
 
@@ -63,7 +64,7 @@ fun MpesaDialog(onDismissRequest: () -> Unit, onClickPay: () -> Unit) {
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                ElevatedButton(onClick = onClickPay) {
+                ElevatedButton(onClick = { onClickPay(phone) }) {
                     Text(text = "Initiate Payment", style = MaterialTheme.typography.bodyLarge)
                 }
             }
