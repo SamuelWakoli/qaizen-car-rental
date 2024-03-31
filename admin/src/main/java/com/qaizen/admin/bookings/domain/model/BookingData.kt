@@ -1,4 +1,4 @@
-package com.qaizen.car_rental_qaizen.domain.model
+package com.qaizen.admin.bookings.domain.model
 
 data class BookingData(
     val timeStamp: String? = null,
@@ -10,6 +10,5 @@ data class BookingData(
     val totalPrice: String? = null,
     val needsDelivery: Boolean? = null,
     val deliveryAddress: String? = null,
-    val deliveryLat: Double? = null,
-    val deliveryLng: Double? = null,
 )
+

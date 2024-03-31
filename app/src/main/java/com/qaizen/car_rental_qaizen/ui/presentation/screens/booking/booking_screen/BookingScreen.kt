@@ -323,8 +323,6 @@ fun BookingScreen(
                                 pickupTime = context.formatTime(timePickerState),
                                 days = days,
                                 needsDelivery = needsDelivery == "Yes",
-                                isPaid = false,
-                                isDeclined = false,
                             )
                         )
                         navHostController.navigate(Screens.SummaryScreen.route) {
