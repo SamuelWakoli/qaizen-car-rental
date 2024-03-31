@@ -72,6 +72,7 @@ import com.google.firebase.ktx.Firebase
 import com.qaizen.car_rental_qaizen.R
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CoilImage
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.booking.delivery_location.LocationPermissionDialog
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreenAppbar
@@ -88,8 +89,10 @@ fun BookingScreen(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
     vehiclesViewModel: VehiclesViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val userId = Firebase.auth.currentUser?.uid
+    val userData = profileViewModel.userData.collectAsState().value
     val uiState = vehiclesViewModel.uiState.collectAsState().value
     val currentVehicle = uiState.currentVehicle!!
 
@@ -314,8 +317,13 @@ fun BookingScreen(
                             bookingData = uiState.currentBookingData.copy(
                                 timeStamp = LocalDateTime.now().toString(),
                                 userId = userId,
-                                vehicleId = uiState.currentVehicle.id,
-                                totalPrice = (uiState.currentVehicle.pricePerDay.replace(",", "")
+                                userName = userData?.displayName,
+                                userEmail = userData?.userEmail,
+                                userPhone = userData?.phone,
+                                vehicleId = currentVehicle.id,
+                                vehicleName = currentVehicle.name,
+                                vehicleImage = currentVehicle.images.first(),
+                                totalPrice = (currentVehicle.pricePerDay.replace(",", "")
                                     .replace(" ", "")
                                     .toInt() * days.replace(",", "").replace(" ", "")
                                     .toInt()).toString(),
