@@ -8,4 +8,5 @@ data class Vehicle(
     val type: String,
     val description: String,
     val images: List<String>,
+    val id: String,
 )

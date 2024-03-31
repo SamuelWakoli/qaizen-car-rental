@@ -33,6 +33,7 @@ class QaizenVehicleRepository : VehiclesRepository {
                     for (doc in value) {
                         vehicles.add(
                             Vehicle(
+                                id = doc.id,
                                 numberPlate = doc.getString("numberPlate").toString(),
                                 name = doc.getString("name").toString(),
                                 available = doc.getBoolean("available"),
@@ -61,6 +62,7 @@ class QaizenVehicleRepository : VehiclesRepository {
                 }
                 if (value != null && value.exists()) {
                     val vehicle = Vehicle(
+                        id = value.id,
                         numberPlate = value.getString("numberPlate").toString(),
                         name = value.getString("name").toString(),
                         available = value.getBoolean("available"),

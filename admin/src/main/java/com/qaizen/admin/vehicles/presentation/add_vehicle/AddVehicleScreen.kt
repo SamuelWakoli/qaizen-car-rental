@@ -389,13 +389,14 @@ fun AddVehicleScreen(
                                 })
                         }
                         vehiclesViewModel.updateVehicle(vehicle = Vehicle(
-                            name = name,
-                            pricePerDay = pricePerDay,
                             numberPlate = numberPlate,
-                            type = type,
+                            name = name,
                             available = currentVehicle?.available ?: true,
-                            images = images,
+                            pricePerDay = pricePerDay,
+                            type = type,
                             description = description,
+                            images = images,
+                            id = numberPlate,
                         ), onSuccess = {
                             isSaving = false
                             navHostController.popBackStack(Screens.HomeScreen.route, false)

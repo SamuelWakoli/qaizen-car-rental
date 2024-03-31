@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.qaizen.admin.R
 import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.bookings.presentation.BookingsPage
+import com.qaizen.admin.bookings.presentation.BookingsViewModel
 import com.qaizen.admin.core.presentation.home.bottom_nav.HomeBottomNavBar
 import com.qaizen.admin.core.presentation.home.bottom_nav.bottomNavItems
 import com.qaizen.admin.core.presentation.home.rail_nav.RailNav
@@ -53,6 +54,7 @@ fun HomeScreen(
     morePageViewModel: MorePageViewModel,
     vehiclesViewModel: VehiclesViewModel,
     adminViewModel: AdminViewModel,
+    bookingsViewModel: BookingsViewModel,
 ) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -131,6 +133,7 @@ fun HomeScreen(
                         BookingsPage(
                             windowSize = windowSize,
                             navHostController = navHostController,
+                            bookingsViewModel = bookingsViewModel,
                         )
                     }
                     composable(bottomNavItems[2].route) {
