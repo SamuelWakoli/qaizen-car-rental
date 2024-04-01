@@ -4,6 +4,7 @@ data class BookingData(
     val timeStamp: String? = null,
     val vehicleId: String? = null,
     val userId:String? = null,
+    val userFcmTokens: Any? = null,
     val vehicleImage: String? = null,
     val vehicleName: String? = null,
     val userName: String? = null,
