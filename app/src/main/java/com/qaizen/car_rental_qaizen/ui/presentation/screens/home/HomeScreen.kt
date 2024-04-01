@@ -153,6 +153,7 @@ fun HomeScreen(
                         MorePage(
                             navHostController = navHostController,
                             modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            profileViewModel = profileViewModel,
                         )
                     }
                 }

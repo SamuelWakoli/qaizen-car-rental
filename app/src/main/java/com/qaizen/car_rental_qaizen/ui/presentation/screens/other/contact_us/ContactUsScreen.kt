@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.HelpCenter
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Whatsapp
@@ -183,13 +182,13 @@ fun ContactUsScreen(navHostController: NavHostController) {
                                         errorMessage = "No email app found"
                                     }
                                 })
-                            HorizontalDivider()
-                            ContactUsListItem(headline = "Report issue",
-                                supportingText = "In-app",
-                                icon = Icons.AutoMirrored.Outlined.HelpCenter,
-                                onClick = {
-                                    //TODO: Navigate to report issue screen
-                                })
+//                            HorizontalDivider()
+//                            ContactUsListItem(headline = "Report issue",
+//                                supportingText = "In-app",
+//                                icon = Icons.AutoMirrored.Outlined.HelpCenter,
+//                                onClick = {
+//                                    //TODO: Navigate to report issue screen
+//                                })
                         }
                     }
                 }

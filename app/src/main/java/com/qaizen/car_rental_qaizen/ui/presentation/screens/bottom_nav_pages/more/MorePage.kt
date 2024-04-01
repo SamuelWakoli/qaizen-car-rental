@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,12 +45,19 @@ import androidx.navigation.NavHostController
 import com.qaizen.car_rental_qaizen.BuildConfig
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.CustomQaizenListItem
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
 import com.qaizen.car_rental_qaizen.utils.openImage
 
 @Composable
-fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController) {
-    var isNotificationOn by remember { mutableStateOf(true) }
+fun MorePage(
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController,
+    profileViewModel: ProfileViewModel,
+) {
+
+    val userData = profileViewModel.userData.collectAsState().value!!
     val context = LocalContext.current
+    var isNotificationOn by remember { mutableStateOf(userData.isNotificationsOn) }
 
     Column(
         modifier = Modifier
@@ -81,7 +89,20 @@ fun MorePage(modifier: Modifier = Modifier, navHostController: NavHostController
                 },
                 trailingContent = {
                     Switch(checked = isNotificationOn,
-                        onCheckedChange = { value -> isNotificationOn = value })
+                        onCheckedChange = { value ->
+                            isNotificationOn = value
+                            profileViewModel.updateUserData(
+                                userData.copy(isNotificationsOn = value),
+                                onSuccess = {
+                                    val message =
+                                        if (value) "Notifications enabled" else "Notifications disabled for your next bookings"
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                },
+                                onError = { error ->
+                                    Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                                }
+                            )
+                        })
                 })
             CustomQaizenListItem(leadingIcon = Icons.Outlined.Web,
                 label = "Qaizen Website",
