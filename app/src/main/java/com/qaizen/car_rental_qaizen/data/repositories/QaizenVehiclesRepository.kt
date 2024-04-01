@@ -55,20 +55,11 @@ class QaizenVehiclesRepository : VehiclesRepository {
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
-        firestore.collection("bookings").document().set(bookingData).addOnSuccessListener {
+        firestore.collection("bookings").document(bookingData.timeStamp!!).set(bookingData).addOnSuccessListener {
             onSuccess()
         }.addOnFailureListener {
             onError(it)
         }
-    }
-
-    override suspend fun requestMpesaPayment(
-        amount: String,
-        phone: String,
-        onSuccess: () -> Unit,
-        onError: (Exception) -> Unit,
-    ) {
-        TODO("Not yet implemented")
     }
 
     override suspend fun updateFavorites(
