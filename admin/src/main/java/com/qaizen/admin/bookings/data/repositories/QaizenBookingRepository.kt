@@ -59,7 +59,8 @@ class QaizenBookingRepository : BookingsRepository {
         val notificationData = hashMapOf(
             "title" to "Booking Approved",
             "body" to "Your booking for ${bookingData.vehicleName} has been approved",
-            "fcmTokens" to bookingData.userFcmTokens
+            "fcmTokens" to bookingData.userFcmTokens,
+            "notificationsOn" to bookingData.notificationsOn,
         )
         firestore.collection("notifications").document(bookingData.timeStamp!!)
             .set(notificationData).addOnCompleteListener {
@@ -79,13 +80,15 @@ class QaizenBookingRepository : BookingsRepository {
     override suspend fun declineBooking(
         bookingId: String,
         fcmTokens: List<String>,
+        notificationsOn: Boolean,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
         val notificationData = hashMapOf(
             "title" to "Booking Declined",
             "body" to "Sorry to inform you that your booking has been declined",
-            "fcmTokens" to fcmTokens
+            "fcmTokens" to fcmTokens,
+            "notificationsOn" to notificationsOn,
         )
         firestore.collection("notifications").document(bookingId).set(notificationData)
             .addOnCompleteListener {

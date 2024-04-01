@@ -128,6 +128,7 @@ fun BookingsPage(
                     bookingsViewModel.declineBooking(
                         bookingId = uiState.currentBooking?.timeStamp!!,
                         fcmTokens = uiState.currentBooking?.userFcmTokens as List<String>,
+                        notificationsOn = uiState.currentBooking?.notificationsOn!!,
                         onSuccess = {
                             Toast.makeText(context, "Booking declined", Toast.LENGTH_SHORT).show()
                         },

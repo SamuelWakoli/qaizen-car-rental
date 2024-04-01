@@ -1,6 +1,5 @@
 package com.qaizen.admin.more
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,9 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.History
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Policy
-import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,35 +49,6 @@ fun MorePage(
                 .padding(top = 4.dp, bottom = 16.dp)
                 .padding(horizontal = 8.dp),
         ) {
-            CustomQaizenListItem(leadingIcon = Icons.Outlined.Notifications,
-                label = "Notifications",
-                onClick = {
-                    navHostController.navigate(Screens.NotificationsScreen.route) {
-                        launchSingleTop = true
-                    }
-                },
-                trailingContent = {
-                    Switch(checked = isNotificationOn,
-                        onCheckedChange = { value ->
-                            isNotificationOn = value
-                            adminViewModel.updateAdmin(
-                                admin!!.copy(notificationsOn = isNotificationOn),
-                                onSuccess = {
-                                    Toast.makeText(
-                                        context,
-                                        "Notifications turned ${if (isNotificationOn) "on" else "off"}.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                onError = { exception ->
-                                    Toast.makeText(
-                                        context,
-                                        "Error: ${exception.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                })
-                        })
-                })
             CustomQaizenListItem(
                 leadingIcon = Icons.Outlined.AdminPanelSettings,
                 label = "Admins",

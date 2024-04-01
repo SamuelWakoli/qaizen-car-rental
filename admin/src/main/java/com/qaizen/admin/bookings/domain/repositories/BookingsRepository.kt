@@ -17,6 +17,7 @@ interface BookingsRepository {
     suspend fun declineBooking(
         bookingId: String,
         fcmTokens: List<String>,
+        notificationsOn: Boolean,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     )

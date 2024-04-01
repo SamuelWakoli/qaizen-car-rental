@@ -45,9 +45,10 @@ class BookingsViewModel @Inject constructor(private val bookingsRepository: Book
     fun declineBooking(
         bookingId: String,
         fcmTokens: List<String>,
+        notificationsOn: Boolean,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) = viewModelScope.launch {
-        bookingsRepository.declineBooking(bookingId, fcmTokens, onSuccess, onError)
+        bookingsRepository.declineBooking(bookingId, fcmTokens, notificationsOn, onSuccess, onError)
     }
 }
