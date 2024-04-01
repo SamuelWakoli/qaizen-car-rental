@@ -30,6 +30,8 @@ playServicesAuth = "21.0.0"
 firebaseMessaging = "23.4.1"
 places = "3.4.0"
 secretsGradlePlugin = "2.0.1"
+googleGmsGoogleServices = "4.4.1"
+firebaseFunctions = "20.4.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -69,8 +71,10 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
+firebase-functions = { group = "com.google.firebase", name = "firebase-functions", version.ref = "firebaseFunctions" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
