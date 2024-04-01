@@ -1,5 +1,9 @@
 package com.qaizen.admin.bookings.presentation
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +19,7 @@ import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.PriceChange
@@ -27,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,15 +43,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.qaizen.admin.LayoutDirectionPreviews
-import com.qaizen.admin.OrientationPreviews
-import com.qaizen.admin.ThemePreviews
+import com.qaizen.admin.bookings.domain.model.BookingData
 
 @Composable
-fun BookingListItem(modifier: Modifier = Modifier) {
-
+fun BookingListItem(
+    modifier: Modifier = Modifier,
+    bookingItem: BookingData,
+    onClickApprove: () -> Unit,
+    onClickDecline: () -> Unit,
+) {
+    val context = LocalContext.current
     var isExpanded by remember { mutableStateOf(false) }
     var rotationState by remember { mutableFloatStateOf(0f) }
 
@@ -65,8 +74,8 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                     rotationState = (if (!isExpanded) 0f else 180f)
                 }, leadingContent = {
                 AsyncImage(
-                    model = "https://s7d1.scene7.com/is/image/scom/24_LEG_feature_2?\$1400w\$",
-                    contentDescription = "Profile Picture",
+                    model = bookingItem.vehicleImage,
+                    contentDescription = "Vehicle Image",
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .height(64.dp)
@@ -74,9 +83,9 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                         .clip(MaterialTheme.shapes.large)
                 )
             }, headlineContent = {
-                Text(text = "Vehicle Name")
+                Text(text = bookingItem.vehicleName ?: "")
             }, supportingContent = {
-                Text(text = "5 days")
+                Text(text = "${bookingItem.days} day(s)")
             }, trailingContent = {
                 IconButton(onClick = {
                     isExpanded = !isExpanded
@@ -95,16 +104,27 @@ fun BookingListItem(modifier: Modifier = Modifier) {
             )
             if (isExpanded) {
                 ListItem(modifier = Modifier.clip(MaterialTheme.shapes.large), headlineContent = {
-                    Text(text = "John Doe")
+                    Text(text = bookingItem.userName ?: "")
                 }, supportingContent = {
-                    Text(text = "0712345678\njohn.mclean@examplepetstore.com")
+                    Text(text = "${bookingItem.userPhone}\n${bookingItem.userEmail}")
                 }, leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.PersonOutline,
                         contentDescription = null,
                     )
                 }, trailingContent = {
-                    IconButton(onClick = { /*TODO: Create call intent*/ }) {
+                    OutlinedIconButton(onClick = {
+                        val phoneNumber = bookingItem.userPhone
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.parse("tel:$phoneNumber")
+                        }
+                        try {
+                            context.startActivity(intent)
+                        } catch (exception: ActivityNotFoundException) {
+                            Toast.makeText(context, "No app to make call", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Phone, contentDescription = "Call"
                         )
@@ -117,7 +137,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                 )
                 )
                 ListItem(modifier = Modifier.clip(MaterialTheme.shapes.large), headlineContent = {
-                    Text(text = "Time: 12:00 PM")
+                    Text(text = "Pickup Time: ${bookingItem.pickupTime}")
                 }, leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.AccessTime,
@@ -130,7 +150,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                 )
                 )
                 ListItem(modifier = Modifier.clip(MaterialTheme.shapes.large), headlineContent = {
-                    Text(text = "Date: 01/01/2024 to 05/01/2024")
+                    Text(text = "Pickup Date: ${bookingItem.pickupDate}")
                 }, leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.DateRange,
@@ -142,41 +162,53 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                     leadingIconColor = MaterialTheme.colorScheme.tertiary
                 )
                 )
-                ListItem(modifier = Modifier.clip(MaterialTheme.shapes.large), headlineContent = {
-                    Text(text = "Delivery Location: N/A")
-                }, leadingContent = {
-                    Icon(
-                        imageVector = Icons.Outlined.LocationOn,
-                        contentDescription = null,
+                if (bookingItem.deliveryAddress.isNullOrEmpty())
+                    ListItem(
+                        modifier = Modifier.clip(MaterialTheme.shapes.large),
+                        headlineContent = {
+                            Text(text = "Delivery Location: ${bookingItem.deliveryAddress}")
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.LocationOn,
+                                contentDescription = null,
+                            )
+                        },
+                        trailingContent = {
+                            OutlinedIconButton(onClick = {
+                                val mapIntent = Intent(Intent.ACTION_VIEW).apply {
+                                    data =
+                                        Uri.parse("geo:${bookingItem.deliveryLat},${bookingItem.deliveryLng}")
+                                }
+                                try {
+                                    context.startActivity(mapIntent)
+                                } catch (exception: ActivityNotFoundException) {
+                                    Toast.makeText(
+                                        context,
+                                        "No app to view location",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Map,
+                                    contentDescription = "View Location"
+                                )
+                            }
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = Color.Transparent,
+                            headlineColor = MaterialTheme.colorScheme.tertiary,
+                            leadingIconColor = MaterialTheme.colorScheme.tertiary
+                        ),
                     )
-                }, colors = ListItemDefaults.colors(
-                    containerColor = Color.Transparent,
-                    headlineColor = MaterialTheme.colorScheme.tertiary,
-                    leadingIconColor = MaterialTheme.colorScheme.tertiary
-                )
-                )
                 ListItem(modifier = Modifier.clip(MaterialTheme.shapes.large), headlineContent = {
-                    Text(text = "Cost: Ksh. 50,000")
+                    Text(text = "Cost: Ksh. ${bookingItem.totalPrice}")
                 }, leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.PriceChange,
-                        contentDescription = null,
-                    )
-                }, colors = ListItemDefaults.colors(
-                    containerColor = Color.Transparent,
-                    headlineColor = MaterialTheme.colorScheme.tertiary,
-                    leadingIconColor = MaterialTheme.colorScheme.tertiary
-                )
-                )
-                ListItem(modifier = Modifier
-                    .clip(MaterialTheme.shapes.large)
-                    .clickable {
-                        // TODO: navigate to payment history
-                    }, headlineContent = {
-                    Text(text = "Payment Status: ")
-                }, leadingContent = {
-                    Icon(
-                        imageVector = Icons.Outlined.Payments,
                         contentDescription = null,
                     )
                 }, colors = ListItemDefaults.colors(
@@ -204,7 +236,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                         .padding(vertical = 4.dp)
                         .clip(MaterialTheme.shapes.large)
                         .clickable {
-                            // TODO: Approve Booking
+                            onClickApprove()
                         }, headlineContent = {
                         Text(text = "Approve Payment")
                     }, leadingContent = {
@@ -225,7 +257,7 @@ fun BookingListItem(modifier: Modifier = Modifier) {
                         .padding(bottom = 4.dp)
                         .clip(MaterialTheme.shapes.large)
                         .clickable {
-                            // TODO: Decline Booking
+                            onClickDecline()
                         }, headlineContent = {
                         Text(text = "Decline & Delete")
                     }, leadingContent = {
@@ -243,12 +275,4 @@ fun BookingListItem(modifier: Modifier = Modifier) {
             }
         }
     }
-}
-
-@ThemePreviews
-@OrientationPreviews
-@LayoutDirectionPreviews
-@Composable
-fun BookingListItemPreview() {
-    BookingListItem()
 }
