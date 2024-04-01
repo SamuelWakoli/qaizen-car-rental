@@ -1,5 +1,6 @@
 package com.qaizen.admin.vehicles.presentation.home
 
+import android.Manifest
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,16 +31,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.qaizen.admin.vehicles.presentation.VehicleListItem
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.qaizen.admin.core.presentation.composables.NotificationsPermissionDialog
 import com.qaizen.admin.navigation.Screens
+import com.qaizen.admin.vehicles.presentation.VehicleListItem
 import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomePage(
     windowSize: WindowSizeClass,
     navHostController: NavHostController,
     vehiclesViewModel: VehiclesViewModel,
 ) {
+    val postNotificationPermission =
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    var showPermissionReqDialog by remember {
+        mutableStateOf(!postNotificationPermission.status.isGranted)
+    }
+    if (showPermissionReqDialog)
+        NotificationsPermissionDialog(
+            onDismissRequest = {
+                showPermissionReqDialog = false
+                postNotificationPermission.launchPermissionRequest()
+            },
+        )
+
 
     val context = LocalContext.current
     val uiState = vehiclesViewModel.uiState.collectAsState().value

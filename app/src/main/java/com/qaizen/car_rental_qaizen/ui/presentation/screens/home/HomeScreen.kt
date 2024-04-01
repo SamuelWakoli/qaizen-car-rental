@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.ui.presentation.screens.home
 
+import android.Manifest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,10 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
@@ -25,7 +29,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.qaizen.car_rental_qaizen.R
+import com.qaizen.car_rental_qaizen.ui.presentation.composables.NotificationsPermissionDialog
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.bottom_nav_pages.dashboard.DashboardPage
@@ -38,7 +46,7 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.bottom_nav.bott
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.rail_nav.RailNav
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.home.top_app_bar.HomeTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     darkTheme: Boolean,
@@ -59,6 +67,21 @@ fun HomeScreen(
     // TODO: Add a firestore listener to check for new version of the app.
     //  Set the initial version to 1.0.0
     //  Do this check inside the view model
+
+
+    val postNotificationPermission =
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    var showPermissionReqDialog by remember {
+        mutableStateOf(!postNotificationPermission.status.isGranted)
+    }
+    if (showPermissionReqDialog)
+        NotificationsPermissionDialog(
+            onDismissRequest = {
+                showPermissionReqDialog = false
+                postNotificationPermission.launchPermissionRequest()
+            },
+        )
+
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
