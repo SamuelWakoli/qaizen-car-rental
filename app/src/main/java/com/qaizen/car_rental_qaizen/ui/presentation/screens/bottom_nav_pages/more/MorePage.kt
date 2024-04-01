@@ -57,7 +57,7 @@ fun MorePage(
 
     val userData = profileViewModel.userData.collectAsState().value!!
     val context = LocalContext.current
-    var isNotificationOn by remember { mutableStateOf(userData.isNotificationsOn) }
+    var isNotificationOn by remember { mutableStateOf(userData.notificationsOn) }
 
     Column(
         modifier = Modifier
@@ -83,19 +83,17 @@ fun MorePage(
             CustomQaizenListItem(leadingIcon = Icons.Outlined.Notifications,
                 label = "Notifications",
                 onClick = {
-                    navHostController.navigate(Screens.NotificationsScreen.route) {
-                        launchSingleTop = true
-                    }
+
                 },
                 trailingContent = {
                     Switch(checked = isNotificationOn,
                         onCheckedChange = { value ->
                             isNotificationOn = value
                             profileViewModel.updateUserData(
-                                userData.copy(isNotificationsOn = value),
+                                userData.copy(notificationsOn = value),
                                 onSuccess = {
                                     val message =
-                                        if (value) "Notifications enabled" else "Notifications disabled for your next bookings"
+                                        if (value) "Notifications enabled" else "Notifications disabled"
                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                                 },
                                 onError = { error ->

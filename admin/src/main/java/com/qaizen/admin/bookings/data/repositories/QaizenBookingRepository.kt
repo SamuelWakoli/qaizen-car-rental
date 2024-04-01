@@ -60,7 +60,7 @@ class QaizenBookingRepository : BookingsRepository {
             "title" to "Booking Approved",
             "body" to "Your booking for ${bookingData.vehicleName} has been approved",
             "fcmTokens" to bookingData.userFcmTokens,
-            "notificationsOn" to bookingData.notificationsOn,
+            "userId" to bookingData.userId,
         )
         firestore.collection("notifications").document(bookingData.timeStamp!!)
             .set(notificationData).addOnCompleteListener {
@@ -80,7 +80,7 @@ class QaizenBookingRepository : BookingsRepository {
     override suspend fun declineBooking(
         bookingId: String,
         fcmTokens: List<String>,
-        notificationsOn: Boolean,
+        userId: String,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
@@ -88,7 +88,7 @@ class QaizenBookingRepository : BookingsRepository {
             "title" to "Booking Declined",
             "body" to "Sorry to inform you that your booking has been declined",
             "fcmTokens" to fcmTokens,
-            "notificationsOn" to notificationsOn,
+            "userId" to userId,
         )
         firestore.collection("notifications").document(bookingId).set(notificationData)
             .addOnCompleteListener {

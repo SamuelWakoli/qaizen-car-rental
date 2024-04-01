@@ -29,7 +29,15 @@ exports.monitorNotifications = functions.firestore
         fcmTokens,
         title,
         body,
+        userId,
       } = notificationData; // Destructure data
+
+      console.log(`User Id: ${userId}`);
+      const userRef = admin.firestore().collection("users").doc(userId);
+      const user = await userRef.get();
+
+      const notificationsOn = user.data().notificationsOn;
+      console.log(`notificationsOn value is: ${notificationsOn}`);
 
       const previousRecordCount =
         change.before.exists ?
@@ -51,7 +59,9 @@ exports.monitorNotifications = functions.firestore
           await admin.messaging().sendToDevice(fcmToken, payload);
         };
 
-        await Promise.all(fcmTokens.map(sendNotification));
+        if (notificationsOn == true) {
+          await Promise.all(fcmTokens.map(sendNotification));
+        }
       }
       return null;
     },

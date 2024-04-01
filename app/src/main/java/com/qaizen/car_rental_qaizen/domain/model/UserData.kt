@@ -12,5 +12,5 @@ data class UserData(
     val userEmail: String?,
     val fcmTokens: Any,
     val favorites: List<String>,
-    val isNotificationsOn: Boolean = true,
+    val notificationsOn: Boolean = true,
 )

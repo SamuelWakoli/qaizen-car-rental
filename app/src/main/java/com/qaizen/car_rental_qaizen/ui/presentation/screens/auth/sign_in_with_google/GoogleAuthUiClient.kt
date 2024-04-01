@@ -66,7 +66,7 @@ class GoogleAuthUiClient(
                         userEmail = email,
                         fcmTokens = tokenList,
                         favorites = emptyList(),
-                        isNotificationsOn = true,
+                        notificationsOn = true,
                     )
                 },
                 errorMessage = null

@@ -24,7 +24,7 @@ class BookingsViewModel @Inject constructor(private val bookingsRepository: Book
     private val _uiState = MutableStateFlow(BookingUiState())
     val uiState: StateFlow<BookingUiState> = _uiState.asStateFlow()
 
-    fun updateCurrentBooking(bookingData: BookingData) {
+    fun updateCurrentBooking(bookingData: BookingData?) {
         _uiState.value = _uiState.value.copy(currentBooking = bookingData)
     }
 
@@ -45,10 +45,10 @@ class BookingsViewModel @Inject constructor(private val bookingsRepository: Book
     fun declineBooking(
         bookingId: String,
         fcmTokens: List<String>,
-        notificationsOn: Boolean,
+        userId: String,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) = viewModelScope.launch {
-        bookingsRepository.declineBooking(bookingId, fcmTokens, notificationsOn, onSuccess, onError)
+        bookingsRepository.declineBooking(bookingId, fcmTokens, userId, onSuccess, onError)
     }
 }

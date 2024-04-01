@@ -18,5 +18,4 @@ data class BookingData(
     val deliveryAddress: String? = null,
     val deliveryLat: Double? = null,
     val deliveryLng: Double? = null,
-    val notificationsOn: Boolean? = null,
 )
