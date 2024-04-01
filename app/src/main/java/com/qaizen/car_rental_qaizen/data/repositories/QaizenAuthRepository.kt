@@ -31,10 +31,34 @@ class QaizenAuthRepository : AuthRepository {
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+        try {
+            // Sign in with email and password.
+            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+
+            // Get the current user.
+            val currentUser = authResult.user!!
+
+            // Get the FCM token.
+            val tokenList = mutableListOf<String>()
+            Firebase.messaging.token.addOnSuccessListener { tokenList.add(it) }
+
+            // Check if the user document exists.
+            val userDocRef = firestore.collection(FirebaseDirectories.UsersCollection.name)
+                .document(currentUser.uid)
+            val userDoc = userDocRef.get().await()
+
+            // Update the FCM tokens.
+            if (userDoc.exists()) {
+                val currentTokens = userDoc.get("fcmTokens") as List<String>
+                tokenList.addAll(currentTokens)
+            }
+            userDocRef.update("fcmTokens", tokenList).await()
+
+            // Sign in successful.
             onSuccess()
-        }.addOnFailureListener {
-            onFailure(it)
+        } catch (e: Exception) {
+            // Sign in failed.
+            onFailure(e)
         }
     }
 
@@ -64,10 +88,8 @@ class QaizenAuthRepository : AuthRepository {
                 userEmail = email,
                 fcmTokens = tokenList,
                 favorites = emptyList(),
-                rentalHistoryIds = emptyList(),
-                paymentHistoryIds = emptyList(),
                 isNotificationsOn = true,
-                )
+            )
             onSuccess.invoke()
 
             // Update the user data in Firestore.

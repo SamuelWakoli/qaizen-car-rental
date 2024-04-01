@@ -43,8 +43,6 @@ class QaizenProfileRepository : ProfileRepository {
                         mpesaPhone = doc.getString("mpesaPhone"),
                         fcmTokens = doc.get("fcmTokens") as List<String>,
                         favorites = doc.get("favorites") as List<String>,
-                        rentalHistoryIds = doc.get("rentalHistoryIds") as List<String>,
-                        paymentHistoryIds = doc.get("paymentHistoryIds") as List<String>,
                         isNotificationsOn = doc.getBoolean("isNotificationOn") ?: true,
                     )
                     trySend(userData)
