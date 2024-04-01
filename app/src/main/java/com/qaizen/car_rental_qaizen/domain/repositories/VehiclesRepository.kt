@@ -17,12 +17,6 @@ interface VehiclesRepository {
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     )
-    suspend fun requestMpesaPayment(
-        amount: String,
-        phone: String,
-        onSuccess: () -> Unit,
-        onError: (Exception) -> Unit,
-    )
 
     suspend fun updateFavorites(
         favoritesList: List<String>,

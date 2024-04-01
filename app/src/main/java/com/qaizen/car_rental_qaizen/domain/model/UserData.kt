@@ -12,7 +12,5 @@ data class UserData(
     val userEmail: String?,
     val fcmTokens: Any,
     val favorites: List<String>,
-    val rentalHistoryIds: List<String> = emptyList(),
-    val paymentHistoryIds: List<String> = emptyList(),
     val isNotificationsOn: Boolean = true,
 )
