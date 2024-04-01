@@ -28,6 +28,7 @@ class QaizenBookingRepository : BookingsRepository {
                             vehicleImage = documentSnapshot.get("vehicleImage").toString(),
                             vehicleName = documentSnapshot.get("vehicleName").toString(),
                             userId = documentSnapshot.get("userId").toString(),
+                            userFcmTokens = documentSnapshot.get("userFcmTokens") as List<String>,
                             userName = documentSnapshot.get("userName").toString(),
                             userPhone = documentSnapshot.get("userPhone").toString(),
                             userEmail = documentSnapshot.get("userEmail").toString(),
@@ -37,9 +38,11 @@ class QaizenBookingRepository : BookingsRepository {
                             totalPrice = documentSnapshot.get("totalPrice").toString(),
                             needsDelivery = documentSnapshot.get("needsDelivery") as Boolean,
                             deliveryAddress = documentSnapshot.get("deliveryAddress").toString(),
+                            deliveryLat = documentSnapshot.getDouble("deliveryLat"),
+                            deliveryLng = documentSnapshot.getDouble("deliveryLng"),
                         )
                     }
-                    trySend(bookings)
+                    trySend(bookings.reversed())
                 }
             }
 
@@ -47,18 +50,50 @@ class QaizenBookingRepository : BookingsRepository {
     }
 
     override suspend fun approvePayment(
-        bookingId: String,
+        bookingData: BookingData,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        /** NOTE: on updating notification data, make sure to update the Cloud Functions too */
+
+        val notificationData = hashMapOf(
+            "title" to "Booking Approved",
+            "body" to "Your booking for ${bookingData.vehicleName} has been approved",
+            "fcmTokens" to bookingData.userFcmTokens
+        )
+        firestore.collection("notifications").document(bookingData.timeStamp!!)
+            .set(notificationData).addOnCompleteListener {
+
+                firestore.collection("records").document(bookingData.timeStamp).set(bookingData)
+                    .addOnSuccessListener {
+                        firestore.collection("bookings").document(bookingData.timeStamp).delete()
+                            .addOnSuccessListener {
+                                onSuccess()
+                            }.addOnFailureListener {
+                                onError(it)
+                            }
+                    }
+            }
     }
 
     override suspend fun declineBooking(
         bookingId: String,
+        fcmTokens: List<String>,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        val notificationData = hashMapOf(
+            "title" to "Booking Declined",
+            "body" to "Sorry to inform you that your booking has been declined",
+            "fcmTokens" to fcmTokens
+        )
+        firestore.collection("notifications").document(bookingId).set(notificationData)
+            .addOnCompleteListener {
+                firestore.collection("bookings").document(bookingId).delete().addOnSuccessListener {
+                    onSuccess()
+                }.addOnFailureListener {
+                    onError(it)
+                }
+            }
     }
 }

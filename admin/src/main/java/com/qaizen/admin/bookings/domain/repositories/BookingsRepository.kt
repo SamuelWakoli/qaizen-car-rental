@@ -10,12 +10,13 @@ interface BookingsRepository {
     fun getBookings(): Flow<List<BookingData>>
 
     suspend fun approvePayment(
-        bookingId: String,
+        bookingData: BookingData,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     )
     suspend fun declineBooking(
         bookingId: String,
+        fcmTokens: List<String>,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     )
