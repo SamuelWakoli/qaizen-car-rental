@@ -106,28 +106,34 @@ fun BookingListItem(
                 ListItem(modifier = Modifier.clip(MaterialTheme.shapes.large), headlineContent = {
                     Text(text = bookingItem.userName ?: "")
                 }, supportingContent = {
-                    Text(text = "${bookingItem.userPhone}\n${bookingItem.userEmail}")
+                    Text(text = "${if(bookingItem.userPhone != "null") bookingItem.userPhone else "[Phone not set this user]"}\n${bookingItem.userEmail}")
                 }, leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.PersonOutline,
                         contentDescription = null,
                     )
-                }, trailingContent = {
-                    OutlinedIconButton(onClick = {
-                        val phoneNumber = bookingItem.userPhone
-                        val intent = Intent(Intent.ACTION_DIAL).apply {
-                            data = Uri.parse("tel:$phoneNumber")
+                }, trailingContent = if (bookingItem.userPhone.isNullOrEmpty()|| bookingItem.userPhone == "null") null else {
+                    {
+                        OutlinedIconButton(onClick = {
+                            val phoneNumber = bookingItem.userPhone
+                            val intent = Intent(Intent.ACTION_DIAL).apply {
+                                data = Uri.parse("tel:$phoneNumber")
+                            }
+                            try {
+                                context.startActivity(intent)
+                            } catch (exception: ActivityNotFoundException) {
+                                Toast.makeText(
+                                    context,
+                                    "No app to make call",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Phone, contentDescription = "Call"
+                            )
                         }
-                        try {
-                            context.startActivity(intent)
-                        } catch (exception: ActivityNotFoundException) {
-                            Toast.makeText(context, "No app to make call", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Phone, contentDescription = "Call"
-                        )
                     }
                 }, colors = ListItemDefaults.colors(
                     containerColor = Color.Transparent,
