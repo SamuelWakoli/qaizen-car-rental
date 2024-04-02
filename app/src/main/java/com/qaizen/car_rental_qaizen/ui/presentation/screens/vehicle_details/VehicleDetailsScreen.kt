@@ -54,7 +54,6 @@ fun VehicleDetailsScreen(
             VehicleDetailsScreenAppbar(
                 navHostController = navHostController,
                 vehicleName = vehicle.name,
-                onClickShare = {},
                 scrollBehavior = scrollBehavior,
             )
         },
