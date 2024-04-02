@@ -34,6 +34,12 @@ class BookingsViewModel @Inject constructor(private val bookingsRepository: Book
         initialValue = null
     )
 
+    val records = bookingsRepository.getRecords().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
     fun approvePayment(
         bookingData: BookingData,
         onSuccess: () -> Unit,

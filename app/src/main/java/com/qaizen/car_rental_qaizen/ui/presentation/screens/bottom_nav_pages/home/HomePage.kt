@@ -47,7 +47,7 @@ fun HomePage(
 
     val context = LocalContext.current
 
-    val vehiclesList = vehiclesViewModel.vehiclesList.collectAsState().value
+    val vehiclesList = vehiclesViewModel.vehiclesList.collectAsState().value?.reversed()
     val favouriteList = vehiclesViewModel.favoritesList.collectAsState().value
 
     Column(

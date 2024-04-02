@@ -63,7 +63,7 @@ fun HomePage(
     val context = LocalContext.current
     val uiState = vehiclesViewModel.uiState.collectAsState().value
 
-    val vehicles = vehiclesViewModel.vehicles.collectAsState().value
+    val vehicles = vehiclesViewModel.vehicles.collectAsState().value?.reversed()
 
     val itemMaxWidth = when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> 600.dp
