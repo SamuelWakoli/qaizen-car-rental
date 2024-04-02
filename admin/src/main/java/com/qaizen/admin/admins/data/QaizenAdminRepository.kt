@@ -57,7 +57,7 @@ class QaizenAdminRepository : AdminRepository {
                             email = doc.getString("email").toString(),
                             photoUrl = doc.getString("photoUrl").toString(),
                             phone = doc.getString("phone").toString(),
-                            fcmTokens = doc["fcmTokens"] as List<String>,
+                            fcmTokens = emptyList(),
                             notificationsOn = doc.getBoolean("notificationsOn") ?: true,
                         )
                     )

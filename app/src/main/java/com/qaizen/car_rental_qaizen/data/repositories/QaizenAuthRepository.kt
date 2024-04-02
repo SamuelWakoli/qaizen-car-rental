@@ -87,14 +87,13 @@ class QaizenAuthRepository : AuthRepository {
                 mpesaPhone = null,
                 userEmail = email,
                 fcmTokens = tokenList,
-                favorites = emptyList(),
+                favorites = emptyList<String>(),
                 notificationsOn = true,
             )
 
             // Update the user data in Firestore.
-            updateUserFirestoreDataOnAuth(currentUser, userData, onFailure).run {
-                onSuccess.invoke()
-            }
+            updateUserFirestoreDataOnAuth(currentUser, userData, onSuccess, onFailure)
+
         } catch (e: Exception) {
             // Handle any exceptions.
             onFailure(e)
@@ -111,6 +110,7 @@ class QaizenAuthRepository : AuthRepository {
     override suspend fun updateUserFirestoreDataOnAuth(
         currentUser: FirebaseUser?,
         data: UserData,
+        onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
         try {
@@ -122,23 +122,12 @@ class QaizenAuthRepository : AuthRepository {
                 }
             )?.await()
 
-            val userDocReference = firestore.collection(FirebaseDirectories.UsersCollection.name)
-                .document(currentUser?.uid!!)//always use uid for the purpose of security best practice
-
             // Update the user data in Firestore.
-            userDocReference.addSnapshotListener { value, error ->
-                if (error != null) {
-                    onFailure(error)
-                    return@addSnapshotListener
-                }
-                if (value != null && value.exists()) {
-                    return@addSnapshotListener
-                } else {
-                    userDocReference.set(data).addOnSuccessListener {
-                        return@addOnSuccessListener
-                    }
-                    return@addSnapshotListener
-                }
+            firestore.collection(FirebaseDirectories.UsersCollection.name)
+                .document(currentUser?.uid!!).set(data).addOnSuccessListener {
+                onSuccess()
+            }.addOnFailureListener {
+                onFailure(it)
             }
         } catch (e: Exception) {
             // Handle any exceptions.

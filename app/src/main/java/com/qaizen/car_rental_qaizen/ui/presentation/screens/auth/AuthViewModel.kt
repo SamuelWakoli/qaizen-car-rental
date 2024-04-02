@@ -30,15 +30,17 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     fun onSignInResult(result: GoogleSignInResult) = viewModelScope.launch {
         Log.d(TAG, "onSignInResult: $result")
-        _uiState.update { state ->
-            state.copy(
-                isGoogleSignInButtonLoading = false,
-                isSignInSuccess = true
-            )
-        }
         authRepository.updateUserFirestoreDataOnAuth(
             currentUser = Firebase.auth.currentUser,
             data = result.data!!,
+            onSuccess = {
+                _uiState.update { state ->
+                    state.copy(
+                        isGoogleSignInButtonLoading = false,
+                        isSignInSuccess = true
+                    )
+                }
+            },
             onFailure = {
                 _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
             }

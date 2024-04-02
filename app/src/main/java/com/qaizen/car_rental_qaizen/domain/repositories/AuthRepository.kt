@@ -27,6 +27,7 @@ interface AuthRepository {
     suspend fun updateUserFirestoreDataOnAuth(
         currentUser: FirebaseUser?,
         data: UserData,
+        onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     )
 

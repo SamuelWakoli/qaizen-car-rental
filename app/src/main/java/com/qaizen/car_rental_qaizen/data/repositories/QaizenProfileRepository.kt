@@ -34,6 +34,9 @@ class QaizenProfileRepository : ProfileRepository {
                     return@addSnapshotListener
                 }
                 if (doc != null && doc.exists()) {
+                    val fcmTokens = doc.get("fcmTokens") as List<String>?
+                    val favorites = doc.get("favorites") as List<String>?
+
                     val userData = UserData(
                         userID = doc.id,
                         createdOn = doc.get("createdOn").toString(),
@@ -42,8 +45,8 @@ class QaizenProfileRepository : ProfileRepository {
                         userEmail = doc.getString("userEmail"),
                         phone = doc.getString("phone"),
                         mpesaPhone = doc.getString("mpesaPhone"),
-                        fcmTokens = doc.get("fcmTokens") as List<String>,
-                        favorites = doc.get("favorites") as List<String>,
+                        fcmTokens = fcmTokens,
+                        favorites = favorites,
                         notificationsOn = doc.getBoolean("notificationsOn") ?: true,
                     )
                     trySend(userData)

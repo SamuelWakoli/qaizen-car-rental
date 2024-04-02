@@ -10,7 +10,7 @@ data class UserData(
     val phone:String? = null,
     val mpesaPhone:String? = null,
     val userEmail: String?,
-    val fcmTokens: Any,
-    val favorites: List<String>,
+    val fcmTokens: List<String>? = null,
+    val favorites: List<String>? = null,
     val notificationsOn: Boolean = true,
 )

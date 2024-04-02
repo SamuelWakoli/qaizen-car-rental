@@ -65,7 +65,7 @@ class GoogleAuthUiClient(
                         photoURL = photoUrl,
                         userEmail = email,
                         fcmTokens = tokenList,
-                        favorites = emptyList(),
+                        favorites = emptyList<String>(),
                         notificationsOn = true,
                     )
                 },
