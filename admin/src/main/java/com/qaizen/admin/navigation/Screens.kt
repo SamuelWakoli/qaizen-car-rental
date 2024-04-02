@@ -13,11 +13,6 @@ sealed class Screens(val route: String) {
 
 
     data object ProfileScreen : Screens("profile_screen")
-    data object EditProfileScreen : Screens("edit_profile_screen")
-    data object PaymentInfoScreen : Screens("payment_info_screen")
-    data object PaymentHistoryScreen : Screens("payment_history_screen")
-    data object RentalHistoryScreen : Screens("rental_history_screen")
-    data object NotificationsScreen : Screens("notifications_screen")
     data object PrivacyPolicyScreen : Screens("privacy_policy_screen")
     data object SearchScreen : Screens("search_screen")
     data object VehicleDetailsScreen : Screens("vehicle_details_screen")
@@ -25,4 +20,5 @@ sealed class Screens(val route: String) {
 
     data object AdminsScreen : Screens("admins_screen")
     data object AddVehicleScreen : Screens("add_vehicle_screen")
+    data object RecordsScreen : Screens("records_screen")
 }
