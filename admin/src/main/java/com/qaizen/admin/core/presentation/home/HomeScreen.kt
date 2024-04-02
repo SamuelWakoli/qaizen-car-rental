@@ -42,6 +42,7 @@ import com.qaizen.admin.more.MorePage
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.users.presentation.UsersPage
+import com.qaizen.admin.users.presentation.UsersViewModel
 import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
 import com.qaizen.admin.vehicles.presentation.home.HomePage
 
@@ -55,6 +56,7 @@ fun HomeScreen(
     vehiclesViewModel: VehiclesViewModel,
     adminViewModel: AdminViewModel,
     bookingsViewModel: BookingsViewModel,
+    usersViewModel: UsersViewModel,
 ) {
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -140,6 +142,7 @@ fun HomeScreen(
                         UsersPage(
                             windowSize = windowSize,
                             navHostController = navHostController,
+                            usersViewModel = usersViewModel,
                         )
                     }
                     composable(bottomNavItems[3].route) {
