@@ -83,7 +83,18 @@ fun MorePage(
             CustomQaizenListItem(leadingIcon = Icons.Outlined.Notifications,
                 label = "Notifications",
                 onClick = {
-
+                    isNotificationOn = !isNotificationOn
+                    profileViewModel.updateUserData(
+                        userData.copy(notificationsOn = isNotificationOn),
+                        onSuccess = {
+                            val message =
+                                if (isNotificationOn) "Notifications enabled" else "Notifications disabled"
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        },
+                        onError = { error ->
+                            Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                        }
+                    )
                 },
                 trailingContent = {
                     Switch(checked = isNotificationOn,

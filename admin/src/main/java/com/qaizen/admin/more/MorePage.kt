@@ -61,9 +61,9 @@ fun MorePage(
                 leadingIcon = Icons.Outlined.History,
                 label = "Records",
                 onClick = {
-//                    navHostController.navigate(Screens.AdminsScreen.route) {
-//                        launchSingleTop = true
-//                    }
+                    navHostController.navigate(Screens.RecordsScreen.route) {
+                        launchSingleTop = true
+                    }
                 })
             CustomQaizenListItem(
                 leadingIcon = Icons.Outlined.Policy,
