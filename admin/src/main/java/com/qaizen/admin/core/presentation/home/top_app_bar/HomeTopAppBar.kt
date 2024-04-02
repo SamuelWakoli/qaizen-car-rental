@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
@@ -22,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,11 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
-import com.google.firebase.auth.FirebaseAuth
 import com.qaizen.admin.R
+import com.qaizen.admin.admins.presentation.AdminViewModel
 import com.qaizen.admin.core.presentation.composables.ThemeSelectDialog
-import com.qaizen.admin.navigation.Screens
 import com.qaizen.admin.more.MorePageViewModel
+import com.qaizen.admin.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,10 +50,12 @@ fun HomeTopAppBar(
     navHostController: NavHostController,
     bottomNavHostController: NavHostController,
     morePageViewModel: MorePageViewModel,
+    adminViewModel: AdminViewModel,
 ) {
 
     val navBackStackEntry by bottomNavHostController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val admin = adminViewModel.admin?.collectAsState()?.value
 
     var showThemeDialog by remember { mutableStateOf(false) }
 
@@ -115,12 +119,12 @@ fun HomeTopAppBar(
             }
             Spacer(modifier = Modifier.size(8.dp))
             AsyncImage(
-                model = FirebaseAuth.getInstance().currentUser?.photoUrl,
+                model = admin?.photoUrl,
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .size(42.dp)
-                    .clip(CircleShape)
+                    .clip(RoundedCornerShape(12.dp))
                     .clickable {
                         navHostController.navigate(Screens.ProfileScreen.route) {
                             launchSingleTop = true

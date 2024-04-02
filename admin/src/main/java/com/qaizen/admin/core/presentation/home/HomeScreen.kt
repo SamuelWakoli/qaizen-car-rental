@@ -78,6 +78,7 @@ fun HomeScreen(
             navHostController = navHostController,
             bottomNavHostController = bottomNavHostController,
             morePageViewModel = morePageViewModel,
+            adminViewModel = adminViewModel,
         )
     }, bottomBar = {
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
