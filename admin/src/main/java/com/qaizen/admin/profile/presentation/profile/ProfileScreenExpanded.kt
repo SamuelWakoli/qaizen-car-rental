@@ -53,7 +53,7 @@ fun ProfileScreenExpanded(
             verticalArrangement = Arrangement.Center
         ) {
             CoilImage(
-                imageUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString(),
+                imageUrl = admin?.photoUrl.toString(),
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .size(100.dp),
@@ -65,7 +65,7 @@ fun ProfileScreenExpanded(
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = FirebaseAuth.getInstance().currentUser?.displayName.toString(),
+                    text = admin?.name ?: "Name Not Set",
                     style = MaterialTheme.typography.titleLarge,
                 )
                 Text(

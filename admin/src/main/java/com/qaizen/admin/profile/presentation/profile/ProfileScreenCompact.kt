@@ -48,7 +48,7 @@ fun ProfileScreenCompact(
         ) {
             ListItem(leadingContent = {
                 CoilImage(
-                    imageUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString(),
+                    imageUrl = admin?.photoUrl.toString(),
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(100.dp),
@@ -58,7 +58,7 @@ fun ProfileScreenCompact(
                     Text(text = admin?.phone ?: "Phone Number Not Set")
                 },
                 headlineContent = {
-                    Text(text = FirebaseAuth.getInstance().currentUser?.displayName.toString())
+                    Text(text = admin?.name ?: "Name Not Set")
                 },
                 supportingContent = { Text(text = FirebaseAuth.getInstance().currentUser?.email.toString()) })
 
