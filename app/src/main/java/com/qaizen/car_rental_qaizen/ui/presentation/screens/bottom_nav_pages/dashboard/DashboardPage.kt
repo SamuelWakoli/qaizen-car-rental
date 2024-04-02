@@ -35,7 +35,6 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.VehiclesViewModel
 
 @Composable
 fun DashboardPage(
-    modifier: Modifier = Modifier,
     navHostController: NavHostController,
     profileViewModel: ProfileViewModel,
     vehiclesViewModel: VehiclesViewModel,
@@ -47,7 +46,6 @@ fun DashboardPage(
         record.userEmail == userData?.userEmail
     }
 
-    val currentRecord = recordsList?.first()
     val vehiclesList = vehiclesViewModel.vehiclesList.collectAsState().value
 
     Column(
@@ -78,8 +76,8 @@ fun DashboardPage(
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(text = "You have not booked any car yet...")
             }
-        } else
-
+        } else {
+            val currentRecord = recordsList.first()
             Card(
                 modifier = Modifier
                     .fillMaxSize()
@@ -106,7 +104,7 @@ fun DashboardPage(
                                 headlineText = "Self Drive Service"
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-                            currentRecord?.vehicleId?.let { vehicleId ->
+                            currentRecord.vehicleId?.let { vehicleId ->
                                 currentRecord.vehicleName?.let { vehicleName ->
                                     DashboardListItem(
                                         modifier = Modifier.clickable {
@@ -140,12 +138,12 @@ fun DashboardPage(
                             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                             DashboardListItem(
                                 overlineText = "Duration",
-                                headlineText = "${currentRecord?.days} days\n${currentRecord?.pickupTime} | ${currentRecord?.pickupDate}",
+                                headlineText = "${currentRecord.days} days\n${currentRecord.pickupTime} | ${currentRecord.pickupDate}",
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                             DashboardListItem(
                                 overlineText = "Total Cost",
-                                headlineText = "Ksh. ${currentRecord?.totalPrice}",
+                                headlineText = "Ksh. ${currentRecord.totalPrice}",
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                             DashboardListItem(
@@ -169,5 +167,6 @@ fun DashboardPage(
                     }
                 }
             }
+        }
     }
 }
