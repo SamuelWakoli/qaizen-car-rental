@@ -9,6 +9,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.qaizen.car_rental_qaizen.domain.model.BookingData
 import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.domain.repositories.ProfileRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -48,6 +49,41 @@ class QaizenProfileRepository : ProfileRepository {
                     trySend(userData)
                 }
             }
+        awaitClose { snapshotListener.remove() }
+    }
+
+    override fun getRecords(): Flow<List<BookingData>> = callbackFlow {
+        val snapshotListener = firestore.collection("records").orderBy("timeStamp")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                if (value != null) {
+                    val bookings = value.documents.map { documentSnapshot ->
+                        BookingData(
+                            timeStamp = documentSnapshot.get("timeStamp").toString(),
+                            vehicleId = documentSnapshot.get("vehicleId").toString(),
+                            vehicleImage = documentSnapshot.get("vehicleImage").toString(),
+                            vehicleName = documentSnapshot.get("vehicleName").toString(),
+                            userId = documentSnapshot.get("userId").toString(),
+                            userName = documentSnapshot.get("userName").toString(),
+                            userPhone = documentSnapshot.get("userPhone").toString(),
+                            userEmail = documentSnapshot.get("userEmail").toString(),
+                            pickupDate = documentSnapshot.get("pickupDate").toString(),
+                            pickupTime = documentSnapshot.get("pickupTime").toString(),
+                            days = documentSnapshot.get("days").toString(),
+                            totalPrice = documentSnapshot.get("totalPrice").toString(),
+                            needsDelivery = documentSnapshot.get("needsDelivery") as Boolean,
+                            deliveryAddress = documentSnapshot.get("deliveryAddress").toString(),
+                            deliveryLat = documentSnapshot.getDouble("deliveryLat"),
+                            deliveryLng = documentSnapshot.getDouble("deliveryLng"),
+                        )
+                    }
+                    trySend(bookings.reversed())
+                }
+            }
+
         awaitClose { snapshotListener.remove() }
     }
 
