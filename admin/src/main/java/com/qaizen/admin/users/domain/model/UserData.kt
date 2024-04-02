@@ -14,5 +14,5 @@ data class UserData(
     val favorites: List<String>,
     val rentalHistoryIds: List<String> = emptyList(),
     val paymentHistoryIds: List<String> = emptyList(),
-    val isNotificationsOn: Boolean = true,
+    val notificationsOn: Boolean = true,
 )

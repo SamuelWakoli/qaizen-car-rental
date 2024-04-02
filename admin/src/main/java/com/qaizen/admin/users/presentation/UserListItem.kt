@@ -1,15 +1,17 @@
 package com.qaizen.admin.users.presentation
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.LibraryBooks
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Sms
 import androidx.compose.material.icons.outlined.Whatsapp
@@ -31,18 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.firebase.auth.FirebaseAuth
-import com.qaizen.admin.LayoutDirectionPreviews
-import com.qaizen.admin.OrientationPreviews
-import com.qaizen.admin.ThemePreviews
+import com.qaizen.admin.users.domain.model.UserData
 
 @Composable
-fun UserListItem(modifier: Modifier = Modifier) {
+fun UserListItem(modifier: Modifier = Modifier, userData: UserData) {
 
     var isExpanded by remember { mutableStateOf(false) }
     var rotationState by remember { mutableFloatStateOf(0f) }
+    val context = LocalContext.current
 
     Card(
         shape = MaterialTheme.shapes.large,
@@ -61,19 +62,19 @@ fun UserListItem(modifier: Modifier = Modifier) {
                     },
                 leadingContent = {
                     AsyncImage(
-                        model = FirebaseAuth.getInstance().currentUser?.photoUrl,
+                        model = userData.photoURL,
                         contentDescription = "Profile Picture",
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .size(42.dp)
-                            .clip(CircleShape)
+                            .clip(RoundedCornerShape(12.dp))
                     )
                 },
                 headlineContent = {
-                    Text(text = "User Name")
+                    Text(text = userData.displayName ?: "Name not found")
                 },
                 supportingContent = {
-                    Text(text = "user@gmail.com")
+                    Text(text = userData.userEmail ?: "Email not found")
                 },
                 trailingContent = {
                     IconButton(onClick = {
@@ -97,10 +98,29 @@ fun UserListItem(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.large)
                         .clickable {
-                            // TODO: Call intent
+                            if (userData.phone != "null") {
+                                val phoneNumber = userData.phone
+                                val intent = Intent(Intent.ACTION_DIAL).apply {
+                                    data = Uri.parse("tel:$phoneNumber")
+                                }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    Toast
+                                        .makeText(context, "No phone app found", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            } else {
+                                Toast
+                                    .makeText(context, "Phone number not found", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         },
                     headlineContent = {
                         Text(text = "Call")
+                    },
+                    supportingContent = {
+                        Text(text = userData.phone ?: "Phone number not found")
                     },
                     leadingContent = {
                         Icon(
@@ -118,7 +138,24 @@ fun UserListItem(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.large)
                         .clickable {
-                            // TODO: SMS intent
+                            if (userData.phone != "null") {
+                                val phoneNumber = userData.phone
+
+                                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                    data = Uri.parse("smsto:$phoneNumber")
+                                }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "No SMS app found",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                            }
                         },
                     headlineContent = {
                         Text(text = "Send Message (SMS)")
@@ -139,7 +176,28 @@ fun UserListItem(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.large)
                         .clickable {
-                            // TODO: WhatsApp intent
+                            if (userData.phone != "null") {
+                                val phoneNumber = userData.phone
+                                //Format phone to start with country code and remove the first zero
+                                val formattedPhoneNumber =
+                                    phoneNumber?.replaceFirst("^0+".toRegex(), "")
+
+                                val intent = Intent(Intent.ACTION_VIEW).apply {
+                                    data =
+                                        Uri.parse("https://api.whatsapp.com/send?phone=$phoneNumber")
+                                }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "No WhatsApp app found",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                            }
                         },
                     headlineContent = {
                         Text(text = "Chat on WhatsApp")
@@ -156,57 +214,7 @@ fun UserListItem(modifier: Modifier = Modifier) {
                         leadingIconColor = MaterialTheme.colorScheme.tertiary
                     )
                 )
-                ListItem(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.large)
-                        .clickable {
-                            // TODO: navigate to payment history
-                        },
-                    headlineContent = {
-                        Text(text = "Payment History")
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.Payments,
-                            contentDescription = null,
-                        )
-                    },
-                    colors = ListItemDefaults.colors(
-                        containerColor = Color.Transparent,
-                        headlineColor = MaterialTheme.colorScheme.tertiary,
-                        leadingIconColor = MaterialTheme.colorScheme.tertiary
-                    )
-                )
-                ListItem(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.large)
-                        .clickable {
-                            // TODO: Call intent
-                        },
-                    headlineContent = {
-                        Text(text = "Booking History")
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.LibraryBooks,
-                            contentDescription = null,
-                        )
-                    },
-                    colors = ListItemDefaults.colors(
-                        containerColor = Color.Transparent,
-                        headlineColor = MaterialTheme.colorScheme.tertiary,
-                        leadingIconColor = MaterialTheme.colorScheme.tertiary
-                    )
-                )
             }
         }
     }
-}
-
-@ThemePreviews
-@OrientationPreviews
-@LayoutDirectionPreviews
-@Composable
-fun UserListItemPreview() {
-    UserListItem()
 }
