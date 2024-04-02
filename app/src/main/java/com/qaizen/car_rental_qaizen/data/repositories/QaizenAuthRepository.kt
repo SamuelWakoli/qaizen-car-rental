@@ -75,7 +75,7 @@ class QaizenAuthRepository : AuthRepository {
 
             // Get the FCM token.
             val tokenList = mutableListOf<String>()
-            Firebase.messaging.token.addOnSuccessListener { tokenList.add(it) }
+            tokenList.add(Firebase.messaging.token.await())
 
             // Create the user data object.
             val userData = UserData(
@@ -90,10 +90,11 @@ class QaizenAuthRepository : AuthRepository {
                 favorites = emptyList(),
                 notificationsOn = true,
             )
-            onSuccess.invoke()
 
             // Update the user data in Firestore.
-            updateUserFirestoreDataOnAuth(currentUser, userData, onFailure)
+            updateUserFirestoreDataOnAuth(currentUser, userData, onFailure).run {
+                onSuccess.invoke()
+            }
         } catch (e: Exception) {
             // Handle any exceptions.
             onFailure(e)

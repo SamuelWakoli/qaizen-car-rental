@@ -85,8 +85,10 @@ class QaizenVehiclesRepository : VehiclesRepository {
                     return@addSnapshotListener
                 }
                 if (documentSnapshot != null) {
-                    val favorites = documentSnapshot.get("favorites") as List<String>
-                    trySend(favorites)
+                    val favorites = documentSnapshot.get("favorites")
+                    if (favorites != null) {
+                        trySend(favorites as List<String>)
+                    }
                 }
             }
 
