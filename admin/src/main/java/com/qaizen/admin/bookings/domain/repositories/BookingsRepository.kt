@@ -9,6 +9,8 @@ interface BookingsRepository {
 
     fun getBookings(): Flow<List<BookingData>>
 
+    fun getRecords(): Flow<List<BookingData>>
+
     suspend fun approvePayment(
         bookingData: BookingData,
         onSuccess: () -> Unit,
