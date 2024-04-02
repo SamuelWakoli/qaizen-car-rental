@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -19,12 +18,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.Help
 import androidx.compose.material.icons.twotone.Email
 import androidx.compose.material.icons.twotone.Lock
 import androidx.compose.material.icons.twotone.LockOpen
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,7 +37,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -155,7 +154,19 @@ fun SignInScreen(
                         modifier = Modifier.padding(end = 64.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Spacer(modifier = Modifier.size(32.dp))
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        )
+                    ) {
+                        Text(
+                            text = "Beware! This app will stop immediately if you are not authored to use it.",
+                            modifier = Modifier.padding(8.dp),
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start,
