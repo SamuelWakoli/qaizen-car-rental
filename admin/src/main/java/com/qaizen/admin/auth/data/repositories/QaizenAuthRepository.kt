@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import com.qaizen.admin.admins.domain.model.Admin
 import com.qaizen.admin.auth.data.FirebaseDirectories
 import com.qaizen.admin.auth.domain.model.UserData
 import com.qaizen.admin.auth.domain.repositories.AuthRepository
@@ -49,8 +50,18 @@ class QaizenAuthRepository : AuthRepository {
                         Firebase.messaging.token.addOnSuccessListener { token ->
                             if (!fcmTokens.contains(token)) {
                                 fcmTokens.add(token)
+                                val admin = Admin(
+                                    id = value.id,
+                                    name = value.getString("displayName").toString(),
+                                    email = value.getString("userEmail").toString(),
+                                    photoUrl = value.getString("photoURL").toString(),
+                                    phone = value.getString("phone").toString(),
+                                    fcmTokens = fcmTokens,
+                                    notificationsOn = value.getBoolean("notificationsOn") ?: true,
+                                )
+
                                 firestore.collection("admins").document(currentUser.uid)
-                                    .update("fcmTokens", fcmTokens)
+                                    .set(admin)
                             }
                         }
                     }
@@ -92,14 +103,18 @@ class QaizenAuthRepository : AuthRepository {
                     return@addSnapshotListener
                 }
                 if (value != null && value.exists()) {
-                    return@addSnapshotListener
-                } else {
-                    userDocReference.set(data).addOnSuccessListener {
-                        firestore.collection("admins").document(currentUser.uid)
-                            .update("fcmTokens", data.fcmTokens)
-                        return@addOnSuccessListener
-                    }
-                    return@addSnapshotListener
+                    val admin = Admin(
+                        id = value.id,
+                        name = value.getString("displayName").toString(),
+                        email = value.getString("userEmail").toString(),
+                        photoUrl = value.getString("photoURL").toString(),
+                        phone = value.getString("phone").toString(),
+                        fcmTokens = data.fcmTokens as List<String>,
+                        notificationsOn = value.getBoolean("notificationsOn") ?: true,
+                    )
+
+                    firestore.collection("admins").document(currentUser.uid)
+                        .set(admin)
                 }
             }
         } catch (e: Exception) {
