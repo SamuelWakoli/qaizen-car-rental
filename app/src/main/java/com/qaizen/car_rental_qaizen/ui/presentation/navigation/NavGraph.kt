@@ -27,10 +27,9 @@ import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.contact_us.Con
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.more_services.MoreServicesScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.other.privacy_policy.PrivacyPolicyScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.edit_profile.EditProfileScreen
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.payment_history.PaymentHistoryScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.payment_info.PaymentInfoScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.profile.ProfileScreen
-import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.rental_history.RentalHistoryScreen
+import com.qaizen.car_rental_qaizen.ui.presentation.screens.profile_section.records.RecordsScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.search.SearchScreen
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.vehicle_details.VehicleDetailsScreen
 
@@ -117,15 +116,10 @@ fun NavGraph(
                 profileViewModel = profileViewModel,
             )
         }
-        composable(Screens.PaymentHistoryScreen.route) {
-            PaymentHistoryScreen(
+        composable(Screens.RecordsScreen.route) {
+            RecordsScreen(
                 windowSize = windowSize,
-                navHostController = navHostController,
-            )
-        }
-        composable(Screens.RentalHistoryScreen.route) {
-            RentalHistoryScreen(
-                windowSize = windowSize,
+                profileViewModel = profileViewModel,
                 navHostController = navHostController,
             )
         }

@@ -20,6 +20,12 @@ class ProfileViewModel @Inject constructor(private val profileRepository: Profil
         initialValue = null
     )
 
+    val records = profileRepository.getRecords().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
     fun updateUserData(
         userData: UserData,
         onSuccess: () -> Unit,

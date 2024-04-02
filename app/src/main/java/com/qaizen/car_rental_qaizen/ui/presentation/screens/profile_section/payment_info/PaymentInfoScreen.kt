@@ -171,7 +171,7 @@ fun PaymentInfoScreen(
                         onSuccess = {
                             isSaving = false
                             navHostController.navigateUp()
-                            Toast.makeText(context, "Profile updated", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Payment info updated", Toast.LENGTH_LONG).show()
                         },
                         onError = {
                             isSaving = false

@@ -17,6 +17,7 @@ import com.qaizen.admin.auth.presentation.AuthViewModel
 import com.qaizen.admin.auth.presentation.ForgotPasswordScreen
 import com.qaizen.admin.auth.presentation.SignInScreen
 import com.qaizen.admin.bookings.presentation.BookingsViewModel
+import com.qaizen.admin.bookings.presentation.RecordsScreen
 import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.profile.presentation.profile.ProfileScreen
@@ -105,5 +106,13 @@ fun NavGraph(
                 vehiclesViewModel = vehiclesViewModel,
             )
         }
+        composable(Screens.RecordsScreen.route) {
+            RecordsScreen(
+                windowSize = windowSize,
+                bookingsViewModel = bookingsViewModel,
+                navHostController = navHostController,
+            )
+        }
+
     }
 }

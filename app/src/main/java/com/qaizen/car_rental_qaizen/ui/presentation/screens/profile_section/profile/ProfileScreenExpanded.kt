@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.outlined.ContactSupport
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Payment
-import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -101,16 +100,9 @@ fun ProfileScreenExpanded(
                     }
                 })
 
-            CustomQaizenListItem(leadingIcon = Icons.Outlined.Payments,
-                label = "Payment History", onClick = {
-                    navHostController.navigate(Screens.PaymentHistoryScreen.route) {
-                        launchSingleTop = true
-                    }
-                })
-
             CustomQaizenListItem(leadingIcon = Icons.Outlined.History,
                 label = "Rental History", onClick = {
-                    navHostController.navigate(Screens.RentalHistoryScreen.route) {
+                    navHostController.navigate(Screens.RecordsScreen.route) {
                         launchSingleTop = true
                     }
                 })
