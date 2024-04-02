@@ -22,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.ProfileViewModel
@@ -92,52 +94,31 @@ fun ProfileScreen(
 
         if (showSignOutDialog) SignOutDialog(onConfirmation = {
             coroutineScope.launch {
-//                    profileScreenViewModel.signOut(
-//                        onSuccess = {
-//                            navController.navigate(route = Screens.SignInScreen.route) {
-//                                popUpTo(Screens.HomeScreen.route) {
-//                                    inclusive = true
-//                                }
-//                            }
-//                        },
-//                        onFailure = {
-//                            profileScreenViewModel.hideOrShowSignOutDialog()
-//                            Toast.makeText(
-//                                context,
-//                                "Failed to sign out, Please try again later",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    )
+                Firebase.auth.signOut()
+            }.invokeOnCompletion {
+                navHostController.navigate(route = Screens.SignInScreen.route) {
+                    popUpTo(Screens.HomeScreen.route) {
+                        inclusive = true
+                    }
+                }
             }
         }, onDismissRequest = {
             showSignOutDialog = false
-//                profileScreenViewModel.hideOrShowSignOutDialog()
         })
 
         if (showDeleteProfileDialog) DeleteProfileDialog(onConfirmation = {
             coroutineScope.launch {
-//                    profileScreenViewModel.deleteProfileAndData(
-//                        onSuccess = {
-//                            navController.navigate(route = Screens.SignInScreen.route) {
-//                                popUpTo(Screens.HomeScreen.route) {
-//                                    inclusive = true
-//                                }
-//                            }
-//                        },
-//                        onFailure = { exception: Exception ->
-//                            profileScreenViewModel.hideOrShowDeleteProfileDialog()
-//                            Toast.makeText(
-//                                context,
-//                                "Failed to delete profile and data: ${exception.message}",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    )
+                Firebase.auth.currentUser?.delete()?.addOnSuccessListener {
+                    Firebase.auth.signOut()
+                    navHostController.navigate(route = Screens.SignInScreen.route) {
+                        popUpTo(Screens.HomeScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             }
         }, onDismissRequest = {
             showDeleteProfileDialog = false
-//                profileScreenViewModel.hideOrShowDeleteProfileDialog()
         })
     }
 }
