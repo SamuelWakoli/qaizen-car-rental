@@ -140,6 +140,8 @@ fun HomeScreen(
                     composable(bottomNavItems[1].route) {
                         DashboardPage(
                             navHostController = navHostController,
+                            profileViewModel = profileViewModel,
+                            vehiclesViewModel = vehiclesViewModel,
                         )
                     }
                     composable(bottomNavItems[2].route) {
