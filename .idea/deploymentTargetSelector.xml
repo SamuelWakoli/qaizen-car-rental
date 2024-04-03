@@ -15,14 +15,11 @@
       </SelectionState>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-04-02T20:56:25.099130610Z">
+        <DropdownSelection timestamp="2024-04-02T23:12:15.188601275Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="FirebaseDirectAccess" identifier="reservation=projects/qaizen-49e94/deviceSessions/session-fp1vixnnzg7za" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/sam/.android/avd/Pixel_3a_API_34.avd" />
             </handle>
-            <template>
-              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=shiba/34" />
-            </template>
           </Target>
         </DropdownSelection>
         <DialogSelection />

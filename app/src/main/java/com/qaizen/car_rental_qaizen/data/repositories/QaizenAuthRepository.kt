@@ -67,37 +67,32 @@ class QaizenAuthRepository : AuthRepository {
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        try {
-            // Create the user with email and password.
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            // Get the current user.
-            val currentUser = authResult.user!!
 
-            // Get the FCM token.
-            val tokenList = mutableListOf<String>()
-            tokenList.add(Firebase.messaging.token.await())
+        // Create the user with email and password.
+        val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+        // Get the current user.
+        val currentUser = authResult.user!!
 
-            // Create the user data object.
-            val userData = UserData(
-                userID = currentUser.uid,
-                createdOn = LocalDateTime.now().toString(),
-                displayName = name,
-                photoURL = currentUser.photoUrl,
-                phone = null,
-                mpesaPhone = null,
-                userEmail = email,
-                fcmTokens = tokenList,
-                favorites = emptyList<String>(),
-                notificationsOn = true,
-            )
+        // Get the FCM token.
+        val tokenList = mutableListOf<String>()
+        tokenList.add(Firebase.messaging.token.await())
 
-            // Update the user data in Firestore.
-            updateUserFirestoreDataOnAuth(currentUser, userData, onSuccess, onFailure)
+        // Create the user data object.
+        val userData = UserData(
+            userID = currentUser.uid,
+            createdOn = LocalDateTime.now().toString(),
+            displayName = name,
+            photoURL = currentUser.photoUrl,
+            phone = null,
+            mpesaPhone = null,
+            userEmail = email,
+            fcmTokens = tokenList,
+            favorites = emptyList<String>(),
+            notificationsOn = true,
+        )
 
-        } catch (e: Exception) {
-            // Handle any exceptions.
-            onFailure(e)
-        }
+        // Update the user data in Firestore.
+        updateUserFirestoreDataOnAuth(currentUser, userData, onSuccess, onFailure)
     }
 
     /**
@@ -113,26 +108,21 @@ class QaizenAuthRepository : AuthRepository {
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        try {
-            // Update the user profile.
-            currentUser?.updateProfile(
-                userProfileChangeRequest {
-                    displayName = data.displayName
-                    photoUri = data.photoURL
-                }
-            )?.await()
+        // Update the user profile.
+        currentUser?.updateProfile(
+            userProfileChangeRequest {
+                displayName = data.displayName
+                photoUri = data.photoURL
+            }
+        )?.await()
 
-            // Update the user data in Firestore.
-            firestore.collection(FirebaseDirectories.UsersCollection.name)
-                .document(currentUser?.uid!!).set(data).addOnSuccessListener {
+        // Update the user data in Firestore.
+        firestore.collection(FirebaseDirectories.UsersCollection.name)
+            .document(currentUser?.uid!!).set(data).addOnSuccessListener {
                 onSuccess()
             }.addOnFailureListener {
                 onFailure(it)
             }
-        } catch (e: Exception) {
-            // Handle any exceptions.
-            onFailure(e)
-        }
     }
 
     override suspend fun sendVerificationEmail(
