@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.qaizen.admin.auth.domain.repositories.AuthRepository
 import com.qaizen.admin.auth.presentation.sign_in_with_google.GoogleSignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,13 +37,16 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
                 isSignInSuccess = true
             )
         }
-        authRepository.updateUserFirestoreDataOnAuth(
-            currentUser = Firebase.auth.currentUser,
-            data = result.data!!,
-            onFailure = {
-                _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
-            }
-        )
+        delay(6000)
+        result.data?.let {
+            authRepository.updateUserFirestoreDataOnAuth(
+                currentUser = Firebase.auth.currentUser,
+                data = it,
+                onFailure = {
+                    _uiState.update { state -> state.copy(errorMessage = result.errorMessage) }
+                }
+            )
+        }
     }
 
     fun resetUiState() {
