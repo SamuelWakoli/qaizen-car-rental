@@ -13,6 +13,7 @@ Your Trusted Partner for All Your Mobility Needs
 
 ## Technologies Used
 * Jetpack Compose
+* Material Design 3
 * Coil Image Loader
 * Google Play Services Auth
 * Firebase: Authentication, Firestore, Storage, Cloud Functions, Cloud Messaging
