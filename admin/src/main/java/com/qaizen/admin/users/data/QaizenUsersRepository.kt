@@ -15,7 +15,7 @@ class QaizenUsersRepository : UsersRepository {
         get() = Firebase.firestore
 
     override fun getUsers(): Flow<List<UserData>> = callbackFlow {
-        val snapshotListener = firestore.collection("users")
+        val snapshotListener = firestore.collection("users").orderBy("createdOn")
             .addSnapshotListener { snapshot, firebaseFirestoreException ->
                 if (firebaseFirestoreException != null) {
                     close(firebaseFirestoreException)

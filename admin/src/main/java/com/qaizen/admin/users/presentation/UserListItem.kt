@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Sms
@@ -35,8 +36,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.qaizen.admin.core.presentation.composables.CoilImage
 import com.qaizen.admin.users.domain.model.UserData
+import com.qaizen.admin.utils.DateTimeUtils
 
 @Composable
 fun UserListItem(modifier: Modifier = Modifier, userData: UserData) {
@@ -44,6 +46,18 @@ fun UserListItem(modifier: Modifier = Modifier, userData: UserData) {
     var isExpanded by remember { mutableStateOf(false) }
     var rotationState by remember { mutableFloatStateOf(0f) }
     val context = LocalContext.current
+    val errorProfileImage: @Composable () -> Unit = {
+        Icon(
+            Icons.Default.AccountCircle, contentDescription = null,
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(42.dp),
+        )
+    }
+
+    val createdOn: String =
+        DateTimeUtils.convertToLocalDateTime(dateTimeString = userData.createdOn)
+
 
     Card(
         shape = MaterialTheme.shapes.large,
@@ -61,14 +75,18 @@ fun UserListItem(modifier: Modifier = Modifier, userData: UserData) {
                         rotationState = (if (!isExpanded) 0f else 180f)
                     },
                 leadingContent = {
-                    AsyncImage(
-                        model = userData.photoURL,
-                        contentDescription = "Profile Picture",
+                    CoilImage(
+                        imageUrl = userData.photoURL.toString(),
                         modifier = Modifier
-                            .padding(end = 8.dp)
                             .size(42.dp)
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(12.dp)),
+                        errorContent = errorProfileImage,
+                        emptyContent = errorProfileImage,
+                        applyCircleShape = false,
                     )
+                },
+                overlineContent = {
+                    Text(text = "Joined: $createdOn")
                 },
                 headlineContent = {
                     Text(text = userData.displayName ?: "Name not found")

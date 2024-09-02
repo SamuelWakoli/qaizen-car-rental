@@ -107,8 +107,6 @@ dependencies {
     // Adaptive Screen
     implementation(libs.material3)
     implementation(libs.androidx.material3.window.size)
-    implementation(libs.androidx.material3.adaptive)
-    implementation(libs.androidx.material3.adaptive.navigation.suite)
 
 
     // Hilt
