@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Search
@@ -34,9 +35,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.AsyncImage
 import com.qaizen.admin.R
 import com.qaizen.admin.admins.presentation.AdminViewModel
+import com.qaizen.admin.core.presentation.composables.CoilImage
 import com.qaizen.admin.core.presentation.composables.ThemeSelectDialog
 import com.qaizen.admin.more.MorePageViewModel
 import com.qaizen.admin.navigation.Screens
@@ -58,6 +59,14 @@ fun HomeTopAppBar(
     val admin = adminViewModel.admin?.collectAsState()?.value
 
     var showThemeDialog by remember { mutableStateOf(false) }
+    val errorProfileImage: @Composable () -> Unit = {
+        Icon(
+            Icons.Default.AccountCircle, contentDescription = null,
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(42.dp),
+        )
+    }
 
     TopAppBar(
         scrollBehavior = topAppBarScrollBehavior,
@@ -118,9 +127,8 @@ fun HomeTopAppBar(
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            AsyncImage(
-                model = admin?.photoUrl,
-                contentDescription = "Profile Picture",
+            CoilImage(
+                imageUrl = admin?.photoUrl.toString(),
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .size(42.dp)
@@ -129,7 +137,10 @@ fun HomeTopAppBar(
                         navHostController.navigate(Screens.ProfileScreen.route) {
                             launchSingleTop = true
                         }
-                    }
+                    },
+                errorContent = errorProfileImage,
+                emptyContent = errorProfileImage,
+                applyCircleShape = false,
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(

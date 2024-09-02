@@ -20,6 +20,7 @@ import com.qaizen.admin.bookings.presentation.BookingsViewModel
 import com.qaizen.admin.bookings.presentation.RecordsScreen
 import com.qaizen.admin.core.presentation.home.HomeScreen
 import com.qaizen.admin.more.MorePageViewModel
+import com.qaizen.admin.more.PrivacyPolicyScreen
 import com.qaizen.admin.profile.presentation.profile.ProfileScreen
 import com.qaizen.admin.users.presentation.UsersViewModel
 import com.qaizen.admin.vehicles.presentation.VehiclesViewModel
@@ -113,6 +114,11 @@ fun NavGraph(
             RecordsScreen(
                 windowSize = windowSize,
                 bookingsViewModel = bookingsViewModel,
+                navHostController = navHostController,
+            )
+        }
+        composable(Screens.PrivacyPolicyScreen.route) {
+            PrivacyPolicyScreen(
                 navHostController = navHostController,
             )
         }
