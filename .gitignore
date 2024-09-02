@@ -15,3 +15,8 @@
 local.properties
 /app/google-services.json
 /secrets.properties
+
+/admin/release
+/app/build
+/app/release/app-release.aab
+/.idea/runConfigurations.xml
