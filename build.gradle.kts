@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.google.gms.google.services) apply false
 
-    id("com.google.dagger.hilt.android") version "2.50" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.21"
-    id("com.google.devtools.ksp") version "2.0.0-1.0.24" apply false
+    id("com.google.dagger.hilt.android") version "2.57.1" apply false
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10"
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2" apply false
 }

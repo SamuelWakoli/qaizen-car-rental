@@ -12,14 +12,14 @@ plugins {
 
 android {
     namespace = "com.qaizen.car_rental_qaizen"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.qaizen.car_rental_qaizen"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 6
-        versionName = "1.1.0"
+        targetSdk = 36
+        versionCode = 7
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -42,6 +42,7 @@ android {
             isMinifyEnabled = false
         }
         release {
+            // TODO: Set isMinifyEnabled true after fixing repositories
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -50,19 +51,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        jvmToolchain(21)
     }
     buildFeatures {
         compose = true
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
 }
 

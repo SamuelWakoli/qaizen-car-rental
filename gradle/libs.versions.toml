@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
-agp = "8.3.2"
+agp = "8.12.2"
 coilCompose = "2.7.0"
 daraja = "2.0.2"
 datastorePreferences = "1.1.1"
