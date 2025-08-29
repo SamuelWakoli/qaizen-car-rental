@@ -6,10 +6,10 @@ import android.content.IntentSender
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
+import com.google.firebase.auth.auth
+import com.google.firebase.messaging.messaging
 import com.qaizen.car_rental_qaizen.BuildConfig
 import com.qaizen.car_rental_qaizen.domain.model.UserData
 import kotlinx.coroutines.tasks.await

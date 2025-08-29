@@ -93,10 +93,12 @@ dependencies {
     implementation(libs.play.services.auth)
 
     // Firebase
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 
 
     // Adaptive Screen
@@ -107,6 +109,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.foundation)
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
 

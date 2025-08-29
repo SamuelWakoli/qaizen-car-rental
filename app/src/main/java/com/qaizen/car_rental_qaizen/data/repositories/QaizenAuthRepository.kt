@@ -1,18 +1,17 @@
 package com.qaizen.car_rental_qaizen.data.repositories
 
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.getField
+import com.google.firebase.messaging.messaging
 import com.qaizen.car_rental_qaizen.data.FirebaseDirectories
 import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 
@@ -22,8 +21,6 @@ class QaizenAuthRepository : AuthRepository {
 
     override val firestore: FirebaseFirestore
         get() = Firebase.firestore
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     override suspend fun signInWithEmailPwd(
         email: String,
@@ -49,7 +46,8 @@ class QaizenAuthRepository : AuthRepository {
 
             // Update the FCM tokens.
             if (userDoc.exists()) {
-                val currentTokens = userDoc.get("fcmTokens") as List<String>
+                val currentTokens: List<String> =
+                    userDoc.getField<List<String>>("fcmTokens") ?: emptyList()
                 tokenList.addAll(currentTokens)
             }
             userDocRef.update("fcmTokens", tokenList).await()
@@ -87,7 +85,7 @@ class QaizenAuthRepository : AuthRepository {
             mpesaPhone = null,
             userEmail = email,
             fcmTokens = tokenList,
-            favorites = emptyList<String>(),
+            favorites = emptyList(),
             notificationsOn = true,
         )
 

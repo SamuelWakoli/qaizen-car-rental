@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.qaizen.admin" />
+                  <option name="mobileSdkAppId" value="1:87554971667:android:1e8f58857430a7535c87e6" />
+                  <option name="projectId" value="qaizen-49e94" />
+                  <option name="projectNumber" value="87554971667" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

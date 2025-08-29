@@ -1,10 +1,11 @@
 package com.qaizen.car_rental_qaizen.data.repositories
 
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.getField
 import com.qaizen.car_rental_qaizen.domain.model.BookingData
 import com.qaizen.car_rental_qaizen.domain.model.Vehicle
 import com.qaizen.car_rental_qaizen.domain.repositories.VehiclesRepository
@@ -37,7 +38,7 @@ class QaizenVehiclesRepository : VehiclesRepository {
                                 pricePerDay = doc.getString("pricePerDay").toString(),
                                 type = doc.getString("type").toString(),
                                 description = doc.getString("description").toString(),
-                                images = doc.get("images") as List<String>,
+                                images = doc.getField<List<String>>("images") ?: emptyList(),
                             )
                         )
                     }
@@ -55,9 +56,10 @@ class QaizenVehiclesRepository : VehiclesRepository {
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
-        firestore.collection("bookings").document(bookingData.timeStamp!!).set(bookingData).addOnSuccessListener {
-            onSuccess()
-        }.addOnFailureListener {
+        firestore.collection("bookings").document(bookingData.timeStamp!!).set(bookingData)
+            .addOnSuccessListener {
+                onSuccess()
+            }.addOnFailureListener {
             onError(it)
         }
     }
@@ -85,9 +87,9 @@ class QaizenVehiclesRepository : VehiclesRepository {
                     return@addSnapshotListener
                 }
                 if (documentSnapshot != null) {
-                    val favorites = documentSnapshot.get("favorites")
+                    val favorites = documentSnapshot.getField<List<String>>("favorites")
                     if (favorites != null) {
-                        trySend(favorites as List<String>)
+                        trySend(favorites)
                     }
                 }
             }

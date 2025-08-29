@@ -202,7 +202,7 @@ fun ForgotPasswordScreen(
                         keyboardOptions = KeyboardOptions().copy(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Email,
-                            autoCorrect = false,
+                            autoCorrectEnabled = false,
                             capitalization = KeyboardCapitalization.None,
                         ),
                         keyboardActions = KeyboardActions(onDone = {

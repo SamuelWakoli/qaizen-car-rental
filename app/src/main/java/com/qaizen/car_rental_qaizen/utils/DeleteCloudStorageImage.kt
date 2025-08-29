@@ -1,7 +1,7 @@
 package com.qaizen.car_rental_qaizen.utils
 
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 
 /**
  * Deletes an image from the given URI.

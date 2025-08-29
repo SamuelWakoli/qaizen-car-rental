@@ -3,8 +3,8 @@ package com.qaizen.car_rental_qaizen.ui.presentation.screens.auth
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import com.qaizen.car_rental_qaizen.ui.presentation.screens.auth.sign_in_with_google.GoogleSignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
