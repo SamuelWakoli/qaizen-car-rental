@@ -317,7 +317,7 @@ fun BookingScreen(
                             bookingData = uiState.currentBookingData.copy(
                                 timeStamp = LocalDateTime.now().toString(),
                                 userId = userId,
-                                userFcmTokens = userData?.fcmTokens,
+                                userFcmTokens = userData?.fcmTokens ?: emptyList(),
                                 userName = userData?.displayName,
                                 userEmail = userData?.userEmail,
                                 userPhone = userData?.phone,

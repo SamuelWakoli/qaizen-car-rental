@@ -62,7 +62,7 @@ class GoogleAuthUiClient(
                         userID = uid,
                         createdOn = LocalDateTime.now().toString(),
                         displayName = displayName,
-                        photoURL = photoUrl,
+                        photoURL = photoUrl.toString(),
                         userEmail = email,
                         fcmTokens = tokenList,
                         favorites = emptyList<String>(),

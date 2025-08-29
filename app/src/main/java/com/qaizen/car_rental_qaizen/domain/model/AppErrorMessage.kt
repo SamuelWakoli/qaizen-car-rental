@@ -1,12 +1,12 @@
 package com.qaizen.car_rental_qaizen.domain.model
 
-import kotlinx.serialization.Serializable
+import androidx.annotation.Keep
 
-@Serializable
+@Keep
 data class AppErrorMessage(
     val title: String,
     val message: String,
     val action: (() -> Unit)? = null,
     val actionLabel: String? = null,
-    val dismissLabel: String? = null
+    val dismissLabel: String? = null,
 )

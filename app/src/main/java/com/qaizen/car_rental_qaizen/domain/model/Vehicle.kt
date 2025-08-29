@@ -1,15 +1,15 @@
 package com.qaizen.car_rental_qaizen.domain.model
 
-import kotlinx.serialization.Serializable
+import androidx.annotation.Keep
 
-@Serializable
+@Keep
 data class Vehicle(
-    val id: String,
-    val numberPlate: String,
-    val name: String,
-    val available: Boolean?,
-    val pricePerDay: String,
-    val type: String,
-    val description: String,
-    val images: List<String>,
+    val id: String = "", // Add default value
+    val numberPlate: String = "", // Add default value
+    val name: String = "", // Add default value
+    val available: Boolean? = null, // Default is already effectively null
+    val pricePerDay: String = "", // Add default value
+    val type: String = "", // Add default value
+    val description: String = "", // Add default value
+    val images: List<String> = emptyList(), // Add default value (e.g., emptyList())
 )

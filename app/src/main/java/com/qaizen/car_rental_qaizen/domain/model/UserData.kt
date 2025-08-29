@@ -1,14 +1,13 @@
 package com.qaizen.car_rental_qaizen.domain.model
 
-import android.net.Uri
-import kotlinx.serialization.Serializable
+import androidx.annotation.Keep
 
-@Serializable
+@Keep
 data class UserData(
-    val userID: String,
+    val userID: String = "",
     val createdOn: String = "",
     val displayName: String?,
-    val photoURL: Uri?,
+    val photoURL: String?,
     val phone:String? = null,
     val mpesaPhone:String? = null,
     val userEmail: String?,

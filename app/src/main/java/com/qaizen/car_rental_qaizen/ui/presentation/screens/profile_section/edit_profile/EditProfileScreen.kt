@@ -108,9 +108,10 @@ fun EditProfileScreen(
                     context, "Updating image", Toast.LENGTH_LONG
                 ).show()
 
-                profileViewModel.uploadProfileImage(image = uri, onSuccess = { downloadUrl ->
-                    newProfileImageUrl = downloadUrl
-                },
+                profileViewModel.uploadProfileImage(
+                    image = uri, onSuccess = { downloadUrl ->
+                        newProfileImageUrl = downloadUrl
+                    },
                     onError = { exception ->
                         errorMessage = exception.message.toString()
                     }
@@ -243,8 +244,7 @@ fun EditProfileScreen(
                         userData = userData?.copy(
                             displayName = name,
                             phone = phone,
-                            photoURL = (newProfileImageUrl ?: userData.photoURL ?: "").toString()
-                                .toUri(),
+                            photoURL = (newProfileImageUrl ?: userData.photoURL ?: ""),
                         )!!,
                         onSuccess = {
                             isSaving = false

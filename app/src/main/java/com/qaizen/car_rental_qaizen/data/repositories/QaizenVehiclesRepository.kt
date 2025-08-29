@@ -27,21 +27,7 @@ class QaizenVehiclesRepository : VehiclesRepository {
                     return@addSnapshotListener
                 }
                 if (snapshot != null) {
-                    val vehicles = mutableListOf<Vehicle>()
-                    for (doc in snapshot) {
-                        vehicles.add(
-                            Vehicle(
-                                id = doc.id,
-                                numberPlate = doc.getString("numberPlate").toString(),
-                                name = doc.getString("name").toString(),
-                                available = doc.getBoolean("available"),
-                                pricePerDay = doc.getString("pricePerDay").toString(),
-                                type = doc.getString("type").toString(),
-                                description = doc.getString("description").toString(),
-                                images = doc.getField<List<String>>("images") ?: emptyList(),
-                            )
-                        )
-                    }
+                    val vehicles = snapshot.toObjects(Vehicle::class.java)
                     trySend(vehicles)
                 }
             }
@@ -60,8 +46,8 @@ class QaizenVehiclesRepository : VehiclesRepository {
             .addOnSuccessListener {
                 onSuccess()
             }.addOnFailureListener {
-            onError(it)
-        }
+                onError(it)
+            }
     }
 
     override suspend fun updateFavorites(

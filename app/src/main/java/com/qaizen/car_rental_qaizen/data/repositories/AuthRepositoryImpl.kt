@@ -1,5 +1,6 @@
 package com.qaizen.car_rental_qaizen.data.repositories
 
+import androidx.core.net.toUri
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -49,8 +50,9 @@ class AuthRepositoryImpl : AuthRepository {
                 val currentTokens: List<String> =
                     userDoc.getField<List<String>>("fcmTokens") ?: emptyList()
                 tokenList.addAll(currentTokens)
+                userDocRef.update("fcmTokens", tokenList).await()
             }
-            userDocRef.update("fcmTokens", tokenList).await()
+
 
             // Sign in successful.
             onSuccess()
@@ -80,7 +82,7 @@ class AuthRepositoryImpl : AuthRepository {
             userID = currentUser.uid,
             createdOn = LocalDateTime.now().toString(),
             displayName = name,
-            photoURL = currentUser.photoUrl,
+            photoURL = currentUser.photoUrl.toString(),
             phone = null,
             mpesaPhone = null,
             userEmail = email,
@@ -110,7 +112,7 @@ class AuthRepositoryImpl : AuthRepository {
         currentUser?.updateProfile(
             userProfileChangeRequest {
                 displayName = data.displayName
-                photoUri = data.photoURL
+                photoUri = data.photoURL?.toUri()
             }
         )?.await()
 

@@ -1,13 +1,13 @@
 package com.qaizen.car_rental_qaizen.domain.model
 
-import kotlinx.serialization.Serializable
+import androidx.annotation.Keep
 
-@Serializable
+@Keep
 data class BookingData(
     val timeStamp: String? = null,
     val vehicleId: String? = null,
     val userId:String? = null,
-    val userFcmTokens: Any? = null,
+    val userFcmTokens: List<String> = emptyList(),
     val vehicleImage: String? = null,
     val vehicleName: String? = null,
     val userName: String? = null,
