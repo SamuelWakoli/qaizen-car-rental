@@ -15,7 +15,7 @@ import com.qaizen.car_rental_qaizen.domain.repositories.AuthRepository
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 
-class QaizenAuthRepository : AuthRepository {
+class AuthRepositoryImpl : AuthRepository {
     override val auth: FirebaseAuth
         get() = Firebase.auth
 

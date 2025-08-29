@@ -1,7 +1,6 @@
 buildscript {
     dependencies {
         classpath(libs.google.services)
-        classpath(libs.secrets.gradle.plugin)
     }
 }
 
@@ -10,9 +9,9 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
     alias(libs.plugins.google.gms.google.services) apply false
-
-    id("com.google.dagger.hilt.android") version "2.57.1" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10"
-    id("com.google.devtools.ksp") version "2.2.10-2.0.2" apply false
+    alias(libs.plugins.google.dagger.hilt.android) apply false
+    alias(libs.plugins.google.devtools.ksp) apply false
+    alias(libs.plugins.secrets) apply false
 }

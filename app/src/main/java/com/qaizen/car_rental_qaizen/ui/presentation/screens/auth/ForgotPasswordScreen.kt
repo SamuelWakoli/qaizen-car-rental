@@ -57,7 +57,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.car_rental_qaizen.R
-import com.qaizen.car_rental_qaizen.data.repositories.QaizenAuthRepository
+import com.qaizen.car_rental_qaizen.data.repositories.AuthRepositoryImpl
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.canUserNavigateUp
 import com.qaizen.car_rental_qaizen.ui.theme.QaizenTheme
 
@@ -231,7 +231,7 @@ fun ForgotPasswordScreen(
 @Composable
 fun ForgotPasswordScreenPreview() {
 
-    val viewModel = AuthViewModel(QaizenAuthRepository())
+    val viewModel = AuthViewModel(AuthRepositoryImpl())
 
     QaizenTheme {
         ForgotPasswordScreen(

@@ -61,7 +61,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.qaizen.car_rental_qaizen.R
-import com.qaizen.car_rental_qaizen.data.repositories.QaizenAuthRepository
+import com.qaizen.car_rental_qaizen.data.repositories.AuthRepositoryImpl
 import com.qaizen.car_rental_qaizen.ui.presentation.composables.GoogleSignInButton
 import com.qaizen.car_rental_qaizen.ui.presentation.navigation.Screens
 import com.qaizen.car_rental_qaizen.ui.theme.QaizenTheme
@@ -398,7 +398,7 @@ fun SignInScreen(
 @Composable
 private fun SignInScreenPreview() {
 
-    val authViewModel = AuthViewModel(QaizenAuthRepository())
+    val authViewModel = AuthViewModel(AuthRepositoryImpl())
     val navHostController = rememberNavController()
     QaizenTheme {
         SignInScreen(authViewModel = authViewModel,

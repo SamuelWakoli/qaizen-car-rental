@@ -1,13 +1,11 @@
 package com.qaizen.car_rental_qaizen.data.repositories
 
 import android.net.Uri
-import androidx.core.net.toUri
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.getField
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import com.qaizen.car_rental_qaizen.domain.model.BookingData
@@ -35,21 +33,7 @@ class QaizenProfileRepository : ProfileRepository {
                     return@addSnapshotListener
                 }
                 if (doc != null && doc.exists()) {
-                    val fcmTokens = doc.getField<List<String>?>("fcmTokens")
-                    val favorites = doc.getField<List<String>?>("favorites")
-
-                    val userData = UserData(
-                        userID = doc.id,
-                        createdOn = doc.get("createdOn").toString(),
-                        displayName = doc.getString("displayName"),
-                        photoURL = doc.get("photoURL").toString().toUri(),
-                        userEmail = doc.getString("userEmail"),
-                        phone = doc.getString("phone"),
-                        mpesaPhone = doc.getString("mpesaPhone"),
-                        fcmTokens = fcmTokens,
-                        favorites = favorites,
-                        notificationsOn = doc.getBoolean("notificationsOn") ?: true,
-                    )
+                    val userData: UserData = doc.toObject(UserData::class.java) as UserData
                     trySend(userData)
                 }
             }

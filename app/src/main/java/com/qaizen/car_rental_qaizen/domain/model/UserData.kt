@@ -1,7 +1,9 @@
 package com.qaizen.car_rental_qaizen.domain.model
 
 import android.net.Uri
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserData(
     val userID: String,
     val createdOn: String = "",

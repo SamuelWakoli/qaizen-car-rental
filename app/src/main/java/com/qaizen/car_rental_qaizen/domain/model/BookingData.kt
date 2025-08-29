@@ -1,5 +1,8 @@
 package com.qaizen.car_rental_qaizen.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BookingData(
     val timeStamp: String? = null,
     val vehicleId: String? = null,
