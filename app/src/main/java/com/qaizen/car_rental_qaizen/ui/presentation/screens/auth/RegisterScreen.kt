@@ -78,7 +78,7 @@ fun RegisterScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = uiState.errorMessage) {
+    LaunchedEffect(uiState.errorMessage) {
         if (uiState.errorMessage != null) {
             snackbarHostState.showSnackbar(
                 uiState.errorMessage,
@@ -88,8 +88,9 @@ fun RegisterScreen(
         }
     }
 
-    LaunchedEffect(key1 = uiState.isSignInSuccess) {
+    LaunchedEffect(uiState.isSignInSuccess) {
         if (uiState.isSignInSuccess) {
+            authViewModel.resetUiState()
             navHostController.navigate(Screens.HomeScreen.route) {
                 launchSingleTop = true
                 popUpTo(Screens.SignInScreen.route) {
@@ -224,7 +225,7 @@ fun RegisterScreen(
                         } else null,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Words,
-                            autoCorrect = false,
+                            autoCorrectEnabled = false,
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next,
                         ),
@@ -266,7 +267,7 @@ fun RegisterScreen(
                         } else null,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.None,
-                            autoCorrect = false,
+                            autoCorrectEnabled = false,
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next,
                         ),
@@ -321,7 +322,7 @@ fun RegisterScreen(
                             VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.None,
-                            autoCorrect = false,
+                            autoCorrectEnabled = false,
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
                         ),
@@ -415,7 +416,8 @@ private fun RegisterScreenPreview() {
     val authViewModel = AuthViewModel(AuthRepositoryImpl())
     val navHostController = rememberNavController()
     QaizenTheme {
-        RegisterScreen(authViewModel = authViewModel,
+        RegisterScreen(
+            authViewModel = authViewModel,
             navHostController = navHostController,
             onSignInWithGoogle = {})
     }

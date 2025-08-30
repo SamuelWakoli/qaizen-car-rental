@@ -47,9 +47,7 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
         )
     }
 
-    fun resetUiState() {
-        _uiState.update { AuthUiState() }
-    }
+    fun resetUiState() = _uiState.update { AuthUiState() }
 
     fun updateName(value: String) {
         _uiState.update {
@@ -105,7 +103,8 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
             }
 
             viewModelScope.launch {
-                authRepository.signInWithEmailPwd(email, password,
+                authRepository.signInWithEmailPwd(
+                    email, password,
                     onSuccess = {
                         _uiState.update {
                             it.copy(
@@ -154,7 +153,8 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
 
             viewModelScope.launch {
-                authRepository.registerWithEmailPwd(name, email, password,
+                authRepository.registerWithEmailPwd(
+                    name, email, password,
                     onSuccess = {
                         _uiState.update {
                             it.copy(

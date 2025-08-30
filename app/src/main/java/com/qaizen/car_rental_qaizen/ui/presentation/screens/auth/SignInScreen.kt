@@ -79,7 +79,7 @@ fun SignInScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = uiState.errorMessage) {
+    LaunchedEffect(uiState.errorMessage) {
         if (uiState.errorMessage != null) {
             snackbarHostState.showSnackbar(
                 uiState.errorMessage,
@@ -89,8 +89,9 @@ fun SignInScreen(
         }
     }
 
-    LaunchedEffect(key1 = uiState.isSignInSuccess) {
+    LaunchedEffect(uiState.isSignInSuccess) {
         if (uiState.isSignInSuccess) {
+            authViewModel.resetUiState()
             navHostController.navigate(Screens.HomeScreen.route) {
                 launchSingleTop = true
                 popUpTo(Screens.SignInScreen.route) {
@@ -228,7 +229,7 @@ fun SignInScreen(
                         } else null,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.None,
-                            autoCorrect = false,
+                            autoCorrectEnabled = false,
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next,
                         ),
@@ -283,7 +284,7 @@ fun SignInScreen(
                             VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.None,
-                            autoCorrect = false,
+                            autoCorrectEnabled = false,
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
                         ),
@@ -401,7 +402,8 @@ private fun SignInScreenPreview() {
     val authViewModel = AuthViewModel(AuthRepositoryImpl())
     val navHostController = rememberNavController()
     QaizenTheme {
-        SignInScreen(authViewModel = authViewModel,
+        SignInScreen(
+            authViewModel = authViewModel,
             navHostController = navHostController,
             onSignInWithGoogle = {})
     }
