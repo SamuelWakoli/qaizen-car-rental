@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.messaging.messaging
 import com.qaizen.car_rental_qaizen.data.FirebaseDirectories
@@ -29,36 +30,41 @@ class AuthRepositoryImpl : AuthRepository {
         onFailure: (Exception) -> Unit,
     ) {
         try {
-            // Sign in with email and password.
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            val currentUser = authResult.user
+                ?: throw IllegalStateException("User not found after sign-in.")
 
-            // Get the current user.
-            val currentUser = authResult.user!!
-
-            // Get the FCM token.
-            val tokenList = mutableListOf<String>()
-            Firebase.messaging.token.addOnSuccessListener { tokenList.add(it) }
-
-            // Check if the user document exists.
+            // Fetch existing FCM tokens or prepare to add a new one.
             val userDocRef = firestore.collection(FirebaseDirectories.UsersCollection.name)
                 .document(currentUser.uid)
             val userDoc = userDocRef.get().await()
-
-            // Update the FCM tokens.
-            if (userDoc.exists()) {
-                val userData = userDoc.toObject(UserData::class.java)!!
-                val currentTokens: List<String> =
-                    userData.fcmTokens
-                tokenList.addAll(currentTokens)
-
-                userDocRef.set(userData.copy(fcmTokens = tokenList)).await()
+            val existingTokens = if (userDoc.exists()) {
+                userDoc.toObject(UserData::class.java)?.fcmTokens ?: emptyList()
+            } else {
+                emptyList()
             }
 
+            val newFcmToken = Firebase.messaging.token.await() // Get current FCM token
+            val updatedTokens = (existingTokens + newFcmToken).distinct()
 
-            // Sign in successful.
+            // Update only fcmTokens if document exists, otherwise it will be created in full by register
+            // or if the user logged in without registering through this app (e.g. admin panel creation)
+            if (userDoc.exists()) {
+                userDocRef.set(mapOf("fcmTokens" to updatedTokens), SetOptions.merge()).await()
+            } else {
+                // Optionally create a basic user document if it doesn't exist,
+                // though typically registration flow should handle this.
+                val basicUserData = UserData(
+                    userID = currentUser.uid,
+                    userEmail = currentUser.email,
+                    fcmTokens = updatedTokens,
+                    createdOn = LocalDateTime.now().toString() // Or use server timestamp
+                )
+                userDocRef.set(basicUserData).await()
+            }
+
             onSuccess()
         } catch (e: Exception) {
-            // Sign in failed.
             onFailure(e)
         }
     }
@@ -68,69 +74,70 @@ class AuthRepositoryImpl : AuthRepository {
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
+        try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            val currentUser = authResult.user
+                ?: throw IllegalStateException("User not found after registration.")
 
-        // Create the user with email and password.
-        val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-        // Get the current user.
-        val currentUser = authResult.user!!
+            val fcmToken = Firebase.messaging.token.await()
 
-        // Get the FCM token.
-        val tokenList = mutableListOf<String>()
-        tokenList.add(Firebase.messaging.token.await())
+            val userData = UserData(
+                userID = currentUser.uid,
+                createdOn = LocalDateTime.now().toString(), // Consider using server timestamp
+                displayName = name,
+                photoURL = currentUser.photoUrl?.toString(), // Already string or null
+                userEmail = email,
+                fcmTokens = listOf(fcmToken),
+                notificationsOn = true,
+            )
 
-        // Create the user data object.
-        val userData = UserData(
-            userID = currentUser.uid,
-            createdOn = LocalDateTime.now().toString(),
-            displayName = name,
-            photoURL = currentUser.photoUrl.toString(),
-            userEmail = email,
-            fcmTokens = tokenList,
-            notificationsOn = true,
-        )
-
-        // Update the user data in Firestore.
-        updateUserFirestoreDataOnAuth(currentUser, userData, onSuccess, onFailure)
+            updateUserFirestoreDataOnAuth(currentUser, userData, onSuccess, onFailure)
+        } catch (e: Exception) {
+            onFailure(e)
+        }
     }
 
-    /**
-     * Updates the user's data in Firestore when the user authenticates.
-     *
-     * @param currentUser The current Firebase user.
-     * @param data The user data to update.
-     * @param onFailure A callback function to handle any exceptions.
-     */
     override suspend fun updateUserFirestoreDataOnAuth(
         currentUser: FirebaseUser?,
         data: UserData,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        // Update the user profile.
-        currentUser?.updateProfile(
-            userProfileChangeRequest {
-                displayName = data.displayName
-                photoUri = data.photoURL?.toUri()
-            }
-        )?.await()
+        if (currentUser == null) {
+            onFailure(IllegalStateException("Current user cannot be null to update Firestore data."))
+            return
+        }
 
-        // Update the user data in Firestore.
-        firestore.collection(FirebaseDirectories.UsersCollection.name)
-            .document(currentUser?.uid!!).set(data).addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener {
-                onFailure(it)
-            }
+        try {
+            currentUser.updateProfile(
+                userProfileChangeRequest {
+                    displayName = data.displayName
+                    photoUri = data.photoURL?.toUri() // Ensure photoURL is a valid URI string
+                }
+            ).await()
+
+            firestore.collection(FirebaseDirectories.UsersCollection.name)
+                .document(currentUser.uid).set(data).await()
+            onSuccess()
+        } catch (e: Exception) {
+            onFailure(e)
+        }
     }
 
     override suspend fun sendVerificationEmail(
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        auth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            onFailure(IllegalStateException("User not authenticated. Cannot send verification email."))
+            return
+        }
+        try {
+            currentUser.sendEmailVerification().await()
             onSuccess()
-        }?.addOnFailureListener {
-            onFailure(it)
+        } catch (e: Exception) {
+            onFailure(e)
         }
     }
 
@@ -139,18 +146,23 @@ class AuthRepositoryImpl : AuthRepository {
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit,
     ) {
-        auth.sendPasswordResetEmail(email).addOnSuccessListener {
+        // This operation doesn't require an authenticated user
+        try {
+            auth.sendPasswordResetEmail(email).await()
             onSuccess()
-        }.addOnFailureListener {
-            onFailure(it)
+        } catch (e: Exception) {
+            onFailure(e)
         }
     }
 
     override suspend fun signInAnonymously(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        auth.signInAnonymously().addOnSuccessListener {
+        try {
+            auth.signInAnonymously().await()
+            // Anonymous users typically don't have extensive profiles/FCM tokens managed the same way.
+            // If specific Firestore interaction is needed upon anonymous sign-in, add it here.
             onSuccess()
-        }.addOnFailureListener {
-            onFailure(it)
+        } catch (e: Exception) {
+            onFailure(e)
         }
     }
 }

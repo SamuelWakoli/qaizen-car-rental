@@ -4,6 +4,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
 import com.qaizen.car_rental_qaizen.domain.model.BookingData
 import com.qaizen.car_rental_qaizen.domain.model.UserData
@@ -20,21 +21,27 @@ class VehiclesRepositoryImpl : VehiclesRepository {
         get() = Firebase.firestore
 
     override fun getAllVehicles(): Flow<List<Vehicle>> = callbackFlow {
-        val snapshotListener =
-            firestore.collection("vehicles").addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-                if (snapshot != null) {
-                    val vehicles = snapshot.toObjects(Vehicle::class.java)
-                    trySend(vehicles)
-                }
+        var snapshotListener: ListenerRegistration? = null
+        auth.addAuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+                trySend(emptyList())
+            } else {
+                 snapshotListener = firestore.collection("vehicles")
+                    .addSnapshotListener { snapshot, error ->
+                        if (error != null) {
+                            close(error)
+                            return@addSnapshotListener
+                        }
+                        if (snapshot != null) {
+                            val vehicles = snapshot.toObjects(Vehicle::class.java)
+                            trySend(vehicles)
+                        } else {
+                            trySend(emptyList())
+                        }
+                    }
             }
-
-        awaitClose {
-            snapshotListener.remove()
         }
+        awaitClose { snapshotListener?.remove() }
     }
 
     override suspend fun bookVehicle(
@@ -42,6 +49,10 @@ class VehiclesRepositoryImpl : VehiclesRepository {
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
+        if (auth.currentUser == null) {
+            onError(Exception("User not authenticated. Cannot book vehicle."))
+            return
+        }
         firestore.collection("bookings").document(bookingData.timeStamp!!).set(bookingData)
             .addOnSuccessListener {
                 onSuccess()
@@ -55,7 +66,11 @@ class VehiclesRepositoryImpl : VehiclesRepository {
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
-        val userId = auth.currentUser?.uid!!
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            onError(Exception("User not authenticated. Cannot update favorites."))
+            return
+        }
         firestore.collection("users").document(userId).update("favorites", favoritesList)
             .addOnSuccessListener {
                 onSuccess()
@@ -64,22 +79,27 @@ class VehiclesRepositoryImpl : VehiclesRepository {
             }
     }
 
-    override fun getFavoritesIds() = callbackFlow {
-        val userId = auth.currentUser?.uid!!
-        val snapshotListener = firestore.collection("users").document(userId)
-            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if (firebaseFirestoreException != null) {
-                    close(firebaseFirestoreException)
-                    return@addSnapshotListener
-                }
-                if (documentSnapshot != null) {
-                    val userData = documentSnapshot.toObject(UserData::class.java)
-                    if (userData?.favorites != null) {
-                        trySend(userData.favorites)
+    override fun getFavoritesIds(): Flow<List<String>> = callbackFlow {
+        var snapshotListener: ListenerRegistration? = null
+        auth.addAuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+                trySend(emptyList())
+            } else {
+                 snapshotListener = firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
+                    .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                        if (firebaseFirestoreException != null) {
+                            close(firebaseFirestoreException)
+                            return@addSnapshotListener
+                        }
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            val userData = documentSnapshot.toObject(UserData::class.java)
+                            trySend(userData?.favorites ?: emptyList())
+                        } else {
+                            trySend(emptyList())
+                        }
                     }
-                }
             }
-
-        awaitClose { snapshotListener.remove() }
+        }
+        awaitClose { snapshotListener?.remove() }
     }
 }

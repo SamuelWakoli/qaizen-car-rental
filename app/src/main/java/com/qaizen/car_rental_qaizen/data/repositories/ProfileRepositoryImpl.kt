@@ -5,6 +5,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
@@ -20,48 +21,75 @@ class ProfileRepositoryImpl : ProfileRepository {
         get() = Firebase.auth
     override val firestore: FirebaseFirestore
         get() = Firebase.firestore
-
     override val storage: FirebaseStorage
         get() = Firebase.storage
 
-    override fun getUSerProfile(): Flow<UserData> = callbackFlow {
-        val userId = auth.currentUser?.uid!!
-        val snapshotListener =
-            firestore.collection("users").document(userId).addSnapshotListener { doc, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-                if (doc != null && doc.exists()) {
-                    val userData: UserData = doc.toObject(UserData::class.java) as UserData
-                    trySend(userData)
-                }
+    override fun getUserProfile(): Flow<UserData?> = callbackFlow {
+        var snapshotListener: ListenerRegistration? = null
+        auth.addAuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+                trySend(null)
+            } else {
+                snapshotListener =
+                    firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
+                        .addSnapshotListener { doc, error ->
+                            if (error != null) {
+                                close(error)
+                                return@addSnapshotListener
+                            }
+                            if (doc != null && doc.exists()) {
+                                val userData = doc.toObject(UserData::class.java)
+                                trySend(userData)
+                            } else {
+                                trySend(null)
+                            }
+                        }
+
             }
-        awaitClose { snapshotListener.remove() }
+        }
+        awaitClose { snapshotListener?.remove() }
     }
 
     override fun getRecords(): Flow<List<BookingData>> = callbackFlow {
-        val snapshotListener = firestore.collection("records").orderBy("timeStamp")
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-                if (snapshot != null) {
-                    val bookings = snapshot.toObjects(BookingData::class.java)
-                    trySend(bookings.reversed())
-                }
+        var snapshotListener: ListenerRegistration? = null
+        auth.addAuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+                trySend(emptyList())
+            } else {
+                snapshotListener = firestore.collection("records")
+                    .whereEqualTo("userId", firebaseAuth.currentUser!!.uid)
+                    .orderBy("timeStamp")
+                    .addSnapshotListener { snapshot, error ->
+                        if (error != null) {
+                            close(error)
+                            return@addSnapshotListener
+                        }
+                        if (snapshot != null) {
+                            val bookings = snapshot.toObjects(BookingData::class.java)
+                            trySend(bookings.reversed())
+                        } else {
+                            trySend(emptyList())
+                        }
+                    }
+
             }
-
-        awaitClose { snapshotListener.remove() }
+        }
+        awaitClose { snapshotListener?.remove() }
     }
-
 
     override suspend fun updateUserProfile(
         userData: UserData,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit,
     ) {
+        if (auth.currentUser == null) {
+            onError(Exception("User not authenticated. Cannot update profile."))
+            return
+        }
+        if (auth.currentUser?.uid != userData.userID) {
+            onError(Exception("User ID mismatch. Cannot update profile for another user."))
+            return
+        }
         firestore.collection("users").document(userData.userID).set(userData)
             .addOnSuccessListener { onSuccess() }.addOnFailureListener { onError(it) }
     }
@@ -71,22 +99,24 @@ class ProfileRepositoryImpl : ProfileRepository {
         onSuccess: (String) -> Unit,
         onError: (Exception) -> Unit,
     ) {
-        val userId = auth.currentUser?.uid!!
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            onError(Exception("User not authenticated. Cannot upload profile image."))
+            return
+        }
         val imageRef = storage.reference.child("users/$userId/profile.png")
         val uploadTask = imageRef.putFile(image)
 
         uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
-                task.exception?.let { exception ->
-                    onError(exception)
+                task.exception?.let {
+                    throw it
                 }
             }
             imageRef.downloadUrl
         }
             .addOnSuccessListener { uri ->
-                onSuccess(
-                    uri.toString()
-                )
+                onSuccess(uri.toString())
             }
             .addOnFailureListener { onError(it) }
     }

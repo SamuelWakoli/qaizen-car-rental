@@ -13,7 +13,7 @@ interface ProfileRepository {
     val firestore: FirebaseFirestore
     val storage: FirebaseStorage
 
-    fun getUSerProfile(): Flow<UserData>
+    fun getUserProfile(): Flow<UserData?>
 
     fun getRecords(): Flow<List<BookingData>>
 
