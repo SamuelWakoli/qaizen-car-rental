@@ -8,7 +8,6 @@ import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.getField
 import com.google.firebase.messaging.messaging
 import com.qaizen.car_rental_qaizen.data.FirebaseDirectories
 import com.qaizen.car_rental_qaizen.domain.model.UserData
@@ -47,10 +46,12 @@ class AuthRepositoryImpl : AuthRepository {
 
             // Update the FCM tokens.
             if (userDoc.exists()) {
+                val userData = userDoc.toObject(UserData::class.java)!!
                 val currentTokens: List<String> =
-                    userDoc.getField<List<String>>("fcmTokens") ?: emptyList()
+                    userData.fcmTokens
                 tokenList.addAll(currentTokens)
-                userDocRef.update("fcmTokens", tokenList).await()
+
+                userDocRef.set(userData.copy(fcmTokens = tokenList)).await()
             }
 
 
@@ -83,11 +84,8 @@ class AuthRepositoryImpl : AuthRepository {
             createdOn = LocalDateTime.now().toString(),
             displayName = name,
             photoURL = currentUser.photoUrl.toString(),
-            phone = null,
-            mpesaPhone = null,
             userEmail = email,
             fcmTokens = tokenList,
-            favorites = emptyList(),
             notificationsOn = true,
         )
 

@@ -157,7 +157,7 @@ fun PaymentInfoScreen(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
-                        autoCorrect = false,
+                        autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done,
                     ),

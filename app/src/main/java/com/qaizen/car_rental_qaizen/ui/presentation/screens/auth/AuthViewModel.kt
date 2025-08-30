@@ -52,7 +52,6 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     }
 
     fun updateName(value: String) {
-
         _uiState.update {
             it.copy(
                 name = value,
@@ -117,6 +116,7 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
                         }
                         onSuccess()
                     }, onFailure = { exception ->
+                        Log.e(TAG, "signInWithEmailPwd: ${exception.message}", exception)
                         _uiState.update {
                             it.copy(
                                 isSignInButtonLoading = false,
