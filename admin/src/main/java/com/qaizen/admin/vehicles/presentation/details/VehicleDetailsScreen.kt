@@ -52,7 +52,7 @@ fun VehicleDetailsScreen(
     val uiState = vehiclesViewModel.uiState.collectAsState().value
     val vehicle = uiState.currentVehicle!!
     val images: MutableList<String> = vehicle.images.toMutableList()
-    images.removeFirst()
+    images.removeAt(0)
 
     Scaffold(
         topBar = {
