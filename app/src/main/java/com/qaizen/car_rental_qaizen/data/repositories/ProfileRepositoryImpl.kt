@@ -15,7 +15,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class QaizenProfileRepository : ProfileRepository {
+class ProfileRepositoryImpl : ProfileRepository {
     override val auth: FirebaseAuth
         get() = Firebase.auth
     override val firestore: FirebaseFirestore
@@ -42,32 +42,13 @@ class QaizenProfileRepository : ProfileRepository {
 
     override fun getRecords(): Flow<List<BookingData>> = callbackFlow {
         val snapshotListener = firestore.collection("records").orderBy("timeStamp")
-            .addSnapshotListener { value, error ->
+            .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
                     return@addSnapshotListener
                 }
-                if (value != null) {
-                    val bookings = value.documents.map { documentSnapshot ->
-                        BookingData(
-                            timeStamp = documentSnapshot.get("timeStamp").toString(),
-                            vehicleId = documentSnapshot.get("vehicleId").toString(),
-                            vehicleImage = documentSnapshot.get("vehicleImage").toString(),
-                            vehicleName = documentSnapshot.get("vehicleName").toString(),
-                            userId = documentSnapshot.get("userId").toString(),
-                            userName = documentSnapshot.get("userName").toString(),
-                            userPhone = documentSnapshot.get("userPhone").toString(),
-                            userEmail = documentSnapshot.get("userEmail").toString(),
-                            pickupDate = documentSnapshot.get("pickupDate").toString(),
-                            pickupTime = documentSnapshot.get("pickupTime").toString(),
-                            days = documentSnapshot.get("days").toString(),
-                            totalPrice = documentSnapshot.get("totalPrice").toString(),
-                            needsDelivery = documentSnapshot.get("needsDelivery") as Boolean,
-                            deliveryAddress = documentSnapshot.get("deliveryAddress").toString(),
-                            deliveryLat = documentSnapshot.getDouble("deliveryLat"),
-                            deliveryLng = documentSnapshot.getDouble("deliveryLng"),
-                        )
-                    }
+                if (snapshot != null) {
+                    val bookings = snapshot.toObjects(BookingData::class.java)
                     trySend(bookings.reversed())
                 }
             }

@@ -8,42 +8,33 @@
 # Keep Kotlin metadata, useful for reflection used by some libraries
 -keep class kotlin.Metadata { *; }
 
-# === Firestore Data Model Rules ===
-# IMPORTANT: If your admin module has its own data models or uses models
-# from a different package than the app module,
-# update "com.qaizen.car_rental_qaizen.domain.model.**" below
-# to the correct package name for your admin module's data models.
-# If the admin module does not use Firestore with data models,
-# or if its models are already covered by another module's Proguard rules
-# (e.g., a shared library), you may not need all of the following rules.
-
-# Keep all data model classes in your admin app's domain.model package,
+# Keep all data model classes in the app's domain.model package,
 # along with all their members (fields, methods, constructors).
-# This is crucial for Firestore to instantiate and populate your objects.
--keep class com.qaizen.car_rental_qaizen.domain.model.** { *; } # FIXME: Update this package if different for admin models
+# This is crucial for Firestore to instantiate and populate the objects.
+-keep class com.qaizen.admin.domain.model.** { *; }
 
 # Keep class members (fields and methods) in any class that are annotated
 # with Firestore's @PropertyName. This ensures custom-named fields are mapped correctly.
-# This rule is general and usually fine.
 -keepclassmembers class * {
     @com.google.firebase.firestore.PropertyName *;
 }
 
-# Additionally, explicitly keep members in your data model classes that are
+# Additionally, explicitly keep members in the data model classes that are
 # annotated with other common Firebase/Firestore annotations.
-# FIXME: Update "com.qaizen.car_rental_qaizen.domain.model.**" if different for admin models
--keepclassmembers class com.qaizen.car_rental_qaizen.domain.model.** {
+-keepclassmembers class com.qaizen.admin.domain.model.** {
     @com.google.firebase.firestore.Exclude *;
     @com.google.firebase.firestore.ServerTimestamp *;
     @com.google.firebase.firestore.DocumentId *;
     @com.google.firebase.firestore.IgnoreExtraProperties *;
-    # Add any other Firebase or custom annotations you use for your models here
+    # Add any other Firebase or custom annotations used for the models here
 }
 
-# Ensure public no-argument constructors are kept for your data model classes.
+# Ensure public no-argument constructors are kept for the data model classes.
 # Firestore often requires these for deserializing data into objects.
-# FIXME: Update "com.qaizen.car_rental_qaizen.domain.model.**" if different for admin models
--keepclassmembers class com.qaizen.car_rental_qaizen.domain.model.** {
+# If the models are Kotlin data classes, they usually have a primary constructor,
+# but Firestore might also use a no-arg constructor if available or if all
+# properties have default values.
+-keepclassmembers class com.qaizen.admin.domain.model.** {
     public <init>();
 }
 

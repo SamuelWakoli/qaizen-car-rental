@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.getField
 import com.qaizen.car_rental_qaizen.domain.model.BookingData
 import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.domain.model.Vehicle
@@ -14,7 +13,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class QaizenVehiclesRepository : VehiclesRepository {
+class VehiclesRepositoryImpl : VehiclesRepository {
     override val auth: FirebaseAuth
         get() = Firebase.auth
     override val firestore: FirebaseFirestore

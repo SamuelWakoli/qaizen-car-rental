@@ -8,9 +8,9 @@
 # Keep Kotlin metadata, useful for reflection used by some libraries
 -keep class kotlin.Metadata { *; }
 
-# Keep all data model classes in your app's domain.model package,
+# Keep all data model classes in the app's domain.model package,
 # along with all their members (fields, methods, constructors).
-# This is crucial for Firestore to instantiate and populate your objects.
+# This is crucial for Firestore to instantiate and populate the objects.
 -keep class com.qaizen.car_rental_qaizen.domain.model.** { *; }
 
 # Keep class members (fields and methods) in any class that are annotated
@@ -19,19 +19,19 @@
     @com.google.firebase.firestore.PropertyName *;
 }
 
-# Additionally, explicitly keep members in your data model classes that are
+# Additionally, explicitly keep members in the data model classes that are
 # annotated with other common Firebase/Firestore annotations.
 -keepclassmembers class com.qaizen.car_rental_qaizen.domain.model.** {
     @com.google.firebase.firestore.Exclude *;
     @com.google.firebase.firestore.ServerTimestamp *;
     @com.google.firebase.firestore.DocumentId *;
     @com.google.firebase.firestore.IgnoreExtraProperties *;
-    # Add any other Firebase or custom annotations you use for your models here
+    # Add any other Firebase or custom annotations used for the models here
 }
 
-# Ensure public no-argument constructors are kept for your data model classes.
+# Ensure public no-argument constructors are kept for the data model classes.
 # Firestore often requires these for deserializing data into objects.
-# If your models are Kotlin data classes, they usually have a primary constructor,
+# If the models are Kotlin data classes, they usually have a primary constructor,
 # but Firestore might also use a no-arg constructor if available or if all
 # properties have default values.
 -keepclassmembers class com.qaizen.car_rental_qaizen.domain.model.** {
