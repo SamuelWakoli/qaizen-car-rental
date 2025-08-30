@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.getField
 import com.qaizen.car_rental_qaizen.domain.model.BookingData
+import com.qaizen.car_rental_qaizen.domain.model.UserData
 import com.qaizen.car_rental_qaizen.domain.model.Vehicle
 import com.qaizen.car_rental_qaizen.domain.repositories.VehiclesRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -73,9 +74,9 @@ class QaizenVehiclesRepository : VehiclesRepository {
                     return@addSnapshotListener
                 }
                 if (documentSnapshot != null) {
-                    val favorites = documentSnapshot.getField<List<String>>("favorites")
-                    if (favorites != null) {
-                        trySend(favorites)
+                    val userData = documentSnapshot.toObject(UserData::class.java)
+                    if (userData?.favorites != null) {
+                        trySend(userData.favorites)
                     }
                 }
             }

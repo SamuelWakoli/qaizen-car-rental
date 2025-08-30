@@ -1,5 +1,4 @@
 package com.qaizen.admin.core.model
-
 data class AppErrorMessage(
     val title: String,
     val message: String,
